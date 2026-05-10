@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>복음초청집회 · 부산교회</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700&family=Cinzel:wght@400;600&family=Nanum+Myeongjo:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --deep-green:  #0a3058;    /* 깊은 바다 네이비 */
+  --forest:      #0d6ea0;    /* 바다 파랑 */
+  --grass:       #1a8fc1;    /* 밝은 바다 */
+  --mint:        #5dd0ef;    /* 하늘빛 */
+  --sky:         #dff3fb;    /* 연한 하늘 배경 */
+  --gold:        #f0c040;    /* 햇살 골드 */
+  --cream:       #f0f9ff;    /* 바다 크림 */
+  --warm-white:  #f8fdff;    /* 밝은 흰빛 */
+  --muted:       #5a7e90;    /* 바다 회색 */
+  --dark-text:   #0a3058;    /* 짙은 네이비 텍스트 */
+  --accent:      #0b90c4;    /* 밝은 바다 강조색 */
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--cream);
+  color: var(--dark-text);
+  font-family: 'Noto Serif KR', serif;
+  max-width: 480px;
+  margin: 0 auto;
+  overflow-x: hidden;
+}
+
+#leafCanvas {
+  position: fixed; top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 480px; height: 100svh;
+  pointer-events: none; z-index: 0; opacity: 0.5;
+}
+
+/* ════ HERO ════ */
+.hero {
+  position: relative; min-height: 100svh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 80px 40px;
+  overflow: hidden; z-index: 1;
+}
+
+.hero-bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 100% 45% at 50% 0%, #7fcfec 0%, transparent 60%),
+    radial-gradient(ellipse 70% 55% at 0% 100%, #0a5e96 0%, transparent 60%),
+    radial-gradient(ellipse 70% 55% at 100% 100%, #0a4a82 0%, transparent 60%),
+    linear-gradient(180deg, #1a9ed4 0%, #0a3e75 60%, #062a5a 100%);
+}
+
+/* 상단 풀잎 장식 */
+.hero-grass {
+  position: absolute; top: 0; left: 0; right: 0; height: 220px;
+  opacity: 0.3;
+}
+
+.hero-badge {
+  position: relative;
+  background: rgba(93,208,239,0.15);
+  border: 1px solid rgba(93,208,239,0.4);
+  border-radius: 40px;
+  padding: 6px 20px;
+  font-family: 'Cinzel', serif;
+  font-size: 9px; letter-spacing: 4px;
+  color: #a8e8f8;
+  margin-bottom: 28px;
+  opacity: 0; animation: fadeUp 1s ease forwards 0.4s;
+}
+
+.hero-invite {
+  position: relative;
+  font-family: 'Nanum Myeongjo', serif;
+  font-size: 14px; letter-spacing: 4px;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 10px;
+  opacity: 0; animation: fadeUp 1s ease forwards 0.7s;
+}
+
+.hero-title {
+  position: relative;
+  font-size: 46px; font-weight: 700;
+  color: white; text-align: center;
+  line-height: 1.1; letter-spacing: -1px;
+  margin-bottom: 8px;
+  opacity: 0; animation: fadeUp 1s ease forwards 1s;
+}
+
+.hero-sub-title {
+  position: relative;
+  font-family: 'Cinzel', serif;
+  font-size: 13px; letter-spacing: 5px;
+  color: var(--mint);
+  margin-bottom: 40px;
+  opacity: 0; animation: fadeUp 1s ease forwards 1.2s;
+}
+
+/* 날짜 박스 */
+.hero-date-card {
+  position: relative;
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(93,208,239,0.40);
+  backdrop-filter: blur(4px);
+  padding: 24px 44px;
+  text-align: center;
+  opacity: 0; animation: fadeUp 1s ease forwards 1.4s;
+}
+
+.hero-date-card::before, .hero-date-card::after {
+  content: '';
+  position: absolute;
+  width: 20px; height: 20px;
+  border-color: #5dd0ef;
+  border-style: solid;
+  opacity: 0.6;
+}
+.hero-date-card::before { top:-5px; left:-5px; border-width:1px 0 0 1px; }
+.hero-date-card::after  { bottom:-5px; right:-5px; border-width:0 1px 1px 0; }
+
+.hero-date-main {
+  font-size: 20px; font-weight: 700;
+  color: white; letter-spacing: 2px;
+  line-height: 1.8;
+}
+
+.hero-date-sub {
+  font-size: 13px; color: rgba(255,255,255,0.5);
+  letter-spacing: 2px; margin-top: 6px;
+  font-weight: 300;
+}
+
+.hero-place {
+  position: relative;
+  margin-top: 20px;
+  font-size: 13px;
+  color: var(--mint);
+  letter-spacing: 2px;
+  opacity: 0; animation: fadeUp 1s ease forwards 1.6s;
+}
+
+.hero-church {
+  position: relative;
+  margin-top: 40px;
+  font-family: 'Cinzel', serif;
+  font-size: 11px; letter-spacing: 4px;
+  color: rgba(255,255,255,0.2);
+  opacity: 0; animation: fadeUp 1s ease forwards 1.9s;
+}
+
+.scroll-hint {
+  position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
+  opacity: 0; animation: fadeUp 1s ease forwards 2.4s;
+}
+.scroll-hint span {
+  display: block; width: 1px; height: 52px; margin: 0 auto;
+  background: linear-gradient(180deg, transparent, #5dd0ef);
+  animation: lineGrow 2s ease-in-out infinite 2.8s;
+}
+
+/* ════ 공통 섹션 ════ */
+.section-wrap {
+  position: relative; z-index: 1;
+  padding: 72px 36px;
+}
+
+.section-label {
+  font-family: 'Cinzel', serif;
+  font-size: 9px; letter-spacing: 5px;
+  color: var(--accent);
+  text-align: center; margin-bottom: 10px;
+}
+
+.section-title {
+  font-size: 24px; font-weight: 700;
+  color: var(--dark-text);
+  text-align: center; margin-bottom: 40px;
+}
+
+/* ════ 말씀 ════ */
+.verse-section {
+  background: linear-gradient(160deg, #1178b0 0%, #0a5a8e 50%, #083d6b 100%);
+  padding: 72px 40px;
+  position: relative; z-index: 1; overflow: hidden;
+}
+.verse-section::before {
+  content: '❝';
+  position: absolute; top: 20px; left: 32px;
+  font-size: 100px; color: rgba(93,208,239,0.15);
+  font-family: Georgia, serif; line-height: 1;
+}
+.verse-label {
+  font-family: 'Cinzel', serif;
+  font-size: 9px; letter-spacing: 5px;
+  color: #a8e8f8; text-align: center;
+  margin-bottom: 32px; opacity: 0.85;
+}
+.verse-text {
+  font-size: 18px; color: white;
+  text-align: center; line-height: 2.4;
+  letter-spacing: 1px; word-break: keep-all;
+}
+.verse-text em { font-style: normal; color: #7ee8fa; }
+.verse-ref {
+  margin-top: 24px; text-align: center;
+  font-family: 'Cinzel', serif;
+  font-size: 11px; letter-spacing: 3px;
+  color: rgba(174,232,248,0.65);
+}
+
+/* ════ 초청 인사말 ════ */
+.greeting-section { background: var(--warm-white); }
+
+.greeting-body {
+  font-size: 15px; line-height: 2.2;
+  color: var(--dark-text);
+  text-align: center; word-break: keep-all;
+}
+.greeting-body em {
+  font-style: normal;
+  color: #1a6642;
+  font-weight: 700;
+}
+
+.greeting-sign {
+  margin-top: 40px; text-align: center;
+  padding-top: 28px;
+  border-top: 1px solid rgba(64,145,108,0.2);
+  font-size: 13px; color: var(--muted);
+  letter-spacing: 2px;
+}
+
+/* ════ 예배 정보 ════ */
+.info-section { background: var(--sky); }
+
+.info-card {
+  background: white;
+  border-left: 3px solid var(--mint);
+  padding: 26px 28px 26px 30px;
+  margin-bottom: 14px;
+  border-radius: 0 4px 4px 0;
+  box-shadow: 0 2px 16px rgba(13,40,24,0.07);
+}
+.info-label {
+  font-family: 'Cinzel', serif;
+  font-size: 9px; letter-spacing: 4px;
+  color: var(--accent); margin-bottom: 10px;
+}
+.info-value {
+  font-size: 18px; font-weight: 700;
+  color: var(--dark-text); line-height: 1.6;
+}
+.info-sub {
+  margin-top: 6px; font-size: 13px;
+  color: var(--muted); line-height: 1.9; font-weight: 300;
+}
+.info-badge {
+  display: inline-block; margin-top: 10px;
+  background: rgba(82,183,136,0.12);
+  color: var(--accent);
+  font-size: 11px; letter-spacing: 1px;
+  padding: 4px 12px; border-radius: 20px;
+}
+
+/* ════ 지도 ════ */
+.map-section { background: var(--cream); padding: 0; position: relative; z-index: 1; }
+.map-header { padding: 64px 36px 32px; text-align: center; }
+.map-iframe-wrap {
+  width: 100%; height: 250px; overflow: hidden;
+  border-top: 1px solid rgba(64,145,108,0.2);
+  border-bottom: 1px solid rgba(64,145,108,0.2);
+}
+.map-iframe-wrap iframe {
+  width: 100%; height: 100%; border: none;
+  filter: sepia(10%) saturate(90%) hue-rotate(20deg);
+}
+.map-btns {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 10px; padding: 20px 32px 0;
+}
+.map-btn {
+  display: flex; align-items: center; justify-content: center;
+  gap: 8px; padding: 13px;
+  border: none; cursor: pointer;
+  font-family: 'Noto Serif KR', serif;
+  font-size: 13px; letter-spacing: 1px;
+  text-decoration: none; transition: opacity 0.2s; border-radius: 2px;
+}
+.map-btn:hover { opacity: 0.8; }
+.map-btn.kakao { background: #FEE500; color: #3A1D1D; }
+.map-btn.naver { background: #03C75A; color: white; }
+
+.transport-section { padding: 28px 32px 60px; background: var(--cream); }
+.transport-item {
+  display: flex; gap: 16px; padding: 14px 0;
+  border-bottom: 1px solid rgba(64,145,108,0.15);
+  font-size: 13px; color: var(--dark-text); line-height: 1.9;
+}
+.transport-icon {
+  width: 32px; height: 32px;
+  background: rgba(64,145,108,0.1);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; font-size: 15px;
+}
+
+/* ════ 카운트다운 ════ */
+.countdown-section {
+  background: linear-gradient(160deg, #1888c0 0%, #0d6499 50%, #0a4a7c 100%);
+  padding: 72px 32px;
+  text-align: center;
+  position: relative; z-index: 1; overflow: hidden;
+}
+.countdown-section::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(93,208,239,0.18) 0%, transparent 65%),
+    radial-gradient(ellipse 60% 50% at 50% 100%, rgba(0,0,0,0.20) 0%, transparent 70%);
+}
+.cd-label {
+  font-family: 'Cinzel', serif;
+  font-size: 9px; letter-spacing: 5px;
+  color: rgba(255,255,255,0.45);
+  margin-bottom: 36px; position: relative;
+}
+.cd-grid { display: flex; justify-content: center; margin-bottom: 20px; position: relative; }
+.cd-item { text-align: center; padding: 0 18px; position: relative; }
+.cd-item + .cd-item::before {
+  content: ':'; position: absolute; left: -3px; top: 6px;
+  font-size: 30px; color: rgba(255,255,255,0.2);
+}
+.cd-num {
+  font-family: 'Cinzel', serif;
+  font-size: 52px; color: white; line-height: 1; min-width: 64px;
+}
+.cd-unit { font-size: 9px; letter-spacing: 3px; color: rgba(255,255,255,0.4); margin-top: 8px; }
+.cd-msg { font-size: 14px; color: rgba(255,255,255,0.55); letter-spacing: 3px; margin-top: 20px; position: relative; }
+
+/* ════ 문의 ════ */
+.church-section { background: var(--warm-white); }
+.church-contact { display: flex; flex-direction: column; gap: 12px; margin-top: 8px; }
+.contact-row {
+  display: flex; gap: 16px; align-items: center;
+  padding: 16px 20px; background: white;
+  border-radius: 4px;
+  box-shadow: 0 2px 10px rgba(13,40,24,0.05);
+}
+.contact-icon {
+  width: 38px; height: 38px;
+  background: rgba(64,145,108,0.1);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; flex-shrink: 0;
+}
+.contact-info { font-size: 14px; color: var(--dark-text); line-height: 1.8; }
+.contact-info small { font-size: 11px; color: var(--muted); display: block; }
+
+/* ════ 푸터 ════ */
+footer {
+  background: linear-gradient(180deg, #0e3f6e 0%, #082a52 100%);
+  padding: 64px 32px 32px;
+  text-align: center;
+  position: relative; z-index: 1;
+}
+.footer-emblem {
+  width: 48px; height: 48px; margin: 0 auto 24px;
+}
+.footer-church {
+  font-family: 'Cinzel', serif;
+  font-size: 15px; letter-spacing: 4px;
+  color: #7ee8fa; margin-bottom: 10px; opacity: 0.9;
+}
+.footer-church-kr {
+  font-size: 20px; font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 5px; margin-bottom: 10px;
+}
+.footer-date {
+  font-family: 'Cinzel', serif;
+  font-size: 10px; letter-spacing: 3px;
+  color: rgba(174,232,248,0.65);
+}
+
+/* ════ 스폰서 링크 ════ */
+.footer-sponsor {
+  margin-top: 36px;
+  padding-top: 28px;
+  border-top: 1px solid rgba(93,208,239,0.20);
+}
+.footer-sponsor-label {
+  font-size: 10px; letter-spacing: 3px;
+  color: rgba(174,232,248,0.5);
+  font-family: 'Cinzel', serif;
+  margin-bottom: 14px;
+}
+.footer-sponsor-link {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 26px;
+  background: rgba(93,208,239,0.10);
+  border: 1px solid rgba(93,208,239,0.30);
+  border-radius: 30px;
+  color: #a8e8f8;
+  font-family: 'Noto Serif KR', serif;
+  font-size: 13px; letter-spacing: 2px;
+  text-decoration: none;
+  transition: all 0.25s;
+}
+.footer-sponsor-link:hover {
+  background: rgba(93,208,239,0.20);
+  border-color: rgba(93,208,239,0.55);
+  color: #e0f7ff;
+}
+.footer-copyright {
+  margin-top: 28px;
+  font-size: 10px; color: rgba(255,255,255,0.20);
+  letter-spacing: 1px;
+}
+
+/* 풀잎 구분선 */
+.grass-divider {
+  text-align: center; padding: 4px 0 0;
+  font-size: 18px; letter-spacing: 6px; opacity: 0.5;
+}
+
+/* ════ 주소 복사 · 캘린더 버튼 ════ */
+.action-btns {
+  display: flex; flex-direction: column; gap: 10px;
+  padding: 20px 32px 32px;
+  background: var(--cream);
+}
+.action-btn {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  padding: 14px 20px;
+  border: 1.5px solid rgba(64,145,108,0.3);
+  background: white;
+  border-radius: 4px;
+  font-family: 'Noto Serif KR', serif;
+  font-size: 14px; color: var(--accent);
+  letter-spacing: 1px; cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgba(13,40,24,0.05);
+}
+.action-btn:hover { background: rgba(64,145,108,0.06); border-color: var(--accent); }
+.action-btn.copied { background: var(--accent); color: white; border-color: var(--accent); }
+
+/* ════ 준비 안내 박스 ════ */
+.notice-box {
+  margin: 0 32px 0;
+  padding: 18px 20px;
+  background: rgba(64,145,108,0.08);
+  border-left: 3px solid var(--mint);
+  border-radius: 0 4px 4px 0;
+}
+.notice-box p {
+  font-size: 13px; color: var(--muted);
+  line-height: 2; word-break: keep-all;
+}
+.notice-box strong { color: var(--accent); }
+
+/* ════ 애니메이션 ════ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes lineGrow {
+  0%, 100% { transform: scaleY(1); opacity: 1; }
+  50%       { transform: scaleY(0.3); opacity: 0.2; }
+}
+.reveal {
+  opacity: 0; transform: translateY(32px);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+}
+.reveal.visible { opacity: 1; transform: none; }
+</style>
+</head>
+<body>
+
+<canvas id="leafCanvas"></canvas>
+
+<!-- ════ HERO ════ -->
+<section class="hero">
+  <div class="hero-bg"></div>
+
+  <!-- 상단 파도·하늘 장식 -->
+  <svg class="hero-grass" viewBox="0 0 480 220" fill="none">
+    <!-- 갈매기 왼쪽 -->
+    <path d="M40 80 Q55 68 68 80 Q80 68 95 80" stroke="rgba(255,255,255,0.55)" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+    <path d="M20 105 Q33 95 44 105 Q55 95 66 105" stroke="rgba(255,255,255,0.40)" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <path d="M60 55 Q70 47 78 55 Q86 47 96 55" stroke="rgba(255,255,255,0.30)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    <!-- 갈매기 오른쪽 -->
+    <path d="M380 75 Q393 63 406 75 Q418 63 432 75" stroke="rgba(255,255,255,0.55)" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+    <path d="M400 100 Q411 91 421 100 Q431 91 442 100" stroke="rgba(255,255,255,0.38)" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <path d="M355 50 Q364 43 372 50 Q380 43 389 50" stroke="rgba(255,255,255,0.28)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    <!-- 중앙 갈매기 -->
+    <path d="M210 45 Q222 36 232 45 Q242 36 254 45" stroke="rgba(255,255,255,0.35)" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+    <!-- 구름 실루엣 -->
+    <ellipse cx="130" cy="30" rx="40" ry="14" fill="rgba(255,255,255,0.10)"/>
+    <ellipse cx="155" cy="24" rx="28" ry="12" fill="rgba(255,255,255,0.12)"/>
+    <ellipse cx="340" cy="38" rx="36" ry="13" fill="rgba(255,255,255,0.09)"/>
+    <ellipse cx="360" cy="30" rx="22" ry="11" fill="rgba(255,255,255,0.11)"/>
+    <!-- 하단 파도 라인 -->
+    <path d="M0 200 Q40 188 80 200 Q120 212 160 200 Q200 188 240 200 Q280 212 320 200 Q360 188 400 200 Q440 212 480 200" stroke="rgba(255,255,255,0.18)" stroke-width="1.5" fill="none"/>
+    <path d="M0 215 Q50 205 100 215 Q150 225 200 215 Q250 205 300 215 Q350 225 400 215 Q440 207 480 215" stroke="rgba(255,255,255,0.10)" stroke-width="1" fill="none"/>
+  </svg>
+
+  <div class="hero-badge">GOSPEL INVITATION 2026</div>
+  <p class="hero-invite">따뜻한 마음으로</p>
+  <h1 class="hero-title">당신을<br>초대합니다</h1>
+  <p class="hero-sub-title">복음초청집회</p>
+
+  <div class="hero-date-card">
+    <div class="hero-date-main">
+      2026년 5월 31일 주일<br>오전 10시 30분
+    </div>
+    <div class="hero-date-sub">한국해양대학교 아치캠퍼스체육관</div>
+  </div>
+
+  <p class="hero-place">📍 부산광역시 영도구 태종로 727</p>
+  <p class="hero-church">BUSAN CHURCH · OUTDOOR GOSPEL MEETING</p>
+
+  <div class="scroll-hint"><span></span></div>
+</section>
+
+<!-- ════ 말씀 ════ -->
+<div class="verse-section reveal">
+  <p class="verse-label">WORD OF GOD</p>
+  <p class="verse-text">
+    수고하며 짐을 진 사람들이여<br> 
+    다 나에게로 오십시오.<br>
+    <em>내가 여러분에게 안식을 줄 것입니다.</em>
+  </p>
+  <p class="verse-ref">마태복음 11 : 28</p>
+</div>
+
+<!-- ════ 초청 인사말 ════ -->
+<div class="section-wrap greeting-section reveal">
+  <p class="section-label">INVITATION</p>
+  <p class="section-title">초청의 말씀</p>
+  <p class="greeting-body">
+    따뜻한 마음으로 당신을 초대합니다.<br><br>
+    푸르른 5월의 끝자락,<br>
+    사랑하는 분들과 함께 나눌 수 있는<br>
+    <em>귀한 시간</em>을 준비했습니다.<br><br>
+    바쁜 일상 속에서 잠시 걸음을 멈추고<br>
+    마음에 <em>쉼과 위로</em>를 더하는 자리에<br>
+    함께하지 않으시겠어요?<br><br>
+    이번 야외 복음집회는<br>
+    <em>누구에게나 열려 있는 자리</em>입니다.<br><br>
+    가족, 친구, 그리고 소중한 당신과 함께<br>
+    따뜻한 마음을 나누고<br>
+    서로에게 힘이 되는 시간을 보내고 싶습니다.<br><br>
+    편안한 마음으로 오셔서<br>
+    작은 기쁨과 깊은 위로를<br>
+    함께 느끼시길 바랍니다.<br><br>
+    그날, 당신이 이 자리에 함께해 주신다면<br>
+    그 자체로 더욱 <em>의미 있는 시간</em>이 될 것입니다.
+  </p>
+  <div class="greeting-sign">
+    기다리고 있겠습니다 🌿<br>
+    <span style="font-size:12px;opacity:0.5;letter-spacing:3px;">부산교회</span>
+  </div>
+</div>
+
+<!-- ════ 예배 정보 ════ -->
+<div class="section-wrap info-section reveal">
+  <p class="section-label">SERVICE INFO</p>
+  <p class="section-title">집회 안내</p>
+
+  <div class="info-card">
+    <p class="info-label">DATE &amp; TIME</p>
+    <p class="info-value">2026년 5월 31일 주일</p>
+    <p class="info-sub">오전 10시 30분<br>야외 복음 집회</p>
+    <span class="info-badge">🌿 누구에게나 열려 있습니다</span>
+  </div>
+
+  <div class="info-card">
+    <p class="info-label">VENUE</p>
+    <p class="info-value">한국해양대학교<br>아치캠퍼스체육관</p>
+    <p class="info-sub">부산광역시 영도구 태종로 727</p>
+  </div>
+
+  <div class="info-card">
+    <p class="info-label">HOST</p>
+    <p class="info-value">부산교회</p>
+    <p class="info-sub">가족, 친구, 이웃 누구든 환영합니다</p>
+  </div>
+</div>
+
+<!-- ════ 오시는 길 ════ -->
+<div class="map-section reveal">
+  <div class="map-header">
+    <p class="section-label">LOCATION</p>
+    <p class="section-title">오시는 길</p>
+  </div>
+
+  <div class="map-iframe-wrap">
+    <!-- 한국해양대학교 아치캠퍼스 (영도구 태종로 727) 정확한 embed URL -->
+    <iframe
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3266.0!2d129.07441!3d35.08721!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3568917963e7e3c3%3A0xc2b5f1e6b0a1d1e0!2z7ZWc6rWt7ZqM7JuQ64yA7ZWZ6rWQIOyynuqyg!5e0!3m2!1sko!2skr!4v1716000000000!5m2!1sko!2skr"
+      allowfullscreen="" loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade"
+      title="한국해양대학교 아치캠퍼스체육관">
+    </iframe>
+  </div>
+
+  <div class="map-btns">
+    <a class="map-btn kakao"
+       href="https://map.kakao.com/link/map/한국해양대학교,35.0879,129.0766"
+       target="_blank">🟡 카카오맵</a>
+    <a class="map-btn naver"
+       href="https://map.naver.com/v5/search/한국해양대학교+영도"
+       target="_blank">🟢 네이버지도</a>
+  </div>
+
+  <div class="transport-section">
+    <div class="transport-item">
+      <div class="transport-icon">🚌</div>
+      <div><strong>버스</strong><br>영도 방면 버스 이용<br>한국해양대학교 하차</div>
+    </div>
+    <div class="transport-item">
+      <div class="transport-icon">🚗</div>
+      <div><strong>자가용</strong><br>부산광역시 영도구 태종로 727<br>
+        <span style="color:var(--accent);font-size:12px;">주차장 할인을 위해 차량정보를 미리 알려 주세요.</span>
+      </div>
+    </div>
+    <div class="transport-item">
+      <div class="transport-icon">🚕</div>
+      <div><strong>택시</strong><br>"한국해양대학교 아치캠퍼스" 로<br>말씀해 주세요</div>
+    </div>
+  </div>
+
+  <!-- 준비 안내 -->
+  <div class="notice-box" style="margin-bottom:20px;">
+    <p>
+      🌿 <strong>야외 집회 준비 안내</strong><br>
+      편안한 복장과 걷기 좋은 신발을 권장합니다.<br>
+      식수나 은박지는 직접 챙겨 오시면 불편이 없습니다.
+    </p>
+  </div>
+
+  <!-- 주소 복사 · 캘린더 추가 버튼 -->
+  <div class="action-btns">
+    <button class="action-btn" id="copy-btn" onclick="copyAddress()">
+      📋 주소 복사하기
+    </button>
+    <a class="action-btn"
+       href="https://www.google.com/calendar/render?action=TEMPLATE&text=복음초청집회+부산교회&dates=20260531T013000Z/20260531T050000Z&details=한국해양대학교+아치캠퍼스체육관+야외+복음집회&location=부산광역시+영도구+태종로+727"
+       target="_blank">
+      📅 구글 캘린더에 일정 추가
+    </a>
+  </div>
+</div>
+
+<!-- ════ 카운트다운 ════ -->
+<section class="countdown-section reveal">
+  <p class="cd-label">D-DAY COUNTDOWN</p>
+  <div class="cd-grid">
+    <div class="cd-item"><div class="cd-num" id="cd-d">00</div><div class="cd-unit">DAYS</div></div>
+    <div class="cd-item"><div class="cd-num" id="cd-h">00</div><div class="cd-unit">HRS</div></div>
+    <div class="cd-item"><div class="cd-num" id="cd-m">00</div><div class="cd-unit">MIN</div></div>
+    <div class="cd-item"><div class="cd-num" id="cd-s">00</div><div class="cd-unit">SEC</div></div>
+  </div>
+  <p class="cd-msg">집회까지 남은 시간</p>
+</section>
+
+<!-- ════ 문의 ════ -->
+<div class="section-wrap church-section reveal">
+  <p class="section-label">CONTACT</p>
+  <p class="section-title">문의</p>
+  <div class="church-contact">
+    <div class="contact-row">
+      <div class="contact-icon">⛪</div>
+      <div class="contact-info">
+        <small>주최</small>부산교회
+      </div>
+    </div>
+    <div class="contact-row">
+      <div class="contact-icon">📍</div>
+      <div class="contact-info">
+        <small>집회 장소</small>
+        한국해양대학교 아치캠퍼스체육관<br>
+        <span style="font-size:12px;color:var(--muted);">부산광역시 영도구 태종로 727</span>
+      </div>
+    </div>
+    <div class="contact-row">
+      <div class="contact-icon">📞</div>
+      <div class="contact-info">
+        <small>전화 문의</small>
+        <a href="tel:051-000-0000"
+           style="color:var(--accent);text-decoration:none;font-weight:600;">
+          010-4581-7775
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ 푸터 ════ -->
+<footer>
+  <svg class="footer-emblem" viewBox="0 0 48 48" fill="none">
+    <circle cx="24" cy="24" r="22" stroke="rgba(93,208,239,0.35)" stroke-width="1"/>
+    <rect x="21" y="6" width="6" height="36" fill="rgba(93,208,239,0.5)"/>
+    <rect x="6" y="17" width="36" height="6" fill="rgba(93,208,239,0.5)"/>
+  </svg>
+  <p class="footer-church">BUSAN CHURCH</p>
+  <p class="footer-church-kr">부산교회</p>
+  <p class="footer-date">2026 · 5 · 31 · OUTDOOR GOSPEL INVITATION</p>
+
+  <div class="footer-sponsor">
+    <p class="footer-sponsor-label">SPONSORED BY</p>
+    <a class="footer-sponsor-link"
+       href="https://mall.kgbr.co.kr/main.php?bType=null"
+       target="_blank" rel="noopener">
+      📖 한국복음서원
+    </a>
+  </div>
+  <p class="footer-copyright">© 2026 부산교회 · Busan Church</p>
+</footer>
+
+<script>
+// ════ 하늘·바다 캔버스 — 갈매기 & 햇빛 반짝임 ════
+const canvas = document.getElementById('leafCanvas');
+const ctx    = canvas.getContext('2d');
+canvas.width = 480;
+canvas.height = document.documentElement.clientHeight;
+
+// 갈매기 그리기 (M 형태 날개)
+function drawGull(ctx, x, y, span, wingAngle, alpha) {
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.strokeStyle = 'rgba(255,255,255,0.9)';
+  ctx.lineWidth   = 1.6;
+  ctx.lineCap     = 'round';
+  ctx.beginPath();
+  // 왼쪽 날개
+  ctx.moveTo(x - span, y + Math.sin(wingAngle) * span * 0.3);
+  ctx.quadraticCurveTo(x - span * 0.5, y - span * 0.12, x, y);
+  // 오른쪽 날개
+  ctx.quadraticCurveTo(x + span * 0.5, y - span * 0.12, x + span, y + Math.sin(wingAngle) * span * 0.3);
+  ctx.stroke();
+  ctx.restore();
+}
+
+// 바다 반짝임 (햇빛 sparkle)
+function drawSparkle(ctx, x, y, r, alpha) {
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.fillStyle = '#ffffff';
+  ctx.beginPath();
+  ctx.arc(x, y, r, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+}
+
+// 갈매기 데이터
+const gulls = Array.from({ length: 14 }, () => ({
+  x:         Math.random() * 560 - 40,
+  y:         30 + Math.random() * 300,
+  span:      7 + Math.random() * 10,
+  speedX:    0.25 + Math.random() * 0.55,
+  speedY:    (Math.random() - 0.5) * 0.15,
+  wing:      Math.random() * Math.PI * 2,
+  wingSpeed: 0.025 + Math.random() * 0.025,
+  alpha:     0.25 + Math.random() * 0.50,
+}));
+
+// 반짝임 데이터 (아래쪽 바다 영역)
+const sparkles = Array.from({ length: 28 }, () => ({
+  x:     Math.random() * 480,
+  y:     canvas.height * 0.55 + Math.random() * canvas.height * 0.45,
+  r:     0.8 + Math.random() * 1.4,
+  phase: Math.random() * Math.PI * 2,
+  speed: 0.03 + Math.random() * 0.04,
+}));
+
+(function loop() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // 갈매기
+  gulls.forEach(g => {
+    drawGull(ctx, g.x, g.y, g.span, g.wing, g.alpha);
+    g.x    += g.speedX;
+    g.y    += g.speedY;
+    g.wing += g.wingSpeed;
+    if (g.x > canvas.width + 60) { g.x = -60; g.y = 30 + Math.random() * 300; }
+  });
+
+  // 반짝임
+  sparkles.forEach(s => {
+    s.phase += s.speed;
+    const a = (Math.sin(s.phase) * 0.5 + 0.5) * 0.45;
+    drawSparkle(ctx, s.x, s.y, s.r, a);
+  });
+
+  requestAnimationFrame(loop);
+})();
+
+window.addEventListener('resize', () => {
+  canvas.height = document.documentElement.clientHeight;
+});
+
+// ════ 스크롤 reveal ════
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(r => obs.observe(r));
+
+// ════ 카운트다운 — KST 타임존 명시 ════
+const targetDate = new Date('2026-05-31T10:30:00+09:00'); // 한국 표준시 명시
+
+function tick() {
+  const diff = targetDate - new Date();
+  if (diff <= 0) {
+    ['cd-d','cd-h','cd-m','cd-s'].forEach(id => document.getElementById(id).textContent = '00');
+    return;
+  }
+  document.getElementById('cd-d').textContent = String(Math.floor(diff / 86400000)).padStart(2,'0');
+  document.getElementById('cd-h').textContent = String(Math.floor(diff % 86400000 / 3600000)).padStart(2,'0');
+  document.getElementById('cd-m').textContent = String(Math.floor(diff % 3600000 / 60000)).padStart(2,'0');
+  document.getElementById('cd-s').textContent = String(Math.floor(diff % 60000 / 1000)).padStart(2,'0');
+}
+tick(); setInterval(tick, 1000);
+
+// ════ 주소 복사 ════
+function copyAddress() {
+  const addr = '부산광역시 영도구 태종로 727 한국해양대학교 아치캠퍼스체육관';
+  navigator.clipboard.writeText(addr).then(() => {
+    const btn = document.getElementById('copy-btn');
+    btn.textContent = '✓ 주소가 복사되었습니다';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = '📋 주소 복사하기';
+      btn.classList.remove('copied');
+    }, 2500);
+  }).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = addr;
+    document.body.appendChild(ta);
+    ta.select(); document.execCommand('copy');
+    document.body.removeChild(ta);
+    const btn = document.getElementById('copy-btn');
+    btn.textContent = '✓ 주소가 복사되었습니다';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = '📋 주소 복사하기';
+      btn.classList.remove('copied');
+    }, 2500);
+  });
+}
+</script>
+</body>
+</html>
