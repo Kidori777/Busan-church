@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>속건강내과의원</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green-deep: #1a5c38;
+    --green-main: #2d7a50;
+    --green-mid: #3d9966;
+    --green-light: #6bbf8a;
+    --green-pale: #e8f5ee;
+    --green-mist: #f2faf5;
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --cream: #fdfaf5;
+    --dark: #1a2820;
+    --gray: #5a6b61;
+    --light-gray: #a8bab0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--cream);
+    color: var(--dark);
+    max-width: 480px;
+    margin: 0 auto;
+    overflow-x: hidden;
+    padding-bottom: 100px;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(160deg, var(--green-deep) 0%, var(--green-main) 55%, var(--green-mid) 100%);
+    min-height: 88vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 0 52px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg-pattern {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+      radial-gradient(circle at 75% 20%, rgba(107,191,138,0.18) 0%, transparent 50%),
+      radial-gradient(circle at 10% 80%, rgba(26,92,56,0.35) 0%, transparent 40%);
+  }
+
+  .hero-circles {
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 280px; height: 280px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,0.08);
+  }
+  .hero-circles::after {
+    content: '';
+    position: absolute;
+    top: 30px; left: 30px; right: 30px; bottom: 30px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,0.06);
+  }
+
+  .hero-leaf {
+    position: absolute;
+    top: 40px; left: 24px;
+    opacity: 0.15;
+    font-size: 120px;
+    line-height: 1;
+    user-select: none;
+  }
+
+  .hero-badge {
+    position: absolute;
+    top: 52px; right: 24px;
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 40px;
+    padding: 8px 16px;
+    font-size: 11px;
+    color: rgba(255,255,255,0.9);
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    animation: fadeDown 0.8s ease 0.3s both;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    padding: 0 28px;
+    animation: fadeUp 0.9s ease 0.1s both;
+  }
+
+  .hero-label {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    color: var(--green-light);
+    font-weight: 500;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+
+  .hero-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 30px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.45;
+    margin-bottom: 10px;
+    word-break: keep-all;
+  }
+
+  .hero-title em {
+    font-style: normal;
+    color: var(--gold-light);
+  }
+
+  .hero-subtitle {
+    font-size: 14px;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.7;
+    margin-bottom: 28px;
+    word-break: keep-all;
+  }
+
+  .hero-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .tag {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 5px 13px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.88);
+    font-weight: 400;
+  }
+
+  /* ── SCROLL INDICATOR ── */
+  .scroll-hint {
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    opacity: 0.55;
+    animation: bounce 2s ease infinite;
+  }
+  .scroll-hint span { font-size: 10px; color: #fff; letter-spacing: 0.08em; }
+  .scroll-hint::after {
+    content: '↓';
+    font-size: 16px;
+    color: #fff;
+  }
+
+  /* ── DOCTORS ── */
+  .doctors-section {
+    background: #fff;
+    padding: 40px 24px 36px;
+    border-bottom: 1px solid #e8f0eb;
+    animation: fadeUp 0.7s ease both;
+  }
+
+  .section-eyebrow {
+    font-size: 10.5px;
+    letter-spacing: 0.2em;
+    color: var(--green-mid);
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .section-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--dark);
+    line-height: 1.4;
+    margin-bottom: 24px;
+    word-break: keep-all;
+  }
+
+  .section-title span {
+    color: var(--green-main);
+  }
+
+  .doctors-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .doctor-card {
+    background: var(--green-mist);
+    border: 1px solid rgba(45,122,80,0.12);
+    border-radius: 16px;
+    padding: 20px 16px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .doctor-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--green-main), var(--green-light));
+  }
+
+  .doctor-icon {
+    width: 52px; height: 52px;
+    background: linear-gradient(135deg, var(--green-main), var(--green-mid));
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    margin: 0 auto 12px;
+    box-shadow: 0 4px 16px rgba(45,122,80,0.25);
+  }
+
+  .doctor-name {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 4px;
+  }
+
+  .doctor-title {
+    font-size: 11px;
+    color: var(--green-main);
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    margin-bottom: 8px;
+  }
+
+  .doctor-desc {
+    font-size: 11.5px;
+    color: var(--gray);
+    line-height: 1.6;
+  }
+
+  /* ── STRENGTHS ── */
+  .strengths-section {
+    background: var(--green-mist);
+    padding: 40px 24px;
+  }
+
+  .strength-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .strength-item {
+    background: #fff;
+    border-radius: 16px;
+    padding: 20px 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    box-shadow: 0 2px 12px rgba(26,92,56,0.06);
+    border-left: 3px solid var(--green-main);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .strength-item:active {
+    transform: scale(0.99);
+  }
+
+  .strength-icon {
+    width: 44px; height: 44px;
+    min-width: 44px;
+    background: linear-gradient(135deg, var(--green-pale), var(--green-mist));
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+  }
+
+  .strength-text h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 5px;
+    word-break: keep-all;
+  }
+
+  .strength-text p {
+    font-size: 13px;
+    color: var(--gray);
+    line-height: 1.65;
+    word-break: keep-all;
+  }
+
+  /* ── SERVICES ── */
+  .services-section {
+    background: #fff;
+    padding: 40px 24px;
+  }
+
+  .service-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .service-card {
+    background: var(--green-mist);
+    border-radius: 16px;
+    padding: 20px 16px;
+    border: 1px solid rgba(45,122,80,0.1);
+    transition: background 0.2s;
+  }
+
+  .service-card:active { background: var(--green-pale); }
+
+  .service-emoji {
+    font-size: 26px;
+    margin-bottom: 10px;
+  }
+
+  .service-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--green-deep);
+    margin-bottom: 6px;
+    word-break: keep-all;
+  }
+
+  .service-items {
+    font-size: 12px;
+    color: var(--gray);
+    line-height: 1.7;
+    word-break: keep-all;
+  }
+
+  /* ── CHECKUP BANNER ── */
+  .checkup-banner {
+    margin: 0 24px;
+    background: linear-gradient(120deg, var(--green-deep), var(--green-main));
+    border-radius: 18px;
+    padding: 22px 20px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+
+  .checkup-banner::after {
+    content: '🏥';
+    position: absolute;
+    right: 16px; top: 50%;
+    transform: translateY(-50%);
+    font-size: 52px;
+    opacity: 0.15;
+  }
+
+  .checkup-label {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--green-light);
+    font-weight: 600;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+
+  .checkup-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 6px;
+    word-break: keep-all;
+  }
+
+  .checkup-desc {
+    font-size: 12.5px;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.6;
+    word-break: keep-all;
+  }
+
+  /* ── LOCATION ── */
+  .location-section {
+    background: var(--green-mist);
+    padding: 40px 24px 36px;
+  }
+
+  .info-card {
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 16px rgba(26,92,56,0.07);
+  }
+
+  .info-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px 20px;
+    border-bottom: 1px solid #f0f5f2;
+  }
+  .info-row:last-child { border-bottom: none; }
+
+  .info-icon-wrap {
+    width: 36px; height: 36px;
+    min-width: 36px;
+    background: var(--green-pale);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    margin-top: 1px;
+  }
+
+  .info-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    color: var(--green-main);
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+  }
+
+  .info-value {
+    font-size: 13.5px;
+    color: var(--dark);
+    line-height: 1.65;
+    word-break: keep-all;
+  }
+
+  .info-value strong {
+    color: var(--green-deep);
+    font-weight: 700;
+  }
+
+  /* ── HOURS TABLE ── */
+  .hours-table {
+    width: 100%;
+    font-size: 13px;
+    border-collapse: collapse;
+  }
+
+  .hours-table tr td {
+    padding: 4px 0;
+    vertical-align: top;
+  }
+
+  .hours-table tr td:first-child {
+    color: var(--gray);
+    width: 110px;
+  }
+
+  .hours-table tr td:last-child {
+    color: var(--dark);
+    font-weight: 500;
+  }
+
+  .night-badge {
+    display: inline-block;
+    background: var(--green-pale);
+    color: var(--green-deep);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 10px;
+    margin-left: 4px;
+    vertical-align: middle;
+  }
+
+  /* ── TRUST FOOTER ── */
+  .trust-section {
+    background: var(--green-deep);
+    padding: 40px 28px 36px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .trust-section::before {
+    content: '＋';
+    position: absolute;
+    font-size: 200px;
+    color: rgba(255,255,255,0.03);
+    top: -30px; right: -20px;
+    font-weight: 300;
+    line-height: 1;
+  }
+
+  .trust-quote {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 17px;
+    font-weight: 600;
+    color: #fff;
+    line-height: 1.7;
+    margin-bottom: 14px;
+    position: relative;
+    z-index: 1;
+    word-break: keep-all;
+  }
+
+  .trust-quote::before {
+    content: '"';
+    font-family: 'Playfair Display', serif;
+    font-size: 40px;
+    color: var(--green-light);
+    opacity: 0.6;
+    display: block;
+    line-height: 0.8;
+    margin-bottom: 10px;
+  }
+
+  .trust-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.7;
+    word-break: keep-all;
+    position: relative;
+    z-index: 1;
+  }
+
+  .trust-clinic-name {
+    margin-top: 24px;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--green-light);
+    font-weight: 600;
+    text-transform: uppercase;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── FLOATING BUTTONS ── */
+  .floating-bar {
+    position: fixed;
+    bottom: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 100%; max-width: 480px;
+    padding: 12px 16px 20px;
+    background: rgba(253,250,245,0.95);
+    backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(45,122,80,0.12);
+    display: flex;
+    gap: 10px;
+    z-index: 999;
+    box-shadow: 0 -4px 24px rgba(26,92,56,0.12);
+  }
+
+  .btn-phone {
+    flex: 1;
+    background: linear-gradient(135deg, var(--green-main), var(--green-deep));
+    color: #fff;
+    border: none;
+    border-radius: 14px;
+    padding: 14px 12px;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: 'Noto Sans KR', sans-serif;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    box-shadow: 0 4px 16px rgba(45,122,80,0.35);
+    transition: opacity 0.15s;
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .btn-phone:active { opacity: 0.88; transform: scale(0.98); }
+
+  .btn-kakao {
+    flex: 1;
+    background: #FEE500;
+    color: #3A1D1D;
+    border: none;
+    border-radius: 14px;
+    padding: 14px 12px;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: 'Noto Sans KR', sans-serif;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    box-shadow: 0 4px 16px rgba(254,229,0,0.4);
+    transition: opacity 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .btn-kakao:active { opacity: 0.88; transform: scale(0.98); }
+
+  /* ── DIVIDER ── */
+  .section-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(45,122,80,0.15), transparent);
+    margin: 0 24px;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(6px); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-bg-pattern"></div>
+  <div class="hero-circles"></div>
+  <div class="hero-leaf">🌿</div>
+  <div class="hero-badge">벡스코역 2번 출구 · 도보 50m</div>
+  <div class="hero-content">
+    <div class="hero-label">속건강내과의원 · Gastro Health Clinic</div>
+    <h1 class="hero-title">속이 편해야<br><em>인생이 즐겁습니다</em></h1>
+    <p class="hero-subtitle">20년 경력 전문의의 정밀 진단<br>속건강내과의원</p>
+    <div class="hero-tags">
+      <span class="tag">#위대장내시경</span>
+      <span class="tag">#종합검진</span>
+      <span class="tag">#5대암검진</span>
+      <span class="tag">#수면내시경</span>
+      <span class="tag">#국민건강검진</span>
+    </div>
+  </div>
+  <div class="scroll-hint"><span>스크롤</span></div>
+</section>
+
+<!-- ── DOCTORS ── -->
+<section class="doctors-section reveal">
+  <div class="section-eyebrow">Our Doctors</div>
+  <h2 class="section-title">두 명의 <span>내과 전문의</span>가<br>직접 진료합니다</h2>
+  <div class="doctors-grid">
+    <div class="doctor-card">
+      <div class="doctor-icon">👨‍⚕️</div>
+      <div class="doctor-name">김민대</div>
+      <div class="doctor-title">대표원장 · 내과전문의</div>
+      <div class="doctor-desc">20년 이상<br>임상 경력</div>
+    </div>
+    <div class="doctor-card">
+      <div class="doctor-icon">👨‍⚕️</div>
+      <div class="doctor-name">강동구</div>
+      <div class="doctor-title">대표원장 · 내과전문의</div>
+      <div class="doctor-desc">20년 이상<br>임상 경력</div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ── STRENGTHS ── -->
+<section class="strengths-section reveal">
+  <div class="section-eyebrow">Why Us</div>
+  <h2 class="section-title">왜 <span>속건강내과</span>인가요?</h2>
+  <div class="strength-list">
+    <div class="strength-item">
+      <div class="strength-icon">🎯</div>
+      <div class="strength-text">
+        <h3>20년 이상 풍부한 임상 경험</h3>
+        <p>숙련된 내과 전문의 대표원장 2인이 직접 세밀하게 진료합니다.</p>
+      </div>
+    </div>
+    <div class="strength-item">
+      <div class="strength-icon">✨</div>
+      <div class="strength-text">
+        <h3>최신 고해상도 내시경 장비</h3>
+        <p>아주 작은 병변도 놓치지 않는 정밀 검사 시스템을 갖추고 있습니다.</p>
+      </div>
+    </div>
+    <div class="strength-item">
+      <div class="strength-icon">🛡️</div>
+      <div class="strength-text">
+        <h3>철저한 위생 & 안전 관리</h3>
+        <p>일회용 소모품 사용 및 엄격한 소독 프로세스로 안심하고 검사받으실 수 있습니다.</p>
+      </div>
+    </div>
+    <div class="strength-item">
+      <div class="strength-icon">📱</div>
+      <div class="strength-text">
+        <h3>당일 검사 결과 확인 가능</h3>
+        <p>바쁜 현대인을 위해 신속하고 정확한 검진 결과를 제공합니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SERVICES ── -->
+<section class="services-section reveal">
+  <div class="section-eyebrow">Services</div>
+  <h2 class="section-title">주요 <span>진료 항목</span></h2>
+  <div class="service-grid">
+    <div class="service-card">
+      <div class="service-emoji">🔍</div>
+      <div class="service-name">내시경 센터</div>
+      <div class="service-items">위·대장 수면 내시경<br>용종 절제술</div>
+    </div>
+    <div class="service-card">
+      <div class="service-emoji">🏥</div>
+      <div class="service-name">건강검진 센터</div>
+      <div class="service-items">국가 5대 암검진<br>채용·종합 검진</div>
+    </div>
+    <div class="service-card">
+      <div class="service-emoji">🧪</div>
+      <div class="service-name">만성질환 관리</div>
+      <div class="service-items">고혈압·당뇨<br>고지혈증 관리</div>
+    </div>
+    <div class="service-card">
+      <div class="service-emoji">💧</div>
+      <div class="service-name">수액 클리닉</div>
+      <div class="service-items">맞춤형 영양<br>수액 치료</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CHECKUP BANNER ── -->
+<div class="checkup-banner reveal">
+  <div class="checkup-label">국민건강보험 건강검진</div>
+  <div class="checkup-title">공단 건강검진 · 5대 암검진<br>일요일 검진도 가능합니다</div>
+  <div class="checkup-desc">국민건강보험 적용 건강검진을 연중 시행합니다.<br>주말 방문도 편리하게 이용하세요.</div>
+</div>
+
+<!-- ── LOCATION ── -->
+<section class="location-section reveal">
+  <div class="section-eyebrow">Location & Hours</div>
+  <h2 class="section-title">오시는 길 & <span>진료 시간</span></h2>
+  <div class="info-card">
+    <div class="info-row">
+      <div class="info-icon-wrap">📍</div>
+      <div>
+        <div class="info-label">위치</div>
+        <div class="info-value">부산 해운대구 해운대로 407<br>(우동, 신세계프라자) <strong>4층</strong></div>
+      </div>
+    </div>
+    <div class="info-row">
+      <div class="info-icon-wrap">🚇</div>
+      <div>
+        <div class="info-label">지하철</div>
+        <div class="info-value">2호선 <strong>벡스코역 2번 출구</strong>에서 도보 50m</div>
+      </div>
+    </div>
+    <div class="info-row">
+      <div class="info-icon-wrap">🚗</div>
+      <div>
+        <div class="info-label">주차</div>
+        <div class="info-value">건물 내 지상·지하 주차장<br><strong>무료 주차 지원</strong></div>
+      </div>
+    </div>
+    <div class="info-row">
+      <div class="info-icon-wrap">⏰</div>
+      <div>
+        <div class="info-label">진료 시간</div>
+        <div class="info-value">
+          <table class="hours-table">
+            <tr>
+              <td>월 · 금</td>
+              <td>09:00 — 20:00 <span class="night-badge">야간</span></td>
+            </tr>
+            <tr>
+              <td>화 · 수 · 목</td>
+              <td>09:00 — 18:00</td>
+            </tr>
+            <tr>
+              <td>토 · 일 · 공휴일</td>
+              <td>09:00 — 13:00</td>
+            </tr>
+          </table>
+          <div style="margin-top:8px; font-size:12px; color:var(--green-main); font-weight:600;">✅ 일요일도 검진 가능</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── TRUST FOOTER ── -->
+<section class="trust-section reveal">
+  <div class="trust-quote">내 가족을 생각하는 마음으로<br>성심껏 진료합니다</div>
+  <div class="trust-sub">불편한 속, 참지 말고<br>벡스코역 앞 속건강내과에서<br>정확하게 진단받으세요.</div>
+  <div class="trust-clinic-name">속건강내과의원 · Sokgeongang Clinic</div>
+</section>
+
+<!-- ── FLOATING CTA ── -->
+<div class="floating-bar">
+  <a class="btn-phone" href="tel:051-746-6002">
+    📞 전화 예약  051-746-6002
+  </a>
+  <button class="btn-kakao" onclick="alert('카카오 상담으로 연결됩니다.')">
+    💬 카톡 상담
+  </button>
+</div>
+
+<script>
+  // Intersection Observer for scroll reveals
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => {
+          entry.target.classList.add('visible');
+        }, 60);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LUNA NAIL · 루나네일</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Noto+Sans+KR:wght@300;400;500;700&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --blush:    #f5e6e0;
+  --rose:     #d4748a;
+  --deep:     #9b3a5a;
+  --nude:     #c9a98e;
+  --dark:     #1e1218;
+  --charcoal: #2d2028;
+  --muted:    #8a7075;
+  --cream:    #fdf8f5;
+  --white:    #ffffff;
+  --gold:     #c8a96e;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: var(--cream);
+  color: var(--dark);
+  max-width: 480px;
+  margin: 0 auto;
+  overflow-x: hidden;
+}
+
+/* ════ HERO ════ */
+.hero {
+  position: relative;
+  height: 100svh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: flex-end;
+  padding-bottom: 64px;
+  overflow: hidden;
+}
+
+/* 배경 — 감각적인 핑크-다크 그라디언트 */
+.hero-bg {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(160deg, #1e1218 0%, #2d1525 40%, #4a1e32 70%, #9b3a5a 100%);
+}
+
+/* 배경 원형 장식 */
+.hero-circle-1 {
+  position: absolute;
+  width: 380px; height: 380px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(212,116,138,0.25) 0%, transparent 70%);
+  top: -80px; right: -100px;
+}
+.hero-circle-2 {
+  position: absolute;
+  width: 260px; height: 260px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(200,169,142,0.15) 0%, transparent 70%);
+  bottom: 40px; left: -60px;
+}
+
+/* 네일 아트 SVG 장식 — 우상단 */
+.hero-deco {
+  position: absolute; top: 40px; right: 24px;
+  opacity: 0.2;
+}
+
+/* 로고 */
+.hero-logo-wrap {
+  position: absolute;
+  top: 52px; left: 0; right: 0;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 8px;
+}
+
+.hero-logo-en {
+  font-family: 'Cinzel', serif;
+  font-size: 32px; font-weight: 600;
+  letter-spacing: 8px;
+  color: white;
+  opacity: 0;
+  animation: fadeUp 1s ease forwards 0.3s;
+}
+
+.hero-logo-kr {
+  font-size: 12px; font-weight: 300;
+  letter-spacing: 6px;
+  color: rgba(255,255,255,0.45);
+  opacity: 0;
+  animation: fadeUp 1s ease forwards 0.6s;
+}
+
+/* 중앙 손 일러스트 영역 */
+.hero-hand {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -52%);
+  width: 280px; height: 280px;
+}
+
+/* 하단 태그라인 */
+.hero-tagline {
+  position: relative; z-index: 1;
+  text-align: center;
+  opacity: 0;
+  animation: fadeUp 1s ease forwards 1.2s;
+}
+
+.hero-tagline-main {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px; font-style: italic; font-weight: 300;
+  color: rgba(255,255,255,0.9);
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+
+.hero-tagline-sub {
+  font-size: 11px; font-weight: 300;
+  letter-spacing: 4px;
+  color: rgba(255,255,255,0.4);
+}
+
+/* 스크롤 힌트 */
+.scroll-hint {
+  position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%);
+  opacity: 0; animation: fadeUp 1s ease forwards 2s;
+}
+.scroll-hint span {
+  display: block; width: 1px; height: 40px; margin: 0 auto;
+  background: linear-gradient(180deg, transparent, rgba(212,116,138,0.8));
+  animation: lineGrow 2s ease-in-out infinite 2.2s;
+}
+
+/* ════ 공통 섹션 ════ */
+section { position: relative; }
+
+.section-header { text-align: center; margin-bottom: 36px; }
+
+.section-en {
+  font-family: 'Cinzel', serif;
+  font-size: 9px; letter-spacing: 5px;
+  color: var(--rose); display: block;
+  margin-bottom: 10px;
+}
+
+.section-kr {
+  font-size: 22px; font-weight: 700;
+  color: var(--dark); letter-spacing: -0.5px;
+}
+
+/* ════ 공지 배너 ════ */
+.notice-banner {
+  background: var(--deep);
+  color: white;
+  text-align: center;
+  padding: 12px 20px;
+  font-size: 12px; letter-spacing: 1px;
+  font-weight: 300;
+}
+.notice-banner strong { color: var(--gold); font-weight: 500; }
+
+/* ════ 소개 섹션 ════ */
+.about-section {
+  background: var(--cream);
+  padding: 72px 36px;
+}
+
+.about-body {
+  font-size: 14px; line-height: 2.4;
+  color: var(--muted); text-align: center;
+  word-break: keep-all;
+}
+
+.about-body em {
+  font-style: normal;
+  color: var(--deep); font-weight: 700;
+}
+
+.about-stats {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1px; margin-top: 48px;
+  background: rgba(212,116,138,0.15);
+  border: 1px solid rgba(212,116,138,0.15);
+  border-radius: 2px; overflow: hidden;
+}
+
+.stat-item {
+  background: white;
+  padding: 20px 12px; text-align: center;
+}
+
+.stat-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 36px; font-weight: 600;
+  color: var(--deep); line-height: 1;
+  display: block;
+}
+
+.stat-label {
+  font-size: 10px; letter-spacing: 2px;
+  color: var(--muted); margin-top: 6px;
+  font-weight: 300;
+}
+
+/* ════ 메뉴 섹션 ════ */
+.menu-section {
+  background: var(--charcoal);
+  padding: 72px 36px;
+}
+
+.menu-section .section-en { color: var(--nude); }
+.menu-section .section-kr { color: white; }
+
+.menu-tabs {
+  display: flex; gap: 8px;
+  margin-bottom: 28px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: none;
+}
+.menu-tabs::-webkit-scrollbar { display: none; }
+
+.menu-tab {
+  flex-shrink: 0;
+  padding: 8px 18px;
+  border-radius: 40px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: transparent;
+  color: rgba(255,255,255,0.45);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 12px; letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.menu-tab.active {
+  background: var(--rose);
+  border-color: var(--rose);
+  color: white;
+}
+
+.menu-panel { display: none; }
+.menu-panel.active { display: block; }
+
+.menu-item {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  padding: 18px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+
+.menu-item:last-child { border-bottom: none; }
+
+.menu-name {
+  font-size: 15px; font-weight: 500; color: white;
+  margin-bottom: 4px;
+}
+
+.menu-desc {
+  font-size: 12px; color: rgba(255,255,255,0.35);
+  font-weight: 300; line-height: 1.6;
+}
+
+.menu-price {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px; font-weight: 600;
+  color: var(--nude); white-space: nowrap;
+  margin-left: 16px; padding-top: 2px;
+}
+
+.menu-badge {
+  display: inline-block;
+  background: var(--rose);
+  color: white; font-size: 9px; letter-spacing: 1px;
+  padding: 2px 8px; border-radius: 10px;
+  margin-left: 8px; vertical-align: middle;
+}
+
+/* ════ 포트폴리오 ════ */
+.portfolio-section {
+  background: var(--blush);
+  padding: 72px 36px;
+}
+
+.portfolio-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px; margin-top: 0;
+}
+
+.portfolio-item {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.portfolio-item:first-child {
+  grid-column: span 2;
+  grid-row: span 2;
+  aspect-ratio: auto;
+}
+
+.portfolio-thumb {
+  width: 100%; height: 100%; min-height: 110px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px;
+  transition: transform 0.3s ease;
+}
+
+.portfolio-item:hover .portfolio-thumb { transform: scale(1.05); }
+
+.portfolio-overlay {
+  position: absolute; inset: 0;
+  background: rgba(155,58,90,0);
+  transition: background 0.3s ease;
+  display: flex; align-items: center; justify-content: center;
+}
+.portfolio-item:hover .portfolio-overlay {
+  background: rgba(155,58,90,0.35);
+}
+.portfolio-overlay span {
+  font-size: 11px; letter-spacing: 2px; color: white;
+  opacity: 0; transition: opacity 0.3s;
+}
+.portfolio-item:hover .portfolio-overlay span { opacity: 1; }
+
+/* ════ 예약 방법 ════ */
+.booking-section {
+  background: var(--cream);
+  padding: 72px 36px;
+}
+
+.booking-steps {
+  display: flex; flex-direction: column; gap: 16px;
+  margin-bottom: 40px;
+}
+
+.booking-step {
+  display: flex; gap: 20px; align-items: flex-start;
+}
+
+.step-num {
+  width: 36px; height: 36px; flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--deep);
+  color: white;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px; font-weight: 600;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.step-body { padding-top: 4px; }
+.step-title { font-size: 15px; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
+.step-desc  { font-size: 13px; color: var(--muted); line-height: 1.7; font-weight: 300; }
+
+/* 예약 버튼들 */
+.booking-btns {
+  display: flex; flex-direction: column; gap: 12px;
+}
+
+.booking-btn {
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  padding: 16px 24px;
+  border-radius: 2px; border: none;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 14px; letter-spacing: 1px;
+  cursor: pointer; text-decoration: none;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.booking-btn.kakao {
+  background: #FEE500; color: #3A1D1D;
+}
+.booking-btn.insta {
+  background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+  color: white;
+}
+.booking-btn.call {
+  background: var(--deep); color: white;
+}
+.booking-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+
+/* ════ 운영 정보 ════ */
+.info-section {
+  background: var(--dark);
+  padding: 64px 36px;
+}
+
+.info-section .section-en { color: var(--nude); }
+.info-section .section-kr { color: white; }
+
+.info-rows {
+  display: flex; flex-direction: column;
+  gap: 0;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 2px; overflow: hidden;
+}
+
+.info-row {
+  display: flex; gap: 20px;
+  padding: 18px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  align-items: flex-start;
+}
+.info-row:last-child { border-bottom: none; }
+
+.info-icon {
+  font-size: 18px; flex-shrink: 0; margin-top: 1px;
+}
+
+.info-content { flex: 1; }
+.info-label {
+  font-size: 10px; letter-spacing: 3px;
+  color: var(--nude); display: block; margin-bottom: 6px;
+  font-weight: 300;
+}
+.info-value {
+  font-size: 14px; color: rgba(255,255,255,0.8);
+  line-height: 1.9; font-weight: 300;
+}
+.info-value strong { color: white; font-weight: 500; }
+.info-value .closed { color: var(--rose); }
+
+/* ════ 지도 ════ */
+.map-section {
+  background: var(--dark);
+  padding: 0 0 64px;
+}
+
+.map-iframe-wrap {
+  width: 100%; height: 220px;
+  overflow: hidden;
+}
+.map-iframe-wrap iframe {
+  width: 100%; height: 100%; border: none;
+  filter: grayscale(30%) sepia(10%);
+}
+
+.map-actions {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 8px; padding: 16px 36px 0;
+}
+
+.map-btn {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 12px; border: none; cursor: pointer;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 12px; letter-spacing: 1px;
+  text-decoration: none; transition: opacity 0.2s; border-radius: 2px;
+}
+.map-btn:hover { opacity: 0.85; }
+.map-btn.kakao { background: #FEE500; color: #3A1D1D; }
+.map-btn.naver { background: #03C75A; color: white; }
+
+.addr-copy-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: calc(100% - 72px); margin: 10px 36px 0;
+  padding: 12px;
+  background: rgba(255,255,255,0.07);
+  color: rgba(255,255,255,0.5);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 2px; cursor: pointer;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 12px; letter-spacing: 1px;
+  transition: all 0.2s;
+}
+.addr-copy-btn:hover { background: rgba(255,255,255,0.12); color: white; }
+.addr-copy-btn.copied { background: var(--rose); color: white; border-color: var(--rose); }
+
+/* ════ 리뷰 ════ */
+.review-section {
+  background: white;
+  padding: 72px 36px;
+}
+
+.review-cards {
+  display: flex; flex-direction: column; gap: 16px;
+}
+
+.review-card {
+  background: var(--cream);
+  padding: 24px;
+  border-radius: 2px;
+  border-left: 3px solid var(--rose);
+}
+
+.review-stars {
+  color: var(--gold); font-size: 13px;
+  letter-spacing: 2px; margin-bottom: 12px;
+}
+
+.review-text {
+  font-size: 14px; line-height: 2; color: var(--ash);
+  word-break: keep-all; font-weight: 300;
+}
+
+.review-author {
+  margin-top: 14px;
+  font-size: 12px; color: var(--muted);
+  letter-spacing: 1px;
+}
+
+/* ════ 푸터 ════ */
+footer {
+  background: var(--charcoal);
+  padding: 48px 36px 60px;
+  text-align: center;
+}
+
+.footer-logo {
+  font-family: 'Cinzel', serif;
+  font-size: 20px; letter-spacing: 6px;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 6px;
+}
+
+.footer-tagline {
+  font-size: 11px; letter-spacing: 3px;
+  color: rgba(255,255,255,0.2);
+  margin-bottom: 28px;
+}
+
+.footer-sns {
+  display: flex; justify-content: center; gap: 16px;
+  margin-bottom: 28px;
+}
+
+.sns-btn {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; text-decoration: none;
+  transition: background 0.2s;
+}
+.sns-btn:hover { background: rgba(255,255,255,0.15); }
+
+.footer-copy {
+  font-size: 10px; letter-spacing: 1px;
+  color: rgba(255,255,255,0.15);
+}
+
+/* 플로팅 예약 버튼 */
+.floating-btn {
+  position: fixed; bottom: 24px; right: 50%;
+  transform: translateX(200px);
+  background: var(--deep);
+  color: white; border: none; cursor: pointer;
+  padding: 14px 24px; border-radius: 40px;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 13px; letter-spacing: 1px; font-weight: 500;
+  box-shadow: 0 4px 20px rgba(155,58,90,0.5);
+  z-index: 200;
+  display: flex; align-items: center; gap: 8px;
+  text-decoration: none;
+  animation: floatUp 0.6s ease forwards 2s;
+  opacity: 0; transform: translateX(200px) translateY(10px);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.floating-btn:hover {
+  box-shadow: 0 6px 28px rgba(155,58,90,0.7);
+  transform: translateX(200px) translateY(-2px);
+}
+
+@keyframes floatUp {
+  to { opacity: 1; transform: translateX(200px) translateY(0); }
+}
+
+/* ════ 애니메이션 ════ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes lineGrow {
+  0%,100% { transform: scaleY(1); opacity: 1; }
+  50%      { transform: scaleY(0.3); opacity: 0.2; }
+}
+.reveal {
+  opacity: 0; transform: translateY(28px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.reveal.visible { opacity: 1; transform: none; }
+</style>
+</head>
+<body>
+
+<!-- ════ HERO ════ -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-circle-1"></div>
+  <div class="hero-circle-2"></div>
+
+  <!-- 네일 손 일러스트 SVG -->
+  <svg class="hero-hand" viewBox="0 0 280 280" fill="none">
+    <!-- 손 실루엣 -->
+    <ellipse cx="140" cy="200" rx="70" ry="55" fill="rgba(212,116,138,0.08)"/>
+    <!-- 손가락들 -->
+    <rect x="80" y="100" width="22" height="80" rx="11" fill="rgba(245,230,224,0.12)"/>
+    <rect x="108" y="80" width="22" height="100" rx="11" fill="rgba(245,230,224,0.15)"/>
+    <rect x="136" y="75" width="22" height="105" rx="11" fill="rgba(245,230,224,0.15)"/>
+    <rect x="164" y="85" width="22" height="95" rx="11" fill="rgba(245,230,224,0.12)"/>
+    <rect x="190" y="115" width="18" height="65" rx="9" fill="rgba(245,230,224,0.1)"/>
+    <!-- 네일 -->
+    <ellipse cx="91" cy="108" rx="8" ry="10" fill="rgba(212,116,138,0.6)"/>
+    <ellipse cx="119" cy="88" rx="8" ry="10" fill="rgba(155,58,90,0.7)"/>
+    <ellipse cx="147" cy="83" rx="8" ry="10" fill="rgba(200,169,142,0.65)"/>
+    <ellipse cx="175" cy="93" rx="8" ry="10" fill="rgba(212,116,138,0.6)"/>
+    <ellipse cx="199" cy="122" rx="7" ry="8" fill="rgba(155,58,90,0.55)"/>
+    <!-- 반짝이 효과 -->
+    <circle cx="147" cy="76" r="2" fill="rgba(255,255,255,0.8)"/>
+    <circle cx="119" cy="82" r="1.5" fill="rgba(255,255,255,0.6)"/>
+    <circle cx="175" cy="88" r="1.5" fill="rgba(255,255,255,0.6)"/>
+    <circle cx="160" cy="68" r="1" fill="rgba(255,255,255,0.4)"/>
+    <circle cx="132" cy="65" r="1" fill="rgba(255,255,255,0.4)"/>
+  </svg>
+
+  <div class="hero-logo-wrap">
+    <div class="hero-logo-en">LUNA NAIL</div>
+    <div class="hero-logo-kr">루 나 네 일</div>
+  </div>
+
+  <div class="hero-tagline">
+    <div class="hero-tagline-main">Your nails, your story.</div>
+    <div class="hero-tagline-sub">PREMIUM NAIL ART STUDIO · BUSAN</div>
+  </div>
+
+  <div class="scroll-hint"><span></span></div>
+</section>
+
+<!-- 공지 배너 -->
+<div class="notice-banner reveal">
+  🎀 5월 특가 — <strong>젤네일 전 메뉴 20% 할인</strong> · 5월 31일까지
+</div>
+
+<!-- ════ 소개 ════ -->
+<section class="about-section reveal">
+  <div class="section-header">
+    <span class="section-en">ABOUT US</span>
+    <span class="section-kr">루나네일 소개</span>
+  </div>
+  <p class="about-body">
+    <em>10년 경력</em>의 아티스트가 직접 시술하는<br>
+    프리미엄 네일 아트 스튜디오입니다.<br><br>
+    트렌디한 디자인부터 섬세한 손 케어까지,<br>
+    당신의 손끝에 <em>특별한 이야기</em>를 담아드립니다.<br><br>
+    모든 시술은 <em>안전한 재료</em>만을 사용하며<br>
+    1:1 개인 맞춤 상담으로 진행됩니다.
+  </p>
+  <div class="about-stats">
+    <div class="stat-item">
+      <span class="stat-num">10+</span>
+      <div class="stat-label">경력 연수</div>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">3천+</span>
+      <div class="stat-label">누적 고객</div>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">4.9★</span>
+      <div class="stat-label">평균 리뷰</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ 메뉴 ════ -->
+<section class="menu-section reveal">
+  <div class="section-header">
+    <span class="section-en">MENU &amp; PRICE</span>
+    <span class="section-kr">메뉴 &amp; 가격</span>
+  </div>
+
+  <div class="menu-tabs">
+    <button class="menu-tab active" onclick="switchTab(this,'gel')">젤네일</button>
+    <button class="menu-tab" onclick="switchTab(this,'care')">케어</button>
+    <button class="menu-tab" onclick="switchTab(this,'art')">아트</button>
+    <button class="menu-tab" onclick="switchTab(this,'remove')">제거</button>
+  </div>
+
+  <div class="menu-panel active" id="tab-gel">
+    <div class="menu-item">
+      <div>
+        <div class="menu-name">단색 젤네일 <span class="menu-badge">BEST</span></div>
+        <div class="menu-desc">선명하고 오래가는 단색 젤 코팅</div>
+      </div>
+      <div class="menu-price">4만원~</div>
+    </div>
+    <div class="menu-item">
+      <div>
+        <div class="menu-name">그라데이션 젤</div>
+        <div class="menu-desc">자연스러운 투톤 그라데이션</div>
+      </div>
+      <div class="menu-price">5만원~</div>
+    </div>
+    <div class="menu-item">
+      <div>
+        <div class="menu-name">풀 아트 젤 <span class="menu-badge">NEW</span></div>
+        <div class="menu-desc">전체 손 디자인 아트 시술</div>
+      </div>
+      <div class="menu-price">7만원~</div>
+    </div>
+  </div>
+
+  <div class="menu-panel" id="tab-care">
+    <div class="menu-item">
+      <div>
+        <div class="menu-name">기본 케어</div>
+        <div class="menu-desc">큐티클 정리 + 보습 케어</div>
+      </div>
+      <div class="menu-price">1만원~</div>
+    </div>
+    <div class="menu-item">
+      <div>
+        <div class="menu-name">딥 모이스처 케어</div>
+        <div class="menu-desc">집중 보습 + 마사지 케어</div>
+      </div>
+      <div class="menu-price">2만원~</div>
+    </div>
+    <div class="menu-item">
+      <div>
+        <div class="menu-name">발 케어 풀 패키지 <span class="menu-badge">BEST</span></div>
+        <div class="menu-desc">각질 제거 + 보습 + 페디큐어</div>
+      </div>
+      <div class="menu-price">5만원~</div>
+    </div>
+  </div>
+
+  <div class="menu-panel" id="tab-art">
+    <div class="menu-item">
+      <div>
+        <div class="menu-name">프렌치 아트</div>
+        <div class="menu-desc">클래식 / 컬러 프렌치</div>
+      </div>
+      <div class="menu-price">5만원~</div>
+    </div>
+    <div class="menu-item">
+      <div>
+        <div class="menu-name">캐릭터 / 포인트 아트</div>
+        <div class="menu-desc">1~2개 포인트 아트 추가</div>
+      </div>
+      <div class="menu-price">+5천원~</div>
+    </div>
+    <div class="menu-item">
+      <div>
+        <div class="menu-name">3D 아트 <span class="menu-badge">NEW</span></div>
+        <div class="menu-desc">젤 조각 / 스톤 3D 아트</div>
+      </div>
+      <div class="menu-price">+1만원~</div>
+    </div>
+  </div>
+
+  <div class="menu-panel" id="tab-remove">
+    <div class="menu-item">
+      <div>
+        <div class="menu-name">젤 제거</div>
+        <div class="menu-desc">기존 젤네일 안전 제거</div>
+      </div>
+      <div class="menu-price">1만원~</div>
+    </div>
+    <div class="menu-item">
+      <div>
+        <div class="menu-name">아크릴 / 빌더 제거</div>
+        <div class="menu-desc">두꺼운 아크릴 전문 제거</div>
+      </div>
+      <div class="menu-price">2만원~</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ 포트폴리오 ════ -->
+<section class="portfolio-section reveal">
+  <div class="section-header">
+    <span class="section-en">PORTFOLIO</span>
+    <span class="section-kr">시술 사진</span>
+  </div>
+  <div class="portfolio-grid">
+    <div class="portfolio-item">
+      <div class="portfolio-thumb" style="background:linear-gradient(135deg,#f5c6d0,#e8929f); min-height:220px; font-size:40px;">💅</div>
+      <div class="portfolio-overlay"><span>VIEW</span></div>
+    </div>
+    <div class="portfolio-item">
+      <div class="portfolio-thumb" style="background:linear-gradient(135deg,#c9a98e,#b08060);">🌸</div>
+      <div class="portfolio-overlay"><span>VIEW</span></div>
+    </div>
+    <div class="portfolio-item">
+      <div class="portfolio-thumb" style="background:linear-gradient(135deg,#d4748a,#c05070);">✨</div>
+      <div class="portfolio-overlay"><span>VIEW</span></div>
+    </div>
+    <div class="portfolio-item">
+      <div class="portfolio-thumb" style="background:linear-gradient(135deg,#9b3a5a,#7a2040);">💎</div>
+      <div class="portfolio-overlay"><span>VIEW</span></div>
+    </div>
+    <div class="portfolio-item">
+      <div class="portfolio-thumb" style="background:linear-gradient(135deg,#e8c4d0,#d4a0b5);">🎀</div>
+      <div class="portfolio-overlay"><span>VIEW</span></div>
+    </div>
+  </div>
+  <p style="text-align:center; margin-top:20px; font-size:12px; color:var(--muted); letter-spacing:2px;">
+    더 많은 작품은 인스타그램에서 확인하세요
+  </p>
+</section>
+
+<!-- ════ 예약 방법 ════ -->
+<section class="booking-section reveal">
+  <div class="section-header">
+    <span class="section-en">RESERVATION</span>
+    <span class="section-kr">예약하기</span>
+  </div>
+
+  <div class="booking-steps">
+    <div class="booking-step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <div class="step-title">원하는 디자인 선택</div>
+        <div class="step-desc">인스타그램 포트폴리오에서 원하는 스타일을 골라두세요</div>
+      </div>
+    </div>
+    <div class="booking-step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <div class="step-title">카카오톡 또는 전화 예약</div>
+        <div class="step-desc">희망 날짜·시간·메뉴를 함께 알려주세요</div>
+      </div>
+    </div>
+    <div class="booking-step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <div class="step-title">방문 &amp; 1:1 상담</div>
+        <div class="step-desc">당일 취향·손 상태를 확인 후 맞춤 시술을 진행합니다</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="booking-btns">
+    <a class="booking-btn kakao" href="https://open.kakao.com/o/example" target="_blank">
+      💬 카카오톡으로 예약하기
+    </a>
+    <a class="booking-btn insta" href="https://instagram.com/lunanail_busan" target="_blank">
+      📷 인스타그램 DM 예약
+    </a>
+    <a class="booking-btn call" href="tel:051-000-0000">
+      📞 전화 예약 · 051-000-0000
+    </a>
+  </div>
+</section>
+
+<!-- ════ 운영 정보 ════ -->
+<section class="info-section reveal">
+  <div class="section-header" style="margin-bottom:28px;">
+    <span class="section-en">INFORMATION</span>
+    <span class="section-kr">운영 안내</span>
+  </div>
+  <div class="info-rows">
+    <div class="info-row">
+      <div class="info-icon">🕐</div>
+      <div class="info-content">
+        <span class="info-label">OPEN HOURS</span>
+        <div class="info-value">
+          <strong>화 — 토</strong> 오전 10시 — 오후 8시<br>
+          <strong>일</strong> 오전 11시 — 오후 6시<br>
+          <span class="closed">월요일 휴무</span>
+        </div>
+      </div>
+    </div>
+    <div class="info-row">
+      <div class="info-icon">📍</div>
+      <div class="info-content">
+        <span class="info-label">ADDRESS</span>
+        <div class="info-value">부산시 해운대구 해운대로 123<br>○○빌딩 3층 루나네일</div>
+      </div>
+    </div>
+    <div class="info-row">
+      <div class="info-icon">💳</div>
+      <div class="info-content">
+        <span class="info-label">PAYMENT</span>
+        <div class="info-value">현금 · 카드 · 계좌이체<br>카카오페이 · 네이버페이</div>
+      </div>
+    </div>
+    <div class="info-row">
+      <div class="info-icon">⚠️</div>
+      <div class="info-content">
+        <span class="info-label">NOTICE</span>
+        <div class="info-value">예약 취소는 <strong>24시간 전</strong>까지<br>노쇼 시 예약 제한이 있을 수 있습니다</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ 지도 ════ -->
+<div class="map-section reveal">
+  <div class="map-iframe-wrap">
+    <iframe
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3262.5!2d129.1602!3d35.1587!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3568ecc3d7b7e0e5%3A0x3e2e3f1234567890!2z7ZWc7IucIOyEseyLnOq1rA!5e0!3m2!1sko!2skr!4v1699000000000"
+      allowfullscreen="" loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade" title="루나네일 위치">
+    </iframe>
+  </div>
+  <div class="map-actions">
+    <a class="map-btn kakao" href="https://map.kakao.com/link/search/루나네일+해운대" target="_blank">🟡 카카오맵</a>
+    <a class="map-btn naver" href="https://map.naver.com/v5/search/루나네일+해운대" target="_blank">🟢 네이버지도</a>
+  </div>
+  <button class="addr-copy-btn" id="addr-btn" onclick="copyAddr()">
+    📋 주소 복사하기
+  </button>
+</div>
+
+<!-- ════ 리뷰 ════ -->
+<section class="review-section reveal">
+  <div class="section-header">
+    <span class="section-en" style="color:var(--rose);">REVIEWS</span>
+    <span class="section-kr">고객 후기</span>
+  </div>
+  <div class="review-cards">
+    <div class="review-card">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">디자인 상담부터 시술까지 꼼꼼하게 해주셔서 정말 만족스러웠어요. 2주가 지났는데도 전혀 들뜨지 않고 처음처럼 예쁘게 유지되고 있어요!</p>
+      <div class="review-author">— 김○○님 · 단골 3년차</div>
+    </div>
+    <div class="review-card">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">인스타에서 봤던 그 디자인 그대로 똑같이 해주셨어요. 가격도 합리적이고 원장님이 너무 친절하세요. 다음 달도 예약했습니다 🩷</p>
+      <div class="review-author">— 이○○님 · 신규 고객</div>
+    </div>
+    <div class="review-card">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">손이 예민해서 늘 걱정했는데 안전한 재료 쓴다고 하셔서 믿고 받았어요. 이제 여기 아니면 못 가겠어요!</p>
+      <div class="review-author">— 박○○님 · 단골 1년차</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ 푸터 ════ -->
+<footer>
+  <div class="footer-logo">LUNA NAIL</div>
+  <div class="footer-tagline">Your nails, your story.</div>
+  <div class="footer-sns">
+    <a class="sns-btn" href="#" target="_blank">📷</a>
+    <a class="sns-btn" href="#" target="_blank">💬</a>
+    <a class="sns-btn" href="tel:051-000-0000">📞</a>
+  </div>
+  <div class="footer-copy">© 2026 LUNA NAIL · ALL RIGHTS RESERVED</div>
+</footer>
+
+<!-- 플로팅 예약 버튼 -->
+<a class="floating-btn" href="https://open.kakao.com/o/example" target="_blank">
+  💬 지금 예약하기
+</a>
+
+<script>
+// 메뉴 탭 전환
+function switchTab(btn, id) {
+  document.querySelectorAll('.menu-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.menu-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-' + id).classList.add('active');
+}
+
+// 주소 복사
+function copyAddr() {
+  const addr = '부산시 해운대구 해운대로 123 ○○빌딩 3층 루나네일';
+  const btn = document.getElementById('addr-btn');
+  navigator.clipboard.writeText(addr).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = addr; document.body.appendChild(ta);
+    ta.select(); document.execCommand('copy');
+    document.body.removeChild(ta);
+  }).finally(() => {});
+  btn.textContent = '✓ 주소가 복사되었습니다';
+  btn.classList.add('copied');
+  setTimeout(() => {
+    btn.textContent = '📋 주소 복사하기';
+    btn.classList.remove('copied');
+  }, 2500);
+}
+
+// 스크롤 reveal
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(r => obs.observe(r));
+</script>
+</body>
+</html>
