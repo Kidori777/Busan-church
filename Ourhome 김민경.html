@@ -113,29 +113,29 @@
     font-size: 12px; font-weight: 700;
     padding: 5px 14px; border-radius: 4px; letter-spacing: 0.04em;
   }
-  .rank-dept { color: rgba(255,255,255,0.5); font-size: 13px; }
+  .rank-dept { color: rgba(255,255,255,0.85); font-size: 14px; font-weight: 500; }
 
   .hero-quote {
-    font-size: 15px; line-height: 1.95;
-    color: rgba(255,255,255,0.55);
+    font-size: 15px; line-height: 2.0;
+    color: rgba(255,255,255,0.82);
     max-width: 420px; margin-bottom: 48px;
     word-break: keep-all;
     animation: fadeUp .7s ease .24s both;
   }
-  .hero-quote strong { color: rgba(255,255,255,0.85); font-weight: 600; }
+  .hero-quote strong { color: #ffffff; font-weight: 700; }
 
   /* 연락처 */
   .contacts { display:flex; flex-direction:column; gap:12px; animation: fadeUp .7s ease .32s both; }
   .c-item { display:flex; align-items:center; gap:14px; }
   .c-ico {
     width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
-    background: rgba(232,114,12,0.12);
-    border: 1px solid rgba(232,114,12,0.25);
+    background: rgba(232,114,12,0.18);
+    border: 1px solid rgba(232,114,12,0.4);
     display: flex; align-items:center; justify-content:center;
   }
   .c-ico svg { width:15px; height:15px; fill:var(--orange); }
-  .c-text { font-size:13px; color:rgba(255,255,255,0.75); font-weight:500; line-height:1.5; }
-  .c-sub { font-size:11px; color:rgba(255,255,255,0.35); }
+  .c-text { font-size:14px; color:rgba(255,255,255,0.92); font-weight:600; line-height:1.5; }
+  .c-sub { font-size:12px; color:rgba(255,255,255,0.55); margin-top:2px; }
 
   /* 오른쪽: 사진 영역 */
   .hero-right {
@@ -181,19 +181,19 @@
   .photo-namecard {
     position: absolute;
     bottom: 0; left: 50%; transform: translateX(-50%);
-    width: 280px;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.12);
+    width: 288px;
+    background: rgba(20, 20, 22, 0.82);
+    border: 1px solid rgba(232,114,12,0.35);
     backdrop-filter: blur(20px);
     border-radius: 16px;
     padding: 16px 22px;
     display: flex; align-items: center; gap: 14px;
     z-index: 10;
-    margin-bottom: 28px;
+    margin-bottom: 36px;
   }
   .nc-dot { width:10px; height:10px; border-radius:50%; background:var(--orange); flex-shrink:0; box-shadow:0 0 8px var(--orange); animation:blink 2s infinite; }
-  .nc-name { font-size:14px; font-weight:700; color:#fff; }
-  .nc-title { font-size:11px; color:rgba(255,255,255,0.45); margin-top:2px; font-family:'Montserrat',sans-serif; letter-spacing:0.05em; }
+  .nc-name { font-size:15px; font-weight:800; color:#ffffff; letter-spacing:-0.3px; }
+  .nc-title { font-size:12px; color:rgba(255,255,255,0.90); margin-top:4px; font-family:'Montserrat',sans-serif; letter-spacing:0.06em; font-weight:500; }
 
   @keyframes fadeUp { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
 
@@ -302,8 +302,8 @@
     display:flex; align-items:center; justify-content:center;
   }
   .info-ico svg { width:14px; height:14px; fill:var(--orange); }
-  .info-cat { font-size:9px; color:rgba(255,255,255,0.3); letter-spacing:0.18em; text-transform:uppercase; font-family:'Montserrat',sans-serif; margin-bottom:4px; }
-  .info-val { font-size:13px; color:rgba(255,255,255,0.85); font-weight:500; line-height:1.55; }
+  .info-cat { font-size:10px; color:rgba(255,255,255,0.6); letter-spacing:0.18em; text-transform:uppercase; font-family:'Montserrat',sans-serif; margin-bottom:4px; }
+  .info-val { font-size:14px; color:rgba(255,255,255,0.95); font-weight:600; line-height:1.6; }
 
   /* 강점 */
   .strengths { display:flex; flex-direction:column; gap:14px; }
@@ -315,7 +315,7 @@
   .str-item:hover { border-color:rgba(232,114,12,0.35); }
   .str-n { position:absolute; top:16px; right:18px; font-family:'Montserrat',sans-serif; font-size:34px; font-weight:800; color:rgba(232,114,12,0.08); line-height:1; }
   .str-title { font-size:14px; font-weight:700; color:var(--orange-l); margin-bottom:7px; }
-  .str-desc { font-size:12px; color:rgba(255,255,255,0.48); line-height:1.75; word-break:keep-all; }
+  .str-desc { font-size:13px; color:rgba(255,255,255,0.78); line-height:1.8; word-break:keep-all; }
 
   /* ── FOOTER ── */
   footer {
@@ -346,14 +346,64 @@
     nav { padding:0 20px; height:56px; }
     .nav-logo img { height:26px; }
 
-    .hero { grid-template-columns:1fr; min-height:auto; }
-    .hero-right { height:380px; padding-top:0; order:-1; }
-    .profile-photo { width:220px; max-height:340px; }
-    .photo-bg-circle { width:280px; height:280px; }
-    .photo-bg-circle2 { width:200px; height:200px; }
-    .photo-namecard { width:220px; bottom:0; margin-bottom:16px; }
-    .hero-left { padding:40px 24px 56px; }
-    .hero-name { font-size:52px; }
+    /* 히어로: 사진 위 / 텍스트 아래 완전 분리 */
+    .hero {
+      grid-template-columns: 1fr;
+      min-height: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* 사진 영역: 상단 고정, 충분한 높이 */
+    .hero-right {
+      order: -1;
+      height: 420px;
+      padding-top: 0;
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    /* 사진 배경을 어둡게 → 흰 배경 중화 */
+    .hero-right::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(28, 28, 30, 0.45);
+      z-index: 4;
+      pointer-events: none;
+    }
+
+    /* 하단에 다크 페이드 → 텍스트 영역으로 자연스럽게 연결 */
+    .hero-right::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 140px;
+      background: linear-gradient(to bottom, transparent, var(--dark));
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    .profile-photo {
+      width: 260px;
+      max-height: 400px;
+      object-position: top center;
+    }
+
+    /* 모바일에서 이름카드 숨김 (턱선 가리는 문제 해결) */
+    .photo-namecard { display: none; }
+
+    .photo-bg-circle { width: 300px; height: 300px; }
+    .photo-bg-circle2 { width: 220px; height: 220px; }
+
+    /* 텍스트 영역 */
+    .hero-left {
+      padding: 32px 24px 56px;
+      background: var(--dark);
+    }
+    .hero-name { font-size: 48px; }
+    .hero-quote { font-size: 14px; margin-bottom: 36px; }
 
     .stripe { padding:16px 24px; gap:24px; flex-wrap:wrap; }
 
@@ -371,7 +421,9 @@
     footer { padding:36px 24px; flex-direction:column; text-align:center; }
   }
   @media(max-width:480px){
-    .hero-name { font-size:40px; letter-spacing:-1.5px; }
+    .hero-right { height: 360px; }
+    .profile-photo { width: 220px; max-height: 340px; }
+    .hero-name { font-size:38px; letter-spacing:-1.5px; }
     .kpi-n { font-size:22px; }
   }
 </style>
