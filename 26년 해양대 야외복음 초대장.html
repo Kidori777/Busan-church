@@ -126,9 +126,10 @@ body {
 .hero-date-card::after  { bottom:-5px; right:-5px; border-width:0 1px 1px 0; }
 
 .hero-date-main {
-  font-size: 20px; font-weight: 700;
-  color: white; letter-spacing: 2px;
-  line-height: 1.8;
+  font-size: 16px; font-weight: 700;
+  color: white; letter-spacing: 1px;
+  line-height: 1.9;
+  white-space: nowrap;
 }
 
 .hero-date-sub {
@@ -151,7 +152,9 @@ body {
   margin-top: 40px;
   font-family: 'Cinzel', serif;
   font-size: 11px; letter-spacing: 4px;
-  color: rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.75);
+  text-align: center;
+  line-height: 2.2;
   opacity: 0; animation: fadeUp 1s ease forwards 1.9s;
 }
 
@@ -420,8 +423,8 @@ footer {
 }
 .footer-copyright {
   margin-top: 28px;
-  font-size: 10px; color: rgba(255,255,255,0.20);
-  letter-spacing: 1px;
+  font-size: 11px; color: rgba(255,255,255,0.70);
+  letter-spacing: 2px;
 }
 
 /* 풀잎 구분선 */
@@ -525,7 +528,7 @@ footer {
   </div>
 
   <p class="hero-place">📍 부산광역시 영도구 태종로 727</p>
-  <p class="hero-church">BUSAN CHURCH · OUTDOOR GOSPEL MEETING</p>
+  <p class="hero-church">BUSAN CHURCH<br>OUTDOOR GOSPEL MEETING</p>
 
   <div class="scroll-hint"><span></span></div>
 </section>
