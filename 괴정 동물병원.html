@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>괴정동물병원 – 우리 아이의 건강한 친구</title>
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sky: #5BC8F5;
+    --sky-light: #D6F0FB;
+    --yellow: #FFD166;
+    --yellow-light: #FFF4D6;
+    --pink: #FF9EB5;
+    --pink-light: #FFE8EE;
+    --mint: #7FD4C1;
+    --mint-light: #DCF5F0;
+    --cream: #FFFBF0;
+    --orange: #FFAB76;
+    --purple: #C3A8FF;
+    --text-dark: #3A2E2E;
+    --text-mid: #6B5C5C;
+    --text-light: #9E8E8E;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--cream);
+    font-family: 'Noto Sans KR', sans-serif;
+    color: var(--text-dark);
+    max-width: 430px;
+    margin: 0 auto;
+    overflow-x: hidden;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(160deg, #E0F4FF 0%, #FFE8F5 60%, #FFF4D6 100%);
+    padding: 32px 20px 0;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, #FFD16640 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: 20px; left: -40px;
+    width: 140px; height: 140px;
+    background: radial-gradient(circle, #5BC8F540 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: white;
+    color: var(--sky);
+    font-family: 'Jua', sans-serif;
+    font-size: 13px;
+    padding: 6px 16px;
+    border-radius: 999px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 10px rgba(91,200,245,0.25);
+    letter-spacing: 0.5px;
+  }
+  .hero-title {
+    font-family: 'Jua', sans-serif;
+    font-size: 34px;
+    line-height: 1.25;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+    position: relative;
+    z-index: 1;
+  }
+  .hero-title span {
+    color: var(--sky);
+  }
+  .hero-sub {
+    font-size: 15px;
+    color: var(--text-mid);
+    line-height: 1.65;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
+  }
+  .paws {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    position: relative;
+    z-index: 1;
+  }
+  .paw {
+    font-size: 28px;
+    animation: bounce 1.6s ease-in-out infinite;
+  }
+  .paw:nth-child(2) { animation-delay: 0.3s; }
+  .paw:nth-child(3) { animation-delay: 0.6s; }
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  .hero-img-wrap {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 10px;
+    position: relative;
+    z-index: 1;
+  }
+  .animal-card {
+    background: white;
+    border-radius: 20px;
+    width: 90px;
+    height: 90px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    animation: float 3s ease-in-out infinite;
+    gap: 4px;
+  }
+  .animal-card span.label {
+    font-size: 11px;
+    color: var(--text-light);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 500;
+  }
+  .animal-card:nth-child(2) { animation-delay: 1s; }
+  .animal-card:nth-child(3) { animation-delay: 2s; }
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-6px); }
+  }
+  .wave-divider {
+    width: 100%;
+    margin-top: -2px;
+    display: block;
+  }
+
+  /* ── CALL CTA ── */
+  .cta-strip {
+    background: white;
+    padding: 16px 20px;
+    display: flex;
+    gap: 10px;
+    border-bottom: 2px solid #F5EDE5;
+  }
+  .btn-call {
+    flex: 1;
+    background: var(--pink);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    padding: 14px 0;
+    font-family: 'Jua', sans-serif;
+    font-size: 17px;
+    cursor: pointer;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 4px 14px rgba(255,158,181,0.45);
+    transition: transform 0.15s;
+  }
+  .btn-call:active { transform: scale(0.97); }
+  .btn-map {
+    flex: 1;
+    background: var(--sky);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    padding: 14px 0;
+    font-family: 'Jua', sans-serif;
+    font-size: 17px;
+    cursor: pointer;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 4px 14px rgba(91,200,245,0.45);
+    transition: transform 0.15s;
+  }
+  .btn-map:active { transform: scale(0.97); }
+
+  /* ── SECTIONS ── */
+  section { padding: 28px 20px; }
+  .section-title {
+    font-family: 'Jua', sans-serif;
+    font-size: 22px;
+    color: var(--text-dark);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-title .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ── SERVICES ── */
+  .services-bg { background: white; }
+  .service-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .service-card {
+    border-radius: 20px;
+    padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.18s;
+  }
+  .service-card:active { transform: scale(0.97); }
+  .service-card.wide {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 20px;
+  }
+  .service-icon {
+    font-size: 38px;
+    line-height: 1;
+  }
+  .service-title {
+    font-family: 'Jua', sans-serif;
+    font-size: 16px;
+    color: var(--text-dark);
+  }
+  .service-desc {
+    font-size: 12.5px;
+    color: var(--text-mid);
+    line-height: 1.6;
+  }
+  .card-blue   { background: var(--sky-light); }
+  .card-pink   { background: var(--pink-light); }
+  .card-yellow { background: var(--yellow-light); }
+  .card-mint   { background: var(--mint-light); }
+  .card-deco {
+    position: absolute;
+    bottom: -12px; right: -12px;
+    font-size: 52px;
+    opacity: 0.12;
+  }
+
+  /* ── NOTICE BANNER ── */
+  .notice {
+    margin: 0 20px 24px;
+    background: #FFF4E6;
+    border-left: 4px solid var(--orange);
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-size: 13.5px;
+    color: #8B5E35;
+    line-height: 1.65;
+  }
+  .notice strong { color: #C06800; font-weight: 700; }
+
+  /* ── HOURS ── */
+  .hours-bg { background: var(--sky-light); }
+  .hours-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  .hours-table th {
+    font-family: 'Jua', sans-serif;
+    font-size: 13px;
+    color: var(--sky);
+    padding: 6px 0;
+    text-align: left;
+    border-bottom: 1.5px solid #C0E8F9;
+    font-weight: 400;
+  }
+  .hours-table td {
+    padding: 9px 0;
+    color: var(--text-mid);
+    border-bottom: 1px solid #DCF1FC;
+    vertical-align: top;
+  }
+  .hours-table td:first-child {
+    font-family: 'Jua', sans-serif;
+    font-size: 15px;
+    color: var(--text-dark);
+    width: 48px;
+  }
+  .hours-table td.time-cell {
+    color: var(--text-dark);
+    font-size: 14px;
+  }
+  .hours-table td.break {
+    font-size: 12px;
+    color: var(--text-light);
+    padding-top: 2px;
+  }
+  .time-wrap { display: flex; flex-direction: column; gap: 2px; }
+  .badge-closed {
+    display: inline-block;
+    background: #FFE8EE;
+    color: var(--pink);
+    font-family: 'Jua', sans-serif;
+    font-size: 13px;
+    padding: 3px 12px;
+    border-radius: 999px;
+  }
+  .badge-sat {
+    display: inline-block;
+    background: #E8F8FF;
+    color: var(--sky);
+    font-family: 'Jua', sans-serif;
+    font-size: 11px;
+    padding: 2px 10px;
+    border-radius: 999px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+  .row-sunday td { opacity: 0.6; }
+  .row-sat td:first-child { color: var(--sky) !important; }
+
+  /* ── ADDRESS ── */
+  .addr-bg { background: white; }
+  .addr-card {
+    background: linear-gradient(135deg, #F0FBFF, #FFF0F8);
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .addr-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 14px;
+    color: var(--text-mid);
+    line-height: 1.65;
+  }
+  .addr-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .addr-row strong {
+    color: var(--text-dark);
+    font-weight: 700;
+    display: block;
+    margin-bottom: 2px;
+  }
+  .addr-divider { border: none; border-top: 1.5px dashed #E0D6CF; }
+  .map-placeholder {
+    background: linear-gradient(135deg, #E8F6FF, #F8E8FF);
+    border-radius: 14px;
+    height: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    gap: 6px;
+    cursor: pointer;
+    transition: transform 0.15s;
+    text-decoration: none;
+  }
+  .map-placeholder:active { transform: scale(0.97); }
+  .map-placeholder span {
+    font-size: 13px;
+    color: var(--sky);
+    font-family: 'Jua', sans-serif;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #3A2E2E;
+    color: #C8B8B8;
+    text-align: center;
+    padding: 28px 20px;
+    font-size: 13px;
+    line-height: 1.9;
+  }
+  footer .footer-name {
+    font-family: 'Jua', sans-serif;
+    font-size: 18px;
+    color: white;
+    margin-bottom: 4px;
+  }
+  footer a { color: var(--sky); text-decoration: none; }
+
+  /* ── HEARTS FLOATING ── */
+  .floating-hearts {
+    position: fixed;
+    pointer-events: none;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 9999;
+    overflow: hidden;
+  }
+  .heart-particle {
+    position: absolute;
+    font-size: 20px;
+    animation: rise 3s ease-in forwards;
+    opacity: 0;
+  }
+  @keyframes rise {
+    0%   { opacity: 1; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(-200px) scale(0.5); }
+  }
+</style>
+</head>
+<body>
+
+<!-- Floating hearts container -->
+<div class="floating-hearts" id="heartsContainer"></div>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div class="hero-badge">🏥 부산 사하구 괴정역 근처</div>
+  <h1 class="hero-title">우리 아이의<br>건강한 친구,<br><span>괴정동물병원</span></h1>
+  <p class="hero-sub">진료 · 미용 · 사료판매<br>반려동물과 함께하는 따뜻한 공간</p>
+  <div class="paws">
+    <span class="paw">🐾</span>
+    <span class="paw">💙</span>
+    <span class="paw">🐾</span>
+  </div>
+  <div class="hero-img-wrap">
+    <div class="animal-card">🐶<span class="label">강아지</span></div>
+    <div class="animal-card">🐱<span class="label">고양이</span></div>
+    <div class="animal-card">🐰<span class="label">소동물</span></div>
+  </div>
+  <svg class="wave-divider" viewBox="0 0 430 48" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0 28 Q107 0 215 28 Q322 56 430 28 L430 48 L0 48 Z" fill="white"/>
+  </svg>
+</div>
+
+<!-- ── CTA BUTTONS ── -->
+<div class="cta-strip">
+  <a class="btn-call" href="tel:051-207-3344">📞 전화 예약</a>
+  <a class="btn-map" href="https://map.kakao.com/link/search/괴정동물병원" target="_blank">🗺️ 길 찾기</a>
+</div>
+
+<!-- ── SERVICES ── -->
+<section class="services-bg">
+  <h2 class="section-title">
+    <span class="dot" style="background:var(--pink);"></span>
+    이런 서비스를 드려요
+  </h2>
+  <div class="service-grid">
+
+    <div class="service-card card-blue">
+      <span class="service-icon">🩺</span>
+      <span class="service-title">동물 진료</span>
+      <span class="service-desc">건강검진부터 각종 질환 치료까지 전문적으로 케어해 드립니다</span>
+      <span class="card-deco">🩺</span>
+    </div>
+
+    <div class="service-card card-pink">
+      <span class="service-icon">✂️</span>
+      <span class="service-title">반려동물 미용</span>
+      <span class="service-desc">우리 아이를 더 예쁘고 건강하게! 깔끔한 미용 서비스</span>
+      <span class="card-deco">✂️</span>
+    </div>
+
+    <div class="service-card card-yellow wide">
+      <span class="service-icon" style="font-size:52px;">🛒</span>
+      <div>
+        <span class="service-title" style="font-size:18px;">사료 · 간식 판매</span>
+        <span class="service-desc" style="font-size:13px; margin-top:6px; display:block;">
+          병원에서 직접 엄선한 반려동물 전용 사료와 건강 간식을 만나보세요. 우리 아이에게 꼭 맞는 영양을 추천해 드립니다.
+        </span>
+      </div>
+    </div>
+
+    <div class="service-card card-mint wide">
+      <span class="service-icon" style="font-size:52px;">💉</span>
+      <div>
+        <span class="service-title" style="font-size:18px;">예방접종 · 건강검진</span>
+        <span class="service-desc" style="font-size:13px; margin-top:6px; display:block;">
+          반려동물의 건강을 지키는 정기 예방접종과 종합검진. 미리미리 체크하면 오래오래 함께할 수 있어요!
+        </span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── NOTICE ── -->
+<div class="notice">
+  <strong>💡 처음 방문하시나요?</strong><br>
+  전화로 미리 상담하시면 대기시간을 줄일 수 있어요.
+  진료 전 간식은 삼가주세요. 진료 관련 궁금한 점은 언제든 문의해 주세요 😊
+</div>
+
+<!-- ── HOURS ── -->
+<section class="hours-bg">
+  <h2 class="section-title">
+    <span class="dot" style="background:var(--sky);"></span>
+    진료 시간
+  </h2>
+  <table class="hours-table">
+    <thead>
+      <tr>
+        <th>요일</th>
+        <th>진료 시간</th>
+        <th>휴게</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>월</td>
+        <td class="time-cell">10:00 – 19:00</td>
+        <td class="break">12:30 – 13:30</td>
+      </tr>
+      <tr>
+        <td>화</td>
+        <td class="time-cell">10:00 – 19:00</td>
+        <td class="break">12:30 – 13:30</td>
+      </tr>
+      <tr>
+        <td>수</td>
+        <td class="time-cell">10:00 – 19:00</td>
+        <td class="break">12:30 – 13:30</td>
+      </tr>
+      <tr>
+        <td>목</td>
+        <td class="time-cell">10:00 – 19:00</td>
+        <td class="break">12:30 – 13:30</td>
+      </tr>
+      <tr>
+        <td>금</td>
+        <td class="time-cell">10:00 – 19:00</td>
+        <td class="break">12:30 – 13:30</td>
+      </tr>
+      <tr class="row-sat">
+        <td>토<span class="badge-sat">단축</span></td>
+        <td class="time-cell">10:00 – 17:00</td>
+        <td class="break">12:30 – 13:30</td>
+      </tr>
+      <tr class="row-sunday">
+        <td>일</td>
+        <td colspan="2"><span class="badge-closed">정기 휴무</span></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ── ADDRESS ── -->
+<section class="addr-bg">
+  <h2 class="section-title">
+    <span class="dot" style="background:var(--mint);"></span>
+    오시는 길
+  </h2>
+  <div class="addr-card">
+
+    <div class="addr-row">
+      <span class="addr-icon">📍</span>
+      <div>
+        <strong>주소</strong>
+        부산광역시 사하구 낙동대로 246-1
+      </div>
+    </div>
+
+    <hr class="addr-divider">
+
+    <div class="addr-row">
+      <span class="addr-icon">🚇</span>
+      <div>
+        <strong>지하철</strong>
+        괴정역 1번 출구에서<br>사하초등학교 방향으로 <strong style="color:var(--sky)">150m</strong>
+      </div>
+    </div>
+
+    <hr class="addr-divider">
+
+    <div class="addr-row">
+      <span class="addr-icon">📞</span>
+      <div>
+        <strong>전화</strong>
+        <a href="tel:051-207-3344" style="color:var(--pink); font-size:17px; font-family:'Jua',sans-serif;">
+          051-207-3344
+        </a>
+      </div>
+    </div>
+
+    <a class="map-placeholder" href="https://map.kakao.com/link/search/괴정동물병원" target="_blank">
+      🗺️
+      <span>카카오맵에서 길 찾기</span>
+    </a>
+
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <p class="footer-name">🐾 괴정동물병원</p>
+  <p>부산광역시 사하구 낙동대로 246-1</p>
+  <p><a href="tel:051-207-3344">051-207-3344</a></p>
+  <p style="margin-top:10px; font-size:12px; color:#8A7A7A;">
+    월–금 10:00–19:00 &nbsp;|&nbsp; 토 10:00–17:00<br>
+    일요일 정기휴무
+  </p>
+</footer>
+
+<script>
+  // 버튼 탭할 때 하트 파티클
+  function spawnHearts(x, y) {
+    const container = document.getElementById('heartsContainer');
+    const emojis = ['❤️','🧡','💛','💚','💙','💜','🐾'];
+    for (let i = 0; i < 6; i++) {
+      const el = document.createElement('div');
+      el.className = 'heart-particle';
+      el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      el.style.left = (x - 10 + Math.random() * 40 - 20) + 'px';
+      el.style.top  = (y - 20) + 'px';
+      el.style.animationDelay = (Math.random() * 0.4) + 's';
+      container.appendChild(el);
+      setTimeout(() => el.remove(), 3500);
+    }
+  }
+
+  document.querySelectorAll('.btn-call, .btn-map').forEach(btn => {
+    btn.addEventListener('click', e => {
+      const r = btn.getBoundingClientRect();
+      spawnHearts(r.left + r.width / 2, r.top);
+    });
+  });
+
+  // 서비스 카드 탭 시 작은 효과
+  document.querySelectorAll('.service-card').forEach(card => {
+    card.addEventListener('click', e => {
+      const r = card.getBoundingClientRect();
+      spawnHearts(r.left + r.width / 2, r.top + 30);
+    });
+  });
+</script>
+</body>
+</html>
