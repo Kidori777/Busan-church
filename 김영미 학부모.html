@@ -874,6 +874,121 @@
     .kakao-float { bottom: 1.2rem; right: 1.2rem; }
     .kakao-float-btn { width: 50px; height: 50px; }
   }
+
+  .hero-sub-role {
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+    color: var(--gold);
+    margin-bottom: 1rem;
+    font-family: 'Cormorant Garamond', serif;
+  }
+  .hero-cta-wrap {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+  }
+  .hero-cta-primary {
+    display: inline-block;
+    padding: 12px 24px;
+    background: var(--green);
+    color: var(--ivory);
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    font-weight: 400;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+  .hero-cta-primary:hover {
+    background: var(--green-light);
+    transform: translateY(-2px);
+  }
+  .hero-cta-secondary {
+    display: inline-block;
+    padding: 12px 24px;
+    border: 1px solid var(--green);
+    color: var(--green);
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    font-weight: 400;
+    transition: all 0.2s ease;
+  }
+  .hero-cta-secondary:hover {
+    background: var(--green);
+    color: var(--ivory);
+    transform: translateY(-2px);
+  }
+  @media (max-width: 768px) {
+    .hero-cta-wrap { flex-direction: column; gap: 0.7rem; }
+    .hero-cta-primary, .hero-cta-secondary { text-align: center; }
+  }
+
+  .mid-cta-band {
+    background: linear-gradient(135deg, var(--green) 0%, #1e3d2a 100%);
+    padding: 4rem 5rem;
+    text-align: center;
+  }
+  .mid-cta-inner { max-width: 600px; margin: 0 auto; }
+  .mid-cta-label {
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    color: var(--gold-light);
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+  .mid-cta-title {
+    font-size: 1.8rem;
+    font-weight: 300;
+    color: var(--ivory);
+    margin-bottom: 2rem;
+    line-height: 1.4;
+  }
+  .mid-cta-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .mid-cta-btn-main {
+    display: inline-block;
+    padding: 13px 28px;
+    background: #FEE500;
+    color: #3C1E1E;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    font-family: 'Noto Serif KR', serif;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .mid-cta-btn-main:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(254,229,0,0.35); }
+  .mid-cta-btn-sub {
+    display: inline-block;
+    padding: 13px 20px;
+    color: rgba(250,247,242,0.75);
+    font-size: 0.85rem;
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid rgba(250,247,242,0.3);
+    transition: color 0.2s;
+  }
+  .mid-cta-btn-sub:hover { color: var(--ivory); }
+  @media (max-width: 768px) {
+    .mid-cta-band { padding: 3rem 1.5rem; }
+    .mid-cta-title { font-size: 1.4rem; }
+    .mid-cta-btns { flex-direction: column; align-items: center; }
+  }
+
+  .profile-contact-btn {
+    display: block;
+    margin-top: 1.2rem;
+    padding: 11px 0;
+    background: var(--green);
+    color: var(--ivory);
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    text-align: center;
+    font-family: 'Noto Serif KR', serif;
+    transition: background 0.2s ease;
+  }
+  .profile-contact-btn:hover { background: var(--green-light); }
 </style>
 </head>
 <body>
@@ -889,11 +1004,11 @@
     <h1 class="hero-name">김영미</h1>
     <p class="hero-name-en">Kim · Young-mi</p>
     <div class="hero-divider"></div>
-    <p class="hero-tagline">아이와 함께 <strong>성장하는 어른</strong>으로, 따뜻한 밥상과 냉철한 지혜를 가진 가정의 <strong>조율사</strong>.</p>
-    <div class="hero-tags">
-      <span class="hero-tag"># 배움의 엄마</span>
-      <span class="hero-tag"># 가정의 조율사</span>
-      <span class="hero-tag"># 지혜로운 동반자</span>
+    <p class="hero-sub-role">감정코칭 · 학습습관 설계 · 엄마 성장 커뮤니티</p>
+    <p class="hero-tagline">초등 자녀를 둔 엄마들과 함께<br><strong>아이도 엄마도 함께 성장하는</strong><br>양육의 시스템을 만듭니다.</p>
+    <div class="hero-cta-wrap">
+      <a href="https://open.kakao.com/o/g4OSCZui" target="_blank" rel="noopener" class="hero-cta-primary">1:1 대화 시작하기</a>
+      <a href="#community" class="hero-cta-secondary">커뮤니티 참여하기</a>
     </div>
   </div>
   <div class="scroll-line"><span>scroll</span></div>
@@ -915,25 +1030,25 @@
   <h2 class="section-title">나의 교육 철학</h2>
   <div class="phil-grid">
     <div class="phil-main">
-      <strong>결과보다 과정을 사랑하는 아이로</strong>
-      아이에게 성적표보다 소중한 것은 실패를 두려워하지 않는 용기라고 믿습니다. 오늘도 저는 아이 곁에서 기다리는 법, 같이 넘어지는 법, 그리고 다시 일어서는 법을 함께 배웁니다. 내가 아이의 교사인 것이 아니라, 아이가 나의 교사입니다.
+      <strong>정답을 맞히는 아이보다<br>질문을 던지는 아이로</strong>
+      아이의 감정을 먼저 읽고, 훈육보다 대화를 통해 행동 변화를 이끕니다. "왜 그랬어?" 대신 "그때 어떤 기분이었어?"라는 한 마디가 아이의 마음을 열었습니다. 철학은 거창한 게 아닙니다. 매일 저녁 10분, 아이 옆에 앉아 듣는 것에서 시작합니다.
     </div>
     <div class="phil-cards">
       <div class="phil-card">
-        <div class="phil-card-title">자율 · Autonomy</div>
-        <div class="phil-card-text">스스로 선택하고 책임지는 능력이 진정한 독립의 시작.</div>
+        <div class="phil-card-title">자율 · 철학 → 행동 → 결과</div>
+        <div class="phil-card-text">스스로 선택하게 둡니다 → 실패해도 기다립니다 → 아이가 책임을 배웁니다.</div>
       </div>
       <div class="phil-card">
-        <div class="phil-card-title">공감 · Empathy</div>
-        <div class="phil-card-text">틀린 것이 아니라 다른 것임을 먼저 가르칩니다.</div>
+        <div class="phil-card-title">공감 · 철학 → 행동 → 결과</div>
+        <div class="phil-card-text">틀린 것이 아닌 다름을 인정합니다 → 먼저 들어줍니다 → 아이가 타인을 존중합니다.</div>
       </div>
       <div class="phil-card">
-        <div class="phil-card-title">창의 · Creativity</div>
-        <div class="phil-card-text">정답 없는 질문을 함께 즐기는 것이 최고의 놀이.</div>
+        <div class="phil-card-title">습관 · 철학 → 행동 → 결과</div>
+        <div class="phil-card-text">거창한 목표보다 작은 루틴을 믿습니다 → 매일 10분 독서를 함께합니다 → 아이가 스스로 책을 폅니다.</div>
       </div>
       <div class="phil-card">
-        <div class="phil-card-title">끈기 · Resilience</div>
-        <div class="phil-card-text">쓰러졌을 때 일어서는 그 순간을 함께 응원합니다.</div>
+        <div class="phil-card-title">끈기 · 철학 → 행동 → 결과</div>
+        <div class="phil-card-text">포기 앞에서 판단하지 않습니다 → 옆에서 같이 앉아 있습니다 → 아이가 다시 시작합니다.</div>
       </div>
     </div>
   </div>
@@ -999,6 +1114,18 @@
     </div>
   </div>
 </section>
+
+<!-- MID CTA -->
+<div class="mid-cta-band">
+  <div class="mid-cta-inner">
+    <p class="mid-cta-label">같은 고민을 나눌 엄마를 찾고 계신가요?</p>
+    <p class="mid-cta-title">아이 교육, 혼자 고민하지 마세요.</p>
+    <div class="mid-cta-btns">
+      <a href="https://open.kakao.com/o/g4OSCZui" target="_blank" rel="noopener" class="mid-cta-btn-main">1:1 대화 시작하기</a>
+      <a href="#community" class="mid-cta-btn-sub">커뮤니티 둘러보기 →</a>
+    </div>
+  </div>
+</div>
 
 <!-- GROWTH -->
 <section class="growth fade-in">
@@ -1082,7 +1209,7 @@
 </section>
 
 <!-- COMMUNITY -->
-<section class="community fade-in">
+<section class="community fade-in" id="community">
   <p class="section-label">Section 05 — Community & Me</p>
   <h2 class="section-title">나를 잇는 연결의 지혜</h2>
   <div class="community-grid">
@@ -1129,21 +1256,22 @@
         <div class="profile-stats">
           <div class="stat">
             <span class="stat-num">7+</span>
-            <span class="stat-label">육아 연차</span>
+            <span class="stat-label">양육 경험</span>
           </div>
           <div class="stat">
-            <span class="stat-num">∞</span>
-            <span class="stat-label">사랑의 양</span>
+            <span class="stat-num">12명</span>
+            <span class="stat-label">스터디 운영</span>
           </div>
           <div class="stat">
-            <span class="stat-num">365</span>
-            <span class="stat-label">함께한 날</span>
+            <span class="stat-num">5개</span>
+            <span class="stat-label">활동 이력</span>
           </div>
           <div class="stat">
-            <span class="stat-num">1</span>
-            <span class="stat-label">세상에 하나</span>
+            <span class="stat-num">감코</span>
+            <span class="stat-label">수료 자격</span>
           </div>
         </div>
+        <a href="https://open.kakao.com/o/g4OSCZui" target="_blank" rel="noopener" class="profile-contact-btn">1:1 대화 시작하기</a>
       </div>
     </div>
   </div>
@@ -1152,7 +1280,7 @@
 <footer>
   <div class="footer-name">김영미 · 디지털 마더 프로필</div>
   <div class="footer-line"></div>
-  <div class="footer-copy">엄마라는 이름 뒤에 빛나는 당신의 이야기 © 2025</div>
+  <div class="footer-copy">엄마라는 이름 뒤에 빛나는 당신의 이야기 © 2026</div>
 </footer>
 
 <script>
@@ -1173,14 +1301,14 @@ document.querySelectorAll('.tl-item').forEach(el => tlObserver.observe(el));
 </script>
 
 <!-- 카카오 오픈채팅 플로팅 버튼 -->
-<a class="kakao-float" href="#" title="카카오 오픈채팅">
+<a class="kakao-float" href="https://open.kakao.com/o/g4OSCZui" target="_blank" rel="noopener" title="카카오 오픈채팅">
   <div class="kakao-float-btn" style="position:relative;">
     <div class="kakao-float-pulse"></div>
     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M12 3C6.477 3 2 6.477 2 10.8c0 2.7 1.556 5.093 3.938 6.568L4.8 21l4.43-2.363A10.8 10.8 0 0 0 12 18.6c5.523 0 10-3.477 10-7.8S17.523 3 12 3Z" fill="#3C1E1E"/>
     </svg>
   </div>
-  <div class="kakao-float-label">오픈채팅 연결</div>
+  <div class="kakao-float-label">교육 고민 나누기</div>
 </a>
 
 </body>
