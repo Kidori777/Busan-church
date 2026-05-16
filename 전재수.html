@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta property="og:title" content="전재수 | 6·3 부산광역시장 선거 기호1번">
+<meta property="og:description" content="우리 일꾼 우리 전재수 — 더불어민주당 기호 1번">
+<title>전재수 | 기호 1번 부산광역시장 후보</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700;900&family=Noto+Sans+KR:wght@300;400;500;700;900&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --blue:#004EA2;
+  --blue2:#003580;
+  --blue3:#0062C8;
+  --gold:#F5C200;
+  --gold2:#E0A800;
+  --white:#ffffff;
+  --gray1:#f5f7fa;
+  --gray2:#8494a8;
+  --gray3:#d0d8e4;
+  --dark:#111827;
+  --red:#E8002D;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--gray1);
+  color:var(--dark);
+  font-family:'Noto Sans KR',sans-serif;
+  overflow-x:hidden;
+}
+
+/* ══ TOP HEADER BAR ══ */
+.top-bar{
+  background:var(--blue);
+  padding:10px 20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  position:sticky;top:0;z-index:100;
+}
+.party-logo{
+  display:flex;align-items:center;gap:8px;
+}
+.party-emblem{
+  width:28px;height:28px;border-radius:50%;
+  background:var(--white);
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:900;color:var(--blue);
+  flex-shrink:0;
+}
+.party-name{
+  font-size:13px;font-weight:700;color:var(--white);
+  letter-spacing:0.5px;
+}
+.election-badge{
+  background:rgba(255,255,255,0.15);
+  border:1px solid rgba(255,255,255,0.4);
+  border-radius:4px;padding:4px 10px;
+  font-size:11px;color:var(--white);font-weight:600;
+  letter-spacing:0.5px;
+}
+
+/* ══ HERO SECTION ══ */
+.hero{
+  background:var(--white);
+  position:relative;
+  overflow:hidden;
+}
+.hero-photo-wrap{
+  width:100%;
+  aspect-ratio:3/4;
+  position:relative;
+  overflow:hidden;
+  max-height:480px;
+}
+.hero-photo{
+  width:100%;height:100%;
+  object-fit:cover;
+  object-position:center top;
+}
+.hero-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(
+    to bottom,
+    transparent 40%,
+    rgba(0,78,162,0.12) 65%,
+    rgba(0,78,162,0.55) 100%
+  );
+}
+/* 좌상단 슬로건 */
+.hero-slogan{
+  position:absolute;
+  top:20px;left:20px;
+  z-index:3;
+}
+.hero-slogan-line{
+  font-family:'Noto Sans KR',sans-serif;
+  font-size:22px;font-weight:900;
+  color:var(--white);
+  line-height:1.3;
+  text-shadow:2px 2px 8px rgba(0,0,0,0.5);
+}
+.hero-slogan-line span{
+  color:var(--gold);
+}
+/* 하단 이름 배너 */
+.hero-name-bar{
+  position:absolute;
+  bottom:0;left:0;right:0;
+  background:var(--blue);
+  padding:14px 20px 14px 0;
+  display:flex;align-items:center;
+  z-index:3;
+}
+.hero-num-box{
+  width:80px;
+  flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.hero-num{
+  font-family:'Bebas Neue',cursive;
+  font-size:72px;line-height:1;
+  color:var(--gold);
+  text-shadow:0 4px 12px rgba(0,0,0,0.3);
+}
+.hero-name-right{
+  flex:1;
+  border-left:3px solid var(--gold);
+  padding-left:16px;
+}
+.hero-region{
+  font-size:14px;color:rgba(255,255,255,0.85);
+  font-weight:500;letter-spacing:1px;margin-bottom:2px;
+}
+.hero-name-text{
+  font-family:'Noto Serif KR',serif;
+  font-size:38px;font-weight:900;color:var(--white);
+  line-height:1;letter-spacing:-1px;
+}
+
+/* ══ COUNTDOWN BAR ══ */
+.countdown-bar{
+  background:var(--blue2);
+  padding:14px 20px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.cd-label-main{
+  font-size:13px;color:rgba(255,255,255,0.8);font-weight:500;
+}
+.cd-nums{
+  display:flex;align-items:center;gap:4px;
+}
+.cd-box{
+  background:rgba(255,255,255,0.1);
+  border:1px solid rgba(255,255,255,0.2);
+  border-radius:6px;padding:4px 8px;text-align:center;min-width:44px;
+}
+.cd-num{
+  font-family:'Bebas Neue',cursive;
+  font-size:22px;color:var(--gold);line-height:1;
+}
+.cd-unit{font-size:9px;color:rgba(255,255,255,0.6);letter-spacing:1px}
+.cd-sep2{font-family:'Bebas Neue',cursive;font-size:18px;color:rgba(255,255,255,0.4);padding-bottom:10px}
+
+/* ══ CAMPAIGN MESSAGE ══ */
+.campaign-msg{
+  background:var(--white);
+  padding:28px 24px;
+  border-bottom:4px solid var(--gold);
+}
+.msg-title{
+  font-family:'Noto Serif KR',serif;
+  font-size:22px;font-weight:900;
+  color:var(--blue);
+  line-height:1.4;
+  margin-bottom:20px;
+}
+.msg-title em{color:var(--gold2);font-style:normal}
+.msg-list{display:flex;flex-direction:column;gap:14px}
+.msg-item{
+  display:flex;gap:12px;align-items:flex-start;
+  padding:14px;
+  background:var(--gray1);
+  border-radius:10px;
+  border-left:4px solid var(--blue);
+}
+.msg-item-icon{font-size:22px;flex-shrink:0;margin-top:1px}
+.msg-item-body{}
+.msg-item-title{font-size:14px;font-weight:700;color:var(--dark);margin-bottom:3px}
+.msg-item-desc{font-size:12px;color:var(--gray2);line-height:1.6}
+
+/* ══ STORY 3전4기 ══ */
+.story{
+  background:var(--blue);
+  padding:32px 24px;
+}
+.section-tag{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,0.12);
+  border:1px solid rgba(255,255,255,0.25);
+  border-radius:4px;padding:4px 12px;
+  font-size:11px;letter-spacing:2px;color:var(--gold);font-weight:600;
+  margin-bottom:14px;
+}
+.story-title{
+  font-family:'Noto Serif KR',serif;
+  font-size:26px;font-weight:900;
+  color:var(--white);line-height:1.4;
+  margin-bottom:6px;
+}
+.story-title span{color:var(--gold)}
+.story-sub{font-size:13px;color:rgba(255,255,255,0.7);line-height:1.7;margin-bottom:28px}
+
+.tl{position:relative;padding-left:20px}
+.tl::before{
+  content:'';position:absolute;left:0;top:6px;bottom:6px;
+  width:2px;background:rgba(255,255,255,0.2);
+}
+.tl-item{
+  position:relative;margin-bottom:24px;padding-left:24px;
+  opacity:0;transform:translateX(-10px);
+  transition:opacity 0.5s,transform 0.5s;
+}
+.tl-item.visible{opacity:1;transform:translateX(0)}
+.tl-dot{
+  position:absolute;left:-30px;top:5px;
+  width:14px;height:14px;border-radius:50%;
+  border:2px solid rgba(255,255,255,0.3);
+  background:var(--blue);
+}
+.tl-dot.fail{border-color:rgba(255,255,255,0.3);background:rgba(255,255,255,0.1)}
+.tl-dot.win{border-color:var(--gold);background:var(--gold);box-shadow:0 0 10px rgba(245,194,0,0.5)}
+.tl-year2{
+  font-family:'Bebas Neue',cursive;
+  font-size:20px;color:rgba(255,255,255,0.4);margin-bottom:2px;
+}
+.tl-year2.active{color:var(--gold)}
+.tl-title2{font-size:14px;font-weight:700;color:var(--white);margin-bottom:2px}
+.tl-desc2{font-size:12px;color:rgba(255,255,255,0.65);line-height:1.6}
+.tl-chip{
+  display:inline-block;margin-top:6px;
+  background:var(--gold);color:#000;
+  border-radius:4px;padding:2px 8px;
+  font-size:11px;font-weight:700;
+}
+
+.poster-quote-box{
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(245,194,0,0.3);
+  border-left:4px solid var(--gold);
+  border-radius:8px;padding:18px;
+  margin-top:24px;
+}
+.poster-quote-text{
+  font-family:'Noto Serif KR',serif;
+  font-size:14px;line-height:1.9;
+  color:rgba(255,255,255,0.9);
+  font-style:italic;
+}
+.poster-quote-author{
+  font-size:12px;color:var(--gold);margin-top:10px;font-weight:500;
+}
+
+/* ══ VISION ══ */
+.vision{
+  background:var(--white);
+  padding:32px 24px;
+}
+.section-tag2{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--blue);
+  border-radius:4px;padding:4px 12px;
+  font-size:11px;letter-spacing:2px;color:var(--white);font-weight:600;
+  margin-bottom:14px;
+}
+.vision-title{
+  font-family:'Noto Serif KR',serif;
+  font-size:24px;font-weight:900;
+  color:var(--dark);line-height:1.4;
+  margin-bottom:6px;
+}
+.vision-title span{color:var(--blue)}
+.vision-sub{font-size:13px;color:var(--gray2);line-height:1.7;margin-bottom:24px}
+
+.amount-banner{
+  background:var(--blue);
+  border-radius:12px;
+  padding:20px;
+  display:flex;align-items:center;gap:16px;
+  margin-bottom:20px;
+}
+.amount-num{
+  font-family:'Bebas Neue',cursive;
+  font-size:56px;color:var(--gold);line-height:1;
+}
+.amount-right{}
+.amount-unit{font-size:13px;color:rgba(255,255,255,0.7);margin-bottom:2px}
+.amount-desc{font-size:12px;color:rgba(255,255,255,0.9);font-weight:600;line-height:1.4}
+
+.zone-list{display:flex;flex-direction:column;gap:12px}
+.zone-item2{
+  border-radius:10px;overflow:hidden;
+  border:1.5px solid var(--gray3);
+}
+.zone-head{
+  padding:12px 16px;
+  display:flex;align-items:center;gap:10px;
+}
+.zone-s-head{background:var(--blue)}
+.zone-e-head{background:#0076C0}
+.zone-w-head{background:#00529C}
+.zone-head-icon{font-size:20px}
+.zone-head-text{}
+.zone-head-region{font-size:11px;color:rgba(255,255,255,0.7);letter-spacing:1px}
+.zone-head-title{font-size:15px;font-weight:700;color:var(--white)}
+.zone-body{padding:14px 16px;background:var(--white)}
+.zone-body-item{
+  display:flex;gap:8px;align-items:flex-start;
+  font-size:12px;color:#444;line-height:1.6;
+  margin-bottom:6px;
+}
+.zone-body-item::before{content:"•";color:var(--blue);font-weight:700;flex-shrink:0}
+
+.uae-box{
+  background:linear-gradient(135deg,var(--blue),var(--blue3));
+  border-radius:10px;padding:18px;
+  margin-bottom:12px;
+  display:flex;align-items:center;gap:14px;
+}
+.uae-flag{font-size:28px}
+.uae-right{}
+.uae-tag{font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.7);margin-bottom:4px}
+.uae-amount{
+  font-family:'Bebas Neue',cursive;
+  font-size:36px;color:var(--gold);line-height:1;
+}
+.uae-desc{font-size:12px;color:rgba(255,255,255,0.85);line-height:1.5;margin-top:2px}
+
+/* ══ STATS ══ */
+.stats{
+  background:var(--blue2);
+  padding:32px 24px;
+}
+.stat-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:10px;margin-bottom:20px;
+}
+.stat-card{
+  background:rgba(255,255,255,0.07);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:10px;padding:18px 14px;
+  text-align:center;
+}
+.stat-n{
+  font-family:'Bebas Neue',cursive;
+  font-size:44px;color:var(--gold);line-height:1;
+}
+.stat-u{font-family:'Bebas Neue',cursive;font-size:18px;color:rgba(255,255,255,0.5)}
+.stat-l{font-size:12px;color:rgba(255,255,255,0.65);margin-top:4px;line-height:1.4}
+
+.career-cards{display:flex;flex-direction:column;gap:10px}
+.career-card{
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:10px;
+  padding:14px 16px;
+  display:flex;align-items:center;gap:14px;
+}
+.career-card-icon{
+  width:40px;height:40px;border-radius:10px;
+  background:var(--gold);
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;flex-shrink:0;
+}
+.career-card-body{flex:1}
+.career-card-title{font-size:14px;font-weight:700;color:var(--white);margin-bottom:2px}
+.career-card-sub{font-size:12px;color:rgba(255,255,255,0.6)}
+.career-card-year{
+  font-family:'Bebas Neue',cursive;
+  font-size:14px;color:rgba(255,255,255,0.35);
+}
+
+/* ══ PHILOSOPHY ══ */
+.philosophy{
+  background:var(--gold);
+  padding:36px 24px;
+  text-align:center;
+}
+.phil-q{
+  font-family:'Noto Serif KR',serif;
+  font-size:22px;font-weight:900;
+  color:var(--blue2);
+  line-height:1.6;margin-bottom:12px;
+}
+.phil-s{font-size:13px;color:rgba(0,53,128,0.75);line-height:1.8}
+
+/* ══ CTA ══ */
+.cta{
+  background:var(--white);
+  padding:36px 24px 60px;
+  text-align:center;
+}
+.cta-title{
+  font-family:'Noto Serif KR',serif;
+  font-size:26px;font-weight:900;
+  color:var(--dark);line-height:1.4;margin-bottom:8px;
+}
+.cta-title span{color:var(--blue)}
+.cta-sub{font-size:13px;color:var(--gray2);line-height:1.8;margin-bottom:28px}
+.btn-vote{
+  display:block;width:100%;
+  background:var(--blue);color:var(--white);
+  padding:18px;border-radius:10px;
+  font-size:16px;font-weight:700;letter-spacing:0.5px;
+  text-decoration:none;border:none;cursor:pointer;
+  margin-bottom:10px;
+  box-shadow:0 4px 20px rgba(0,78,162,0.3);
+}
+.btn-kakao{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  width:100%;
+  background:#FEE500;color:#3A1D1D;
+  padding:17px;border-radius:10px;
+  font-size:15px;font-weight:700;
+  text-decoration:none;border:none;cursor:pointer;
+  margin-bottom:10px;
+}
+.btn-out{
+  display:block;width:100%;
+  background:var(--gray1);color:var(--dark);
+  padding:16px;border-radius:10px;
+  font-size:14px;font-weight:600;
+  text-decoration:none;border:1.5px solid var(--gray3);cursor:pointer;
+}
+.vote-date-box{
+  margin-top:28px;
+  background:var(--blue);
+  border-radius:12px;
+  padding:20px;
+  text-align:center;
+}
+.vote-date-text{
+  font-family:'Noto Serif KR',serif;
+  font-size:20px;font-weight:900;
+  color:var(--white);margin-bottom:4px;
+}
+.vote-date-sub{font-size:13px;color:rgba(255,255,255,0.7)}
+
+/* ══ FOOTER ══ */
+footer{
+  background:var(--blue2);
+  padding:20px 24px;
+  text-align:center;
+  font-size:11px;color:rgba(255,255,255,0.4);
+  line-height:2;
+}
+
+/* ══ TOP BTN ══ */
+.top-btn{
+  position:fixed;bottom:24px;right:20px;
+  width:44px;height:44px;border-radius:50%;
+  background:var(--blue);
+  border:2px solid var(--gold);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--white);font-size:16px;
+  text-decoration:none;z-index:100;
+  opacity:0;transition:opacity 0.3s;
+  box-shadow:0 4px 16px rgba(0,78,162,0.4);
+}
+.top-btn.show{opacity:1}
+
+/* ══ ANIMATIONS ══ */
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0.6}}
+.fade-up{opacity:0;transform:translateY(16px);transition:opacity 0.6s,transform 0.6s}
+.fade-up.visible{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<!-- TOP HEADER -->
+<header class="top-bar">
+  <div class="party-logo">
+    <div class="party-emblem">민</div>
+    <span class="party-name">더불어민주당</span>
+  </div>
+  <div class="election-badge">직접선거후보</div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-photo-wrap">
+    <img class="hero-photo" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/4QLaRXhpZgAATU0AKgAAAAgABAE7AAIAAAAFAAABSodpAAQAAAABAAABUJydAAEAAAAKAAACyOocAAcAAAEMAAAAPgAAAAAc6gAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAU1RBUgAAAAWQAwACAAAAFAAAAp6QBAACAAAAFAAAArKSkQACAAAAAzc2AACSkgACAAAAAzc2AADqHAAHAAABDAAAAZIAAAAAHOoAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADIwMjY6MDU6MTYgMjE6NTU6MTUAMjAyNjowNToxNiAyMTo1NToxNQAAAFMAVABBAFIAAAD/4QQXaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLwA8P3hwYWNrZXQgYmVnaW49J++7vycgaWQ9J1c1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCc/Pg0KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyI+PHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj48cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0idXVpZDpmYWY1YmRkNS1iYTNkLTExZGEtYWQzMS1kMzNkNzUxODJmMWIiIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIvPjxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSJ1dWlkOmZhZjViZGQ1LWJhM2QtMTFkYS1hZDMxLWQzM2Q3NTE4MmYxYiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIj48eG1wOkNyZWF0ZURhdGU+MjAyNi0wNS0xNlQyMTo1NToxNS43NTg8L3htcDpDcmVhdGVEYXRlPjwvcmRmOkRlc2NyaXB0aW9uPjxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSJ1dWlkOmZhZjViZGQ1LWJhM2QtMTFkYS1hZDMxLWQzM2Q3NTE4MmYxYiIgeG1sbnM6ZGM9Imh0dHA6Ly9wdXJsLm9yZy9kYy9lbGVtZW50cy8xLjEvIj48ZGM6Y3JlYXRvcj48cmRmOlNlcSB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPjxyZGY6bGk+U1RBUjwvcmRmOmxpPjwvcmRmOlNlcT4NCgkJCTwvZGM6Y3JlYXRvcj48L3JkZjpEZXNjcmlwdGlvbj48L3JkZjpSREY+PC94OnhtcG1ldGE+DQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPD94cGFja2V0IGVuZD0ndyc/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" alt="전재수 후보">
+    <div class="hero-overlay"></div>
+    <div class="hero-slogan">
+      <div class="hero-slogan-line">우리 <span>일꾼</span></div>
+      <div class="hero-slogan-line">우리 <span>전재수</span></div>
+    </div>
+  </div>
+  <div class="hero-name-bar">
+    <div class="hero-num-box">
+      <div class="hero-num">1</div>
+    </div>
+    <div class="hero-name-right">
+      <div class="hero-region">부산광역시장 후보</div>
+      <div class="hero-name-text">전재수</div>
+    </div>
+  </div>
+</section>
+
+<!-- COUNTDOWN -->
+<div class="countdown-bar">
+  <div class="cd-label-main">🗳️ 6 · 3 선거까지</div>
+  <div class="cd-nums">
+    <div class="cd-box"><div class="cd-num" id="cd-d">00</div><div class="cd-unit">DAY</div></div>
+    <div class="cd-sep2">:</div>
+    <div class="cd-box"><div class="cd-num" id="cd-h">00</div><div class="cd-unit">HR</div></div>
+    <div class="cd-sep2">:</div>
+    <div class="cd-box"><div class="cd-num" id="cd-m">00</div><div class="cd-unit">MIN</div></div>
+    <div class="cd-sep2">:</div>
+    <div class="cd-box"><div class="cd-num" id="cd-s">00</div><div class="cd-unit">SEC</div></div>
+  </div>
+</div>
+
+<!-- CAMPAIGN MESSAGE -->
+<section class="campaign-msg fade-up">
+  <h2 class="msg-title">일할 사람 하나 키우는 게<br><em>자식 키우는 것만큼 어렵습니다</em></h2>
+  <div class="msg-list">
+    <div class="msg-item">
+      <div class="msg-item-icon">🌊</div>
+      <div class="msg-item-body">
+        <div class="msg-item-title">검증된 실행력, 장관 출신의 체급</div>
+        <div class="msg-item-desc">해양수산부 장관 재임 시 UAE 30조 프로젝트 성사, HMM 본사 부산 이전 — 말이 아닌 결과로 증명했습니다.</div>
+      </div>
+    </div>
+    <div class="msg-item">
+      <div class="msg-item-icon">🤝</div>
+      <div class="msg-item-body">
+        <div class="msg-item-title">떠나지 않는 부산 사람</div>
+        <div class="msg-item-desc">세 번 넘어져도 부산을 떠나지 않았습니다. 낙선 포스터를 벽에 붙여두며 초심을 지켰습니다.</div>
+      </div>
+    </div>
+    <div class="msg-item">
+      <div class="msg-item-icon">🤖</div>
+      <div class="msg-item-body">
+        <div class="msg-item-title">기술이 발전할수록 사람이 중요하다</div>
+        <div class="msg-item-desc">AI가 바꾸는 세상에서 노동자의 임금과 시민의 일자리를 지키는 '사람 냄새 나는 시장'이 되겠습니다.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STORY -->
+<section class="story">
+  <div class="section-tag">HIS STORY</div>
+  <h2 class="story-title">3전 <span>4기</span><br>포기하지 않은 사람</h2>
+  <p class="story-sub">10년간 부산을 떠나지 않았습니다. 그 진심이 마침내 부산을 바꿨습니다.</p>
+
+  <div class="tl">
+    <div class="tl-item fade-up">
+      <div class="tl-dot fail"></div>
+      <div class="tl-year2">2006 · 2008 · 2012</div>
+      <div class="tl-title2">세 번의 낙선 — 그래도 부산에 남았다</div>
+      <div class="tl-desc2">득표율 32.8% → 38.57% → 47.6%. 매번 성장하며 지역 민심을 일궈냈습니다. 여의도로 떠나지 않고 '행님, 누님'들과 함께했습니다.</div>
+    </div>
+    <div class="tl-item fade-up" style="transition-delay:0.15s">
+      <div class="tl-dot win"></div>
+      <div class="tl-year2 active">2016 — 첫 당선</div>
+      <div class="tl-title2">3전 4기, 득표율 55.92%</div>
+      <div class="tl-desc2">보수 중진을 꺾으며 진정성이 지역주의를 이길 수 있음을 증명했습니다.</div>
+      <div class="tl-chip">3전 4기 달성</div>
+    </div>
+    <div class="tl-item fade-up" style="transition-delay:0.3s">
+      <div class="tl-dot win"></div>
+      <div class="tl-year2 active">2020 · 2024 — 3선 의원</div>
+      <div class="tl-title2">해양수산부 장관 · 부산의 대변자</div>
+      <div class="tl-desc2">부산 민주당 유일한 현역 의원으로 3선 달성. 제24대 해양수산부 장관으로 부산의 미래를 설계했습니다.</div>
+    </div>
+  </div>
+
+  <div class="poster-quote-box fade-up">
+    <p class="poster-quote-text">"의원실 벽에는 당선 포스터가 아닌<br>세 장의 낙선 포스터가 붙어 있습니다.<br>가장 힘들고 아팠던 초심을 잊지 않기 위해."</p>
+    <p class="poster-quote-author">— 전재수, "정치는 말이 아니라 결과로 증명하는 것"</p>
+  </div>
+</section>
+
+<!-- VISION -->
+<section class="vision">
+  <div class="section-tag2">AI VISION</div>
+  <h2 class="vision-title">부산 <span>AI 대전환</span><br>로드맵</h2>
+  <p class="vision-sub">장관이 직접 설계한 8,921억 원 규모 부산 미래 계획</p>
+
+  <div class="amount-banner fade-up">
+    <div class="amount-num">8,921</div>
+    <div class="amount-right">
+      <div class="amount-unit">억 원 규모</div>
+      <div class="amount-desc">부산 AI 대전환<br>총 투자 로드맵</div>
+    </div>
+  </div>
+
+  <div class="zone-list fade-up">
+    <div class="uae-box">
+      <div class="uae-flag">🇦🇪</div>
+      <div class="uae-right">
+        <div class="uae-tag">UAE 스타게이트 프로젝트</div>
+        <div class="uae-amount">30조</div>
+        <div class="uae-desc">5GW급 AI 데이터센터 클러스터<br>장관 재임 시 직접 성사</div>
+      </div>
+    </div>
+
+    <div class="zone-item2">
+      <div class="zone-head zone-s-head">
+        <div class="zone-head-icon">🚢</div>
+        <div class="zone-head-text">
+          <div class="zone-head-region">남부산</div>
+          <div class="zone-head-title">항만물류 AI 허브</div>
+        </div>
+      </div>
+      <div class="zone-body">
+        <div class="zone-body-item">부산 신항 7부두 × UAE 칼리파항 AI 통합 표준화</div>
+        <div class="zone-body-item">AI 물류 솔루션 제3국 수출 · 2030 로드맵</div>
+      </div>
+    </div>
+
+    <div class="zone-item2">
+      <div class="zone-head zone-e-head">
+        <div class="zone-head-icon">🎬</div>
+        <div class="zone-head-text">
+          <div class="zone-head-region">동부산 (해운대·기장)</div>
+          <div class="zone-head-title">미디어 AI 특구</div>
+        </div>
+      </div>
+      <div class="zone-body">
+        <div class="zone-body-item">부산국제영화제 × AI 기술 = 글로벌 콘텐츠 수도</div>
+        <div class="zone-body-item">연 35% 성장 AI 미디어 시장 선점 · 인재 유치</div>
+      </div>
+    </div>
+
+    <div class="zone-item2">
+      <div class="zone-head zone-w-head">
+        <div class="zone-head-icon">🏭</div>
+        <div class="zone-head-text">
+          <div class="zone-head-region">서부산 (북구·사상·사하)</div>
+          <div class="zone-head-title">스마트 제조 AI 클러스터</div>
+        </div>
+      </div>
+      <div class="zone-body">
+        <div class="zone-body-item">사하구 부산 AI 산업운영센터 신설</div>
+        <div class="zone-body-item">북구·사상구 첨단 소재 융합 클러스터 + 스마트팩토리</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats">
+  <div class="section-tag" style="margin-bottom:20px">TRACK RECORD</div>
+  <div class="stat-grid fade-up">
+    <div class="stat-card">
+      <div class="stat-n">3<span class="stat-u">선</span></div>
+      <div class="stat-l">국회의원<br>20·21·22대</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-n">10<span class="stat-u">년</span></div>
+      <div class="stat-l">험지 부산<br>끝까지 버텼다</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-n">30<span class="stat-u">조</span></div>
+      <div class="stat-l">UAE 프로젝트<br>직접 성사</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-n">1<span class="stat-u">호</span></div>
+      <div class="stat-l">HMM 본사<br>부산 이전</div>
+    </div>
+  </div>
+  <div class="career-cards fade-up">
+    <div class="career-card">
+      <div class="career-card-icon">🏛️</div>
+      <div class="career-card-body">
+        <div class="career-card-title">제24대 해양수산부 장관</div>
+        <div class="career-card-sub">UAE 스타게이트 · HMM 이전 · AI 항만 로드맵</div>
+      </div>
+      <div class="career-card-year">2024</div>
+    </div>
+    <div class="career-card">
+      <div class="career-card-icon">⚖️</div>
+      <div class="career-card-body">
+        <div class="career-card-title">제20·21·22대 국회의원</div>
+        <div class="career-card-sub">부산 북구·강서구 — 3선 달성</div>
+      </div>
+      <div class="career-card-year">2016~</div>
+    </div>
+    <div class="career-card">
+      <div class="career-card-icon">🇰🇷</div>
+      <div class="career-card-body">
+        <div class="career-card-title">참여정부 대통령비서실 제2부속실장</div>
+        <div class="career-card-sub">청와대 핵심 국정 메커니즘 체득</div>
+      </div>
+      <div class="career-card-year">노무현</div>
+    </div>
+    <div class="career-card">
+      <div class="career-card-icon">⚓</div>
+      <div class="career-card-body">
+        <div class="career-card-title">대한민국 해병대 병장 만기제대</div>
+        <div class="career-card-sub">해병대 701기</div>
+      </div>
+      <div class="career-card-year">복무완</div>
+    </div>
+  </div>
+</section>
+
+<!-- PHILOSOPHY -->
+<section class="philosophy fade-up">
+  <p class="phil-q">기술이 발전할수록<br>사람이 중요하다</p>
+  <p class="phil-s">차가운 AI 공약이 아닙니다.<br>기술의 수혜가 노동자의 임금으로,<br>시민의 일자리로 환원되는<br><strong>'사람 냄새 나는 기술'</strong>을 만들겠습니다.</p>
+</section>
+
+<!-- CTA -->
+<section class="cta fade-up">
+  <h2 class="cta-title">6월 3일,<br><span>부산의 선택</span>이 역사를 만듭니다</h2>
+  <p class="cta-sub">3전 4기. 포기하지 않는 사람이<br>결국 부산을 바꿉니다.</p>
+
+  <a class="btn-vote" href="tel:051-000-0000" onclick="return false;">📞 캠프에 전화하기</a>
+  <a class="btn-kakao" href="#" onclick="return false;">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="#3A1D1D"><path d="M12 3c-5.523 0-10 3.693-10 8.25 0 2.877 1.75 5.412 4.414 6.891l-1.1 4.054a.25.25 0 00.377.272L10.307 19.7A11.84 11.84 0 0012 19.5c5.523 0 10-3.693 10-8.25S17.523 3 12 3z"/></svg>
+    카카오톡 채널
+  </a>
+  <a class="btn-out" href="#" onclick="return false;">🏠 전재수 공식 홈페이지</a>
+
+  <div class="vote-date-box">
+    <div class="vote-date-text">🗳️ 2025년 6월 3일 투표하세요</div>
+    <div class="vote-date-sub">기호 1번 전재수 · 더불어민주당</div>
+  </div>
+</section>
+
+<footer>
+  더불어민주당 전재수 부산광역시장 후보 선거캠프<br>
+  본 홈페이지는 공직선거법을 준수하여 제작되었습니다<br>
+  © 2025 전재수 선거캠프. All rights reserved.
+</footer>
+
+<a href="#" class="top-btn" id="topBtn">▲</a>
+
+<script>
+function updateCountdown(){
+  const target=new Date('2025-06-03T06:00:00+09:00');
+  const diff=target-new Date();
+  if(diff<=0){return}
+  document.getElementById('cd-d').textContent=String(Math.floor(diff/86400000)).padStart(2,'0');
+  document.getElementById('cd-h').textContent=String(Math.floor(diff%86400000/3600000)).padStart(2,'0');
+  document.getElementById('cd-m').textContent=String(Math.floor(diff%3600000/60000)).padStart(2,'0');
+  document.getElementById('cd-s').textContent=String(Math.floor(diff%60000/1000)).padStart(2,'0');
+}
+updateCountdown();setInterval(updateCountdown,1000);
+
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});
+},{threshold:0.12});
+document.querySelectorAll('.fade-up,.tl-item').forEach(el=>obs.observe(el));
+
+const topBtn=document.getElementById('topBtn');
+window.addEventListener('scroll',()=>topBtn.classList.toggle('show',scrollY>300));
+topBtn.addEventListener('click',e=>{e.preventDefault();scrollTo({top:0,behavior:'smooth'})});
+</script>
+</body>
+</html>
