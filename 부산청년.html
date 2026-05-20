@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>부산교회 2구역 청년 섞임</title>
+<meta name="description" content="매주 따뜻한 떡을 떼며, 삶을 나누고, 그리스도 안에서 함께 자라가는 2구역 청년들의 이야기입니다.">
+<meta property="og:title" content="부산교회 2구역 청년 대학생 섞임">
+<meta property="og:description" content="매주 따뜻한 교제와 함께 자라가는 2구역 청년들의 이야기 🌿">
+<meta property="og:type" content="website">
+
+
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ── Reset ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+a{text-decoration:none;color:inherit}
+button{border:none;background:none;cursor:pointer;font-family:inherit;color:inherit}
+input,textarea,select{font-family:inherit}
+img{display:block;max-width:100%}
+
+/* ── Variables ── */
+:root{
+  --cream:#FAF8F2;
+  --cream2:#F2EDE1;
+  --white:#FFFFFF;
+  --sage:#6FA98C;
+  --sage-l:#B6D4C5;
+  --sage-d:#3F7A62;
+  --peach:#E8907A;
+  --yellow:#F5C84A;
+  --text:#332A20;
+  --text-m:#7A6E62;
+  --text-l:#AEA49A;
+  --border:#E4DDD2;
+  --shadow-sm:0 1px 8px rgba(80,55,30,.07);
+  --shadow:0 3px 18px rgba(80,55,30,.1);
+  --nav-h:62px;
+  --max-w:480px;
+  --r:14px;
+  --r-sm:10px;
+}
+
+/* ── Base ── */
+html{background:var(--cream)}
+body{
+  font-family:'Noto Sans KR',sans-serif;
+  color:var(--text);
+  background:var(--cream);
+  min-height:100dvh;
+  max-width:var(--max-w);
+  margin:0 auto;
+  overflow-x:hidden;
+  font-size:14px;
+  line-height:1.6;
+}
+
+/* ── Pages ── */
+.page{display:none;min-height:calc(100dvh - var(--nav-h));padding-bottom:calc(var(--nav-h) + 20px);animation:fadeUp .25s ease}
+.page.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ── Bottom Nav ── */
+#bottom-nav{
+  position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+  width:100%;max-width:var(--max-w);
+  height:var(--nav-h);
+  background:rgba(255,255,255,.96);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-top:1px solid var(--border);
+  display:flex;align-items:stretch;
+  z-index:100;
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+.nav-btn{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:3px;cursor:pointer;color:var(--text-l);font-size:10px;font-weight:500;
+  transition:color .2s;letter-spacing:-.2px;
+}
+.nav-btn.active{color:var(--sage-d)}
+.nav-btn .ni{font-size:22px;line-height:1;transition:transform .2s}
+.nav-btn.active .ni{transform:scale(1.1)}
+
+/* ── Hero ── */
+.hero{
+  background:linear-gradient(155deg,var(--sage) 0%,var(--sage-d) 100%);
+  padding:52px 24px 38px;position:relative;overflow:hidden;
+}
+.hero::before,.hero::after{
+  content:'';position:absolute;border-radius:50%;
+  background:rgba(255,255,255,.06);
+}
+.hero::before{width:200px;height:200px;right:-40px;top:-40px}
+.hero::after{width:120px;height:120px;left:-30px;bottom:-50px}
+.hero-chip{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(255,255,255,.2);color:#fff;
+  font-size:11px;font-weight:500;padding:4px 12px;border-radius:20px;
+  margin-bottom:14px;letter-spacing:.3px;
+}
+.hero-title{
+  font-family:'Noto Serif KR',serif;
+  font-size:28px;font-weight:700;color:#fff;line-height:1.3;margin-bottom:12px;
+}
+.hero-sub{font-size:13px;color:rgba(255,255,255,.82);line-height:1.75;font-weight:300}
+
+/* ── Section Header ── */
+.sec-hd{display:flex;align-items:center;justify-content:space-between;padding:24px 20px 12px}
+.sec-title{font-family:'Noto Serif KR',serif;font-size:18px;font-weight:600}
+.sec-more{font-size:12px;color:var(--sage-d);font-weight:500;cursor:pointer}
+
+/* ── Post Card ── */
+.post-card{
+  background:var(--white);border-radius:var(--r);
+  margin:0 16px 14px;overflow:hidden;
+  box-shadow:var(--shadow-sm);cursor:pointer;
+  transition:transform .15s,box-shadow .15s;
+}
+.post-card:active{transform:scale(.98);box-shadow:none}
+.post-card-thumb{width:100%;aspect-ratio:4/3;object-fit:cover;background:var(--cream2)}
+.post-card-thumb-empty{
+  width:100%;aspect-ratio:4/3;
+  background:linear-gradient(135deg,var(--sage-l) 0%,var(--cream2) 100%);
+  display:flex;align-items:center;justify-content:center;font-size:44px;
+}
+.post-card-body{padding:14px 16px 10px}
+.post-card-date{font-size:11px;color:var(--text-l);margin-bottom:5px}
+.post-card-title{font-size:16px;font-weight:600;margin-bottom:5px;line-height:1.4}
+.post-card-preview{
+  font-size:13px;color:var(--text-m);line-height:1.6;
+  overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+}
+.post-card-foot{
+  display:flex;align-items:center;gap:12px;
+  padding:9px 16px;border-top:1px solid var(--border);
+  font-size:12px;color:var(--text-l);
+}
+
+/* ── Detail Header ── */
+.det-hd{
+  background:var(--white);padding:14px 16px;border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:10;
+  display:flex;align-items:center;gap:10px;
+}
+.back-btn{font-size:22px;padding:2px 4px;color:var(--text);line-height:1}
+
+/* ── Photo Slider ── */
+.slider-wrap{position:relative;overflow:hidden;background:#1a1a1a;touch-action:pan-y}
+.slider-track{display:flex;transition:transform .32s cubic-bezier(.25,.46,.45,.94)}
+.slide-img{min-width:100%;aspect-ratio:4/3;object-fit:cover}
+.slider-counter{
+  position:absolute;bottom:10px;right:12px;
+  background:rgba(0,0,0,.45);color:#fff;
+  font-size:11px;padding:3px 9px;border-radius:20px;letter-spacing:.3px;
+}
+.slider-dots{display:flex;justify-content:center;gap:5px;padding:10px 0;background:var(--white)}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--border);transition:width .2s,background .2s;cursor:pointer}
+.dot.on{width:20px;border-radius:3px;background:var(--sage)}
+
+/* ── Brother Message ── */
+.bro-msg{
+  margin:18px 16px;
+  background:linear-gradient(135deg,#F5FAF7,#EAF4EE);
+  border-radius:var(--r);padding:18px 20px;
+  border-left:3px solid var(--sage);position:relative;
+}
+.bro-label{font-size:11px;font-weight:600;color:var(--sage-d);letter-spacing:.4px;margin-bottom:8px}
+.bro-text{font-size:15px;line-height:1.8;color:var(--text)}
+.bro-quote{
+  position:absolute;top:10px;right:14px;
+  font-size:44px;color:var(--sage-l);line-height:1;
+  font-family:Georgia,serif;opacity:.55;
+}
+
+/* ── Post Meta & Content ── */
+.post-meta{padding:16px 20px 8px}
+.post-meta-date{font-size:12px;color:var(--text-l)}
+.post-meta-title{font-family:'Noto Serif KR',serif;font-size:21px;font-weight:700;line-height:1.4;margin-top:5px}
+.post-body-text{padding:12px 20px 20px;font-size:15px;line-height:1.85;color:var(--text);white-space:pre-wrap}
+
+/* ── Divider ── */
+.divider{height:7px;background:var(--cream2)}
+
+/* ── Share Bar ── */
+.share-bar{
+  display:flex;gap:8px;padding:12px 16px;background:var(--white);
+}
+.btn-share{
+  flex:1;padding:10px 8px;border-radius:9px;
+  font-size:13px;font-weight:500;
+  display:flex;align-items:center;justify-content:center;gap:5px;
+  transition:opacity .15s;
+}
+.btn-share:active{opacity:.75}
+.btn-share.kakao{background:#FEE500;color:#3B1F1F}
+.btn-share.copy{background:var(--cream2);color:var(--text-m)}
+
+/* ── Comments Section ── */
+.cmts-area{background:var(--cream2);padding:18px 14px 24px}
+.cmts-title{font-size:15px;font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.cmt-item{
+  background:var(--white);border-radius:var(--r-sm);
+  padding:13px 14px;margin-bottom:9px;box-shadow:var(--shadow-sm);
+}
+.cmt-item.reply{margin-left:18px;border-left:2.5px solid var(--sage-l);border-radius:0 var(--r-sm) var(--r-sm) 0}
+.cmt-row{display:flex;justify-content:space-between;margin-bottom:5px;align-items:baseline}
+.cmt-name{font-size:13px;font-weight:600}
+.cmt-time{font-size:11px;color:var(--text-l)}
+.cmt-text{font-size:14px;line-height:1.65;color:var(--text)}
+.cmt-acts{display:flex;gap:10px;margin-top:7px;font-size:12px;color:var(--text-l)}
+.cmt-acts button{font-size:12px;color:var(--text-l);transition:color .15s}
+.cmt-acts button:hover{color:var(--sage-d)}
+
+/* ── Forms ── */
+.cmt-form{
+  background:var(--white);border-radius:var(--r-sm);
+  padding:13px 14px;margin-bottom:14px;box-shadow:var(--shadow-sm);
+}
+.cmt-form-lbl{font-size:13px;font-weight:600;margin-bottom:9px;color:var(--text-m)}
+.f-row{display:flex;gap:7px;margin-bottom:7px}
+.f-in{
+  flex:1;padding:10px 12px;
+  border:1.5px solid var(--border);border-radius:8px;
+  font-size:14px;color:var(--text);background:var(--cream);outline:none;
+  transition:border-color .2s;
+}
+.f-in:focus{border-color:var(--sage)}
+.f-ta{
+  width:100%;padding:10px 12px;
+  border:1.5px solid var(--border);border-radius:8px;
+  font-size:14px;color:var(--text);background:var(--cream);outline:none;
+  resize:none;transition:border-color .2s;
+}
+.f-ta:focus{border-color:var(--sage)}
+.btn-submit{
+  width:100%;padding:11px;
+  background:var(--sage);color:#fff;
+  border-radius:8px;font-size:14px;font-weight:600;
+  transition:background .2s;margin-top:7px;
+}
+.btn-submit:active{background:var(--sage-d)}
+.btn-submit:disabled{background:var(--text-l);cursor:not-allowed}
+
+/* ── Guestbook ── */
+.gb-hero{
+  background:linear-gradient(155deg,var(--peach) 0%,#C0603E 100%);
+  padding:42px 24px 32px;text-align:center;color:#fff;position:relative;overflow:hidden;
+}
+.gb-hero::before{content:'';position:absolute;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.06);right:-50px;top:-50px}
+.gb-hero h1{font-family:'Noto Serif KR',serif;font-size:24px;font-weight:700;margin-bottom:8px}
+.gb-hero p{font-size:13px;opacity:.85;line-height:1.65}
+.gb-entry{
+  background:var(--white);border-radius:var(--r-sm);
+  padding:14px 16px;margin:0 14px 10px;box-shadow:var(--shadow-sm);
+}
+
+/* ── Admin ── */
+.adm-login{
+  min-height:calc(100dvh - var(--nav-h));
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:32px;
+}
+.adm-login-box{
+  width:100%;max-width:340px;
+  background:var(--white);border-radius:var(--r);
+  padding:32px 24px;box-shadow:var(--shadow);text-align:center;
+}
+.adm-hd{
+  background:linear-gradient(135deg,#2E2318,#4A3828);
+  padding:18px 20px;color:#fff;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.adm-hd h2{font-size:16px;font-weight:600}
+.adm-post{
+  background:var(--white);border-radius:var(--r-sm);
+  padding:13px 14px;margin-bottom:9px;box-shadow:var(--shadow-sm);
+  display:flex;align-items:center;gap:11px;
+}
+.adm-thumb{
+  width:54px;height:54px;border-radius:8px;object-fit:cover;
+  background:var(--cream2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:22px;
+}
+.adm-info{flex:1;min-width:0}
+.adm-info-title{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.adm-info-date{font-size:12px;color:var(--text-l);margin-top:2px}
+.adm-acts{display:flex;gap:5px;flex-shrink:0}
+.btn-ed{padding:6px 10px;border-radius:6px;font-size:12px;font-weight:500;background:#DDF0E6;color:var(--sage-d)}
+.btn-dl{padding:6px 10px;border-radius:6px;font-size:12px;font-weight:500;background:#FDEAE6;color:#C04030}
+.btn-new{
+  width:calc(100% - 28px);margin:14px 14px 4px;padding:14px;border-radius:var(--r);
+  background:var(--sage);color:#fff;font-size:15px;font-weight:600;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  box-shadow:0 4px 14px rgba(63,122,98,.28);transition:all .15s;
+}
+.btn-new:active{transform:scale(.98)}
+
+/* ── Post Form ── */
+.form-pg{padding:0}
+.form-hd{
+  background:var(--white);padding:14px 16px;border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:10;
+  display:flex;align-items:center;gap:10px;
+}
+.form-hd-title{font-size:16px;font-weight:600;flex:1}
+.btn-save{
+  padding:8px 16px;background:var(--sage);color:#fff;
+  border-radius:8px;font-size:14px;font-weight:600;transition:all .15s;
+}
+.btn-save:active{background:var(--sage-d)}
+.form-body{padding:18px 16px}
+.form-grp{margin-bottom:18px}
+.form-lbl{font-size:13px;font-weight:600;color:var(--text-m);margin-bottom:6px;display:block}
+.f-in-full{
+  width:100%;padding:12px 14px;
+  border:1.5px solid var(--border);border-radius:8px;
+  font-size:15px;color:var(--text);background:var(--white);outline:none;
+  transition:border-color .2s;
+}
+.f-in-full:focus{border-color:var(--sage)}
+.f-ta-full{
+  width:100%;padding:12px 14px;
+  border:1.5px solid var(--border);border-radius:8px;
+  font-size:15px;color:var(--text);background:var(--white);outline:none;
+  resize:none;transition:border-color .2s;
+}
+.f-ta-full:focus{border-color:var(--sage)}
+
+/* ── Photo Upload ── */
+.upload-zone{
+  border:2px dashed var(--sage-l);border-radius:var(--r);
+  padding:24px;text-align:center;cursor:pointer;
+  background:#F5FAF7;transition:border-color .2s;
+}
+.upload-zone:hover{border-color:var(--sage)}
+.photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:10px}
+.photo-item{position:relative;aspect-ratio:1;border-radius:8px;overflow:hidden}
+.photo-item img{width:100%;height:100%;object-fit:cover}
+.photo-del{
+  position:absolute;top:4px;right:4px;
+  background:rgba(0,0,0,.55);color:#fff;border-radius:50%;
+  width:20px;height:20px;font-size:11px;
+  display:flex;align-items:center;justify-content:center;
+}
+
+/* ── Progress ── */
+.progress-wrap{margin-top:11px}
+.prog-bar-bg{background:var(--border);border-radius:4px;height:6px;overflow:hidden}
+.prog-bar{height:100%;background:var(--sage);transition:width .3s;border-radius:4px}
+.prog-txt{font-size:12px;color:var(--text-m);margin-top:4px;text-align:center}
+
+/* ── Modal ── */
+.modal-bg{
+  position:fixed;inset:0;background:rgba(0,0,0,.48);
+  z-index:200;display:none;align-items:flex-end;justify-content:center;
+}
+.modal-bg.open{display:flex}
+.modal-box{
+  background:var(--white);border-radius:var(--r) var(--r) 0 0;
+  padding:22px;width:100%;max-width:var(--max-w);
+  max-height:85dvh;overflow-y:auto;
+}
+.modal-title{font-size:17px;font-weight:700;margin-bottom:14px}
+.modal-btns{display:flex;gap:8px;margin-top:16px}
+.btn-cancel{flex:1;padding:12px;border-radius:8px;background:var(--cream2);font-size:14px;font-weight:500}
+.btn-ok{flex:1;padding:12px;border-radius:8px;background:var(--sage);color:#fff;font-size:14px;font-weight:600}
+.btn-ok.danger{background:#C84030}
+
+/* ── Toast ── */
+.toast{
+  position:fixed;bottom:calc(var(--nav-h) + 14px);left:50%;transform:translateX(-50%);
+  background:var(--text);color:#fff;
+  padding:11px 20px;border-radius:22px;
+  font-size:13px;font-weight:500;
+  z-index:300;white-space:nowrap;
+  opacity:0;pointer-events:none;
+  transition:opacity .28s,bottom .28s;
+}
+.toast.show{opacity:1;bottom:calc(var(--nav-h) + 22px)}
+.toast.ok{background:var(--sage-d)}
+.toast.err{background:#C04030}
+
+/* ── Misc ── */
+.empty{text-align:center;padding:48px 28px;color:var(--text-l)}
+.empty-icon{font-size:44px;margin-bottom:10px}
+.empty-txt{font-size:14px;line-height:1.7}
+.loading{display:flex;align-items:center;justify-content:center;padding:36px}
+.spinner{
+  width:30px;height:30px;border:3px solid var(--sage-l);
+  border-top-color:var(--sage);border-radius:50%;
+  animation:spin .75s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.tag{
+  display:inline-block;padding:3px 10px;border-radius:20px;
+  font-size:11px;font-weight:500;
+}
+.tag-sage{background:#DDF0E6;color:var(--sage-d)}
+</style>
+</head>
+<body>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Bottom Nav -->
+<nav id="bottom-nav">
+  <div class="nav-btn active" data-page="home" onclick="go('home')">
+    <span class="ni">🏠</span><span>홈</span>
+  </div>
+  <div class="nav-btn" data-page="feed" onclick="go('feed')">
+    <span class="ni">📸</span><span>섞임소식</span>
+  </div>
+  <div class="nav-btn" data-page="guestbook" onclick="go('guestbook')">
+    <span class="ni">📖</span><span>방명록</span>
+  </div>
+  <div class="nav-btn" data-page="admin" onclick="go('admin')">
+    <span class="ni">⚙️</span><span>관리자</span>
+  </div>
+</nav>
+
+<!-- ╔═══════════════════╗ -->
+<!-- ║   HOME PAGE       ║ -->
+<!-- ╚═══════════════════╝ -->
+<div id="page-home" class="page active">
+  <div class="hero">
+    <div class="hero-chip">🌿 부산교회 2구역 · 청년 대학생</div>
+    <h1 class="hero-title">섞임</h1>
+    <p class="hero-sub">
+      매주 따뜻한 떡을 떼며, 삶을 나누고,<br>
+      그리스도 안에서 함께 자라가는<br>
+      2구역 청년들의 이야기입니다.
+    </p>
+  </div>
+
+  <div class="sec-hd">
+    <h2 class="sec-title">최신 소식</h2>
+    <span class="sec-more" onclick="go('feed')">전체보기 →</span>
+  </div>
+  <div id="home-posts"><div class="loading"><div class="spinner"></div></div></div>
+</div>
+
+<!-- ╔═══════════════════╗ -->
+<!-- ║   FEED PAGE       ║ -->
+<!-- ╚═══════════════════╝ -->
+<div id="page-feed" class="page">
+  <div class="hero" style="padding:36px 24px 28px">
+    <div class="hero-chip">📸 섞임 소식</div>
+    <h1 class="hero-title" style="font-size:22px">매주의 교제 이야기</h1>
+    <p class="hero-sub" style="font-size:12px">말씀과 식사와 기도로 함께한 시간들</p>
+  </div>
+  <div id="feed-posts" style="padding-top:14px">
+    <div class="loading"><div class="spinner"></div></div>
+  </div>
+</div>
+
+<!-- ╔═══════════════════╗ -->
+<!-- ║   POST DETAIL     ║ -->
+<!-- ╚═══════════════════╝ -->
+<div id="page-post" class="page">
+  <div class="det-hd">
+    <button class="back-btn" onclick="goBack()">←</button>
+    <span style="font-size:15px;font-weight:600;flex:1">섞임 소식</span>
+    <button onclick="sharePost()" style="font-size:18px;padding:4px">🔗</button>
+  </div>
+  <div id="post-content"></div>
+</div>
+
+<!-- ╔═══════════════════╗ -->
+<!-- ║   GUESTBOOK       ║ -->
+<!-- ╚═══════════════════╝ -->
+<div id="page-guestbook" class="page">
+  <div class="gb-hero">
+    <h1>방명록 · 기도제목</h1>
+    <p>서로를 향한 격려와 중보기도 제목을<br>자유롭게 나눠요 🙏</p>
+  </div>
+
+  <div style="padding:18px 14px 4px">
+    <div class="cmt-form">
+      <div class="cmt-form-lbl">✏️ 새 글 남기기</div>
+      <div class="f-row">
+        <input class="f-in" id="gb-name" placeholder="이름">
+        <input class="f-in" id="gb-pw" type="password" placeholder="비밀번호">
+      </div>
+      <textarea class="f-ta" id="gb-text" placeholder="격려, 기도제목, 소식을 자유롭게 남겨주세요 😊" rows="3"></textarea>
+      <button class="btn-submit" onclick="submitGb()">남기기</button>
+    </div>
+  </div>
+
+  <div id="gb-list"><div class="loading"><div class="spinner"></div></div></div>
+</div>
+
+<!-- ╔═══════════════════╗ -->
+<!-- ║   ADMIN PAGE      ║ -->
+<!-- ╚═══════════════════╝ -->
+<div id="page-admin" class="page">
+
+  <!-- 로그인 뷰 -->
+  <div id="adm-login-v" class="adm-login">
+    <div class="adm-login-box">
+      <div style="font-size:48px;margin-bottom:16px">🔐</div>
+      <h2 style="font-family:'Noto Serif KR',serif;font-size:20px;font-weight:700;margin-bottom:6px">관리자 로그인</h2>
+      <p style="font-size:13px;color:var(--text-l);margin-bottom:22px">형제님 전용 관리 페이지입니다</p>
+      <input class="f-in-full" id="adm-pw" type="password" placeholder="비밀번호를 입력하세요" style="margin-bottom:12px">
+      <button class="btn-submit" onclick="adminLogin()">로그인</button>
+    </div>
+  </div>
+
+  <!-- 관리 패널 뷰 -->
+  <div id="adm-panel-v" style="display:none">
+    <div class="adm-hd">
+      <h2>관리자 패널</h2>
+      <button style="font-size:12px;color:rgba(255,255,255,.65)" onclick="adminLogout()">로그아웃</button>
+    </div>
+    <button class="btn-new" onclick="openForm()">＋ 새 섞임 소식 올리기</button>
+    <div style="padding:14px 14px 4px">
+      <div style="font-size:12px;font-weight:600;color:var(--text-l);letter-spacing:.4px;margin-bottom:10px">게시글 관리</div>
+      <div id="adm-list"><div class="loading"><div class="spinner"></div></div></div>
+    </div>
+  </div>
+
+  <!-- 글 작성/수정 폼 뷰 -->
+  <div id="adm-form-v" class="form-pg" style="display:none">
+    <div class="form-hd">
+      <button class="back-btn" onclick="closeForm()">←</button>
+      <span class="form-hd-title" id="form-title">새 소식 올리기</span>
+      <button class="btn-save" id="btn-save" onclick="savePost()">저장</button>
+    </div>
+    <div class="form-body">
+      <div class="form-grp">
+        <label class="form-lbl">📅 날짜</label>
+        <input class="f-in-full" id="fi-date" type="date">
+      </div>
+      <div class="form-grp">
+        <label class="form-lbl">📝 제목</label>
+        <input class="f-in-full" id="fi-title" placeholder="예) 5월 셋째 주 섞임 💚">
+      </div>
+      <div class="form-grp">
+        <label class="form-lbl">💌 형제님의 한마디</label>
+        <textarea class="f-ta-full" id="fi-bro" placeholder="이번 교제에서 나누고 싶은 따뜻한 권면이나 말씀을 적어주세요." rows="4"></textarea>
+      </div>
+      <div class="form-grp">
+        <label class="form-lbl">📖 교제 내용</label>
+        <textarea class="f-ta-full" id="fi-content" placeholder="오늘 나눈 말씀, 식사, 활동 등 이야기를 자유롭게 적어주세요." rows="6"></textarea>
+      </div>
+      <div class="form-grp">
+        <label class="form-lbl">📷 사진 첨부</label>
+        <div id="existing-photos" style="margin-bottom:8px"></div>
+        <div class="upload-zone" onclick="document.getElementById('fi-photos').click()">
+          <div style="font-size:30px;margin-bottom:7px">📷</div>
+          <div style="font-size:14px;font-weight:600;color:var(--sage-d)">사진 선택하기</div>
+          <div style="font-size:12px;color:var(--text-l);margin-top:3px">여러 장 동시 선택 · PC · 스마트폰 모두 OK</div>
+        </div>
+        <input type="file" id="fi-photos" multiple accept="image/*" style="display:none" onchange="handlePhotos(this)">
+        <div class="photo-grid" id="new-photos"></div>
+        <div id="progress-wrap" class="progress-wrap" style="display:none">
+          <div class="prog-bar-bg"><div class="prog-bar" id="prog-bar" style="width:0%"></div></div>
+          <div class="prog-txt" id="prog-txt">업로드 중...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /page-admin -->
+
+<!-- ╔═══════════════════╗ -->
+<!-- ║   MODALS          ║ -->
+<!-- ╚═══════════════════╝ -->
+
+<!-- 삭제 확인 -->
+<div class="modal-bg" id="m-del">
+  <div class="modal-box">
+    <div class="modal-title">🗑️ 삭제 확인</div>
+    <p style="font-size:14px;color:var(--text-m)" id="m-del-txt">정말 삭제하시겠어요?</p>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeModal('m-del')">취소</button>
+      <button class="btn-ok danger" id="m-del-ok">삭제</button>
+    </div>
+  </div>
+</div>
+
+<!-- 비밀번호 확인 -->
+<div class="modal-bg" id="m-pw">
+  <div class="modal-box">
+    <div class="modal-title">🔑 비밀번호 확인</div>
+    <p style="font-size:13px;color:var(--text-m);margin-bottom:12px">작성 시 입력한 비밀번호를 입력해주세요.</p>
+    <input class="f-in-full" id="m-pw-val" type="password" placeholder="비밀번호">
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeModal('m-pw')">취소</button>
+      <button class="btn-ok" id="m-pw-ok">확인</button>
+    </div>
+  </div>
+</div>
+
+<!-- 답글 -->
+<div class="modal-bg" id="m-reply">
+  <div class="modal-box">
+    <div class="modal-title" id="m-reply-title">💬 답글 남기기</div>
+    <div class="f-row" style="margin-bottom:8px">
+      <input class="f-in" id="r-name" placeholder="이름">
+      <input class="f-in" id="r-pw" type="password" placeholder="비밀번호">
+    </div>
+    <textarea class="f-ta" id="r-text" placeholder="답글을 입력하세요" rows="3" style="width:100%"></textarea>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeModal('m-reply')">취소</button>
+      <button class="btn-ok" onclick="submitReply()">등록</button>
+    </div>
+  </div>
+</div>
+
+<!-- ╔═══════════════════╗ -->
+<!-- ║   FIREBASE + APP  ║ -->
+<!-- ╚═══════════════════╝ -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import {
+  getFirestore, collection, doc, addDoc, getDoc, getDocs,
+  updateDoc, deleteDoc, query, orderBy, limit,
+  serverTimestamp, increment
+} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+import {
+  getStorage, ref as sRef, uploadBytes, getDownloadURL
+} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js';
+
+/* ─── Firebase Init ─── */
+const app = initializeApp({
+  apiKey:"AIzaSyBCz54UBVbRa9dTeRGjjo3jP8NLPN70lek",
+  authDomain:"busanch-youngth.firebaseapp.com",
+  projectId:"busanch-youngth",
+  storageBucket:"busanch-youngth.firebasestorage.app",
+  messagingSenderId:"980464442220",
+  appId:"1:980464442220:web:0b5977e0b57b770aadb149"
+});
+const db = getFirestore(app);
+const storage = getStorage(app);
+
+/* ─── ⚠️ 관리자 비밀번호 (여기서 변경하세요!) ─── */
+const ADMIN_PW = "부산2구역2025";
+
+/* ─── State ─── */
+let curPage = 'home', prevPage = 'home';
+let curPostId = null;
+let isAdmin = false;
+let editId = null;
+let newFiles = [];
+let exUrls = [];
+let pendDelFn = null;
+let pendPwFn = null;
+let replyParentId = null;
+let slideIdx = 0, slideTotal = 0, slideStartX = 0;
+
+/* ─── Router ─── */
+function go(page, data=null){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(n=>n.classList.remove('active'));
+  prevPage=curPage; curPage=page;
+  document.getElementById('page-'+page).classList.add('active');
+  const nb=document.querySelector(`[data-page="${page}"]`);
+  if(nb)nb.classList.add('active');
+  window.scrollTo(0,0);
+  if(page==='home')loadHome();
+  else if(page==='feed')loadFeed();
+  else if(page==='post')loadPost(data);
+  else if(page==='guestbook')loadGb();
+  else if(page==='admin')loadAdmin();
+}
+function goBack(){go(prevPage)}
+
+/* ─── HOME ─── */
+async function loadHome(){
+  const c=document.getElementById('home-posts');
+  c.innerHTML='<div class="loading"><div class="spinner"></div></div>';
+  try{
+    const q0=query(collection(db,'posts'),orderBy('createdAt','desc'),limit(3));
+    const s=await getDocs(q0);
+    if(s.empty){c.innerHTML=emptyHtml('🌱','아직 소식이 없어요.<br>첫 번째 섞임 소식을 기다리고 있어요!');return}
+    c.innerHTML='';
+    s.forEach(d=>c.appendChild(mkCard(d.id,d.data())));
+  }catch(e){c.innerHTML=emptyHtml('😢','불러오기 오류: '+e.message)}
+}
+
+/* ─── FEED ─── */
+async function loadFeed(){
+  const c=document.getElementById('feed-posts');
+  c.innerHTML='<div class="loading"><div class="spinner"></div></div>';
+  try{
+    const q1=query(collection(db,'posts'),orderBy('createdAt','desc'));
+    const s=await getDocs(q1);
+    if(s.empty){c.innerHTML=emptyHtml('📸','아직 소식이 없어요!');return}
+    c.innerHTML='';
+    s.forEach(d=>c.appendChild(mkCard(d.id,d.data())));
+  }catch(e){c.innerHTML=emptyHtml('😢','오류: '+e.message)}
+}
+
+function mkCard(id,d){
+  const div=document.createElement('div');
+  div.className='post-card';
+  div.onclick=()=>go('post',id);
+  const thumb=(d.photos&&d.photos.length>0)
+    ?`<img class="post-card-thumb" src="${d.photos[0]}" alt="섞임 사진" loading="lazy">`
+    :`<div class="post-card-thumb-empty">🌿</div>`;
+  const dateStr=d.date?fmt2(d.date):(d.createdAt?fmtTs(d.createdAt):'');
+  div.innerHTML=`${thumb}
+    <div class="post-card-body">
+      <div class="post-card-date">${dateStr}</div>
+      <div class="post-card-title">${esc(d.title||'섞임 소식')}</div>
+      <div class="post-card-preview">${esc(d.content||'')}</div>
+    </div>
+    <div class="post-card-foot">
+      <span>📷 ${(d.photos||[]).length}</span>
+      <span>💬 ${d.commentCount||0}</span>
+    </div>`;
+  return div;
+}
+
+/* ─── POST DETAIL ─── */
+async function loadPost(pid){
+  if(!pid){go('feed');return}
+  curPostId=pid;
+  const c=document.getElementById('post-content');
+  c.innerHTML='<div class="loading"><div class="spinner"></div></div>';
+  try{
+    const docSnap=await getDoc(doc(db,'posts',pid));
+    if(!docSnap.exists()){c.innerHTML=emptyHtml('😢','게시글을 찾을 수 없어요.');return}
+    const d=docSnap.data();
+    const photos=d.photos||[];
+    const dateStr=d.date?fmt2(d.date):'';
+
+    /* slider */
+    let sliderHtml='';
+    if(photos.length>0){
+      const slides=photos.map(u=>`<img class="slide-img" src="${u}" alt="섞임 사진" loading="lazy">`).join('');
+      const dots=photos.length>1?`<div class="slider-dots">${photos.map((_,i)=>`<div class="dot${i===0?' on':''}" onclick="toSlide(${i})"></div>`).join('')}</div>`:'';
+      const counter=photos.length>1?`<div class="slider-counter" id="s-ctr">1 / ${photos.length}</div>`:'';
+      sliderHtml=`
+        <div class="slider-wrap" id="s-wrap">
+          <div class="slider-track" id="s-track">${slides}</div>
+          ${counter}
+        </div>${dots}`;
+    }
+
+    /* brother message */
+    const broHtml=d.brotherMessage?`
+      <div class="bro-msg">
+        <div class="bro-label">✉️ 형제님의 한마디</div>
+        <div class="bro-text">${esc(d.brotherMessage)}</div>
+        <div class="bro-quote">"</div>
+      </div>`:'';
+
+    c.innerHTML=`
+      ${sliderHtml}
+      <div class="post-meta">
+        <div class="post-meta-date">${dateStr}</div>
+        <div class="post-meta-title">${esc(d.title||'섞임 소식')}</div>
+      </div>
+      ${broHtml}
+      <div class="divider"></div>
+      <div class="post-body-text">${esc(d.content||'')}</div>
+      <div class="divider"></div>
+      <div class="share-bar">
+        <button class="btn-share kakao" onclick="sharePost()">📱 공유하기</button>
+        <button class="btn-share copy" onclick="copyLink()">🔗 링크 복사</button>
+      </div>
+      <div class="divider"></div>
+      <div class="cmts-area" id="cmts">
+        <div class="loading"><div class="spinner"></div></div>
+      </div>`;
+
+    if(photos.length>1)initSlider(photos.length);
+    loadCmts(pid);
+  }catch(e){c.innerHTML=emptyHtml('😢','오류: '+e.message)}
+}
+
+/* ─── Slider ─── */
+function initSlider(total){
+  slideIdx=0;slideTotal=total;
+  const wrap=document.getElementById('s-wrap');
+  if(!wrap)return;
+  wrap.addEventListener('touchstart',e=>{slideStartX=e.touches[0].clientX},{passive:true});
+  wrap.addEventListener('touchend',e=>{
+    const dx=slideStartX-e.changedTouches[0].clientX;
+    if(Math.abs(dx)>40){
+      if(dx>0&&slideIdx<slideTotal-1)toSlide(slideIdx+1);
+      else if(dx<0&&slideIdx>0)toSlide(slideIdx-1);
+    }
+  },{passive:true});
+}
+function toSlide(i){
+  slideIdx=i;
+  const t=document.getElementById('s-track');
+  const dots=document.querySelectorAll('.dot');
+  const ctr=document.getElementById('s-ctr');
+  if(t)t.style.transform=`translateX(-${i*100}%)`;
+  dots.forEach((d,j)=>d.classList.toggle('on',j===i));
+  if(ctr)ctr.textContent=`${i+1} / ${slideTotal}`;
+}
+
+/* ─── Comments ─── */
+async function loadCmts(pid){
+  const area=document.getElementById('cmts');
+  if(!area)return;
+  try{
+    const snap=await getDocs(query(collection(db,'posts',pid,'comments'),orderBy('createdAt','asc')));
+    const all=[],map={};
+    snap.forEach(d=>{const c={id:d.id,...d.data(),replies:[]};map[d.id]=c;if(!c.parentId)all.push(c)});
+    snap.forEach(d=>{const c=d.data();if(c.parentId&&map[c.parentId])map[c.parentId].replies.push({id:d.id,...c})});
+
+    area.innerHTML=`
+      <div class="cmts-title">💬 댓글 <span style="color:var(--sage)">${snap.size}</span></div>
+      <div class="cmt-form">
+        <div class="cmt-form-lbl">댓글 남기기</div>
+        <div class="f-row">
+          <input class="f-in" id="cn" placeholder="이름">
+          <input class="f-in" id="cp" type="password" placeholder="비밀번호">
+        </div>
+        <textarea class="f-ta" id="ct" placeholder="따뜻한 격려를 남겨주세요 😊" rows="2"></textarea>
+        <button class="btn-submit" onclick="submitCmt('${pid}')">댓글 등록</button>
+      </div>
+      <div id="cmt-list"></div>`;
+
+    const list=document.getElementById('cmt-list');
+    if(all.length===0){
+      list.innerHTML='<div style="text-align:center;padding:18px;font-size:13px;color:var(--text-l)">첫 댓글을 남겨보세요 💚</div>';
+    }else{
+      all.forEach(c=>{
+        list.appendChild(renderCmt(c,pid,false));
+        c.replies.forEach(r=>list.appendChild(renderCmt(r,pid,true)));
+      });
+    }
+  }catch(e){
+    area.innerHTML=emptyHtml('😢','댓글 오류: '+e.message);
+  }
+}
+function renderCmt(c,pid,isReply){
+  const div=document.createElement('div');
+  div.className='cmt-item'+(isReply?' reply':'');
+  const time=c.createdAt?fmtTs(c.createdAt):'';
+  div.innerHTML=`
+    <div class="cmt-row">
+      <span class="cmt-name">${esc(c.name||'익명')}</span>
+      <span class="cmt-time">${time}</span>
+    </div>
+    <div class="cmt-text">${esc(c.content||'')}</div>
+    <div class="cmt-acts">
+      ${!isReply?`<button onclick="openReply('${c.id}','${esc(c.name||'')}')">↩ 답글</button>`:''}
+      <button onclick="openDelCmt('${pid}','${c.id}','${c.passwordHash||''}')">🗑 삭제</button>
+    </div>`;
+  return div;
+}
+async function submitCmt(pid){
+  const n=document.getElementById('cn').value.trim();
+  const p=document.getElementById('cp').value.trim();
+  const t=document.getElementById('ct').value.trim();
+  if(!n||!p||!t){toast('이름, 비밀번호, 내용을 모두 입력해주세요','err');return}
+  const btn=document.querySelector('#cmts .btn-submit');
+  if(btn){btn.disabled=true;btn.textContent='등록 중...'}
+  try{
+    const h=await sha(p);
+    await addDoc(collection(db,'posts',pid,'comments'),{name:n,content:t,passwordHash:h,parentId:null,createdAt:serverTimestamp()});
+    await updateDoc(doc(db,'posts',pid),{commentCount:increment(1)});
+    toast('댓글이 등록되었어요 💚','ok');
+    loadCmts(pid);
+  }catch(e){
+    toast('오류: '+e.message,'err');
+    if(btn){btn.disabled=false;btn.textContent='댓글 등록'}
+  }
+}
+function openReply(parentId,parentName){
+  replyParentId=parentId;
+  document.getElementById('r-name').value='';
+  document.getElementById('r-pw').value='';
+  document.getElementById('r-text').value='';
+  document.getElementById('r-text').placeholder=`@${parentName}에게 답글`;
+  document.getElementById('m-reply-title').textContent=`💬 @${parentName}에게 답글`;
+  openModal('m-reply');
+}
+async function submitReply(){
+  const n=document.getElementById('r-name').value.trim();
+  const p=document.getElementById('r-pw').value.trim();
+  const t=document.getElementById('r-text').value.trim();
+  if(!n||!p||!t){toast('모두 입력해주세요','err');return}
+  try{
+    const h=await sha(p);
+    await addDoc(collection(db,'posts',curPostId,'comments'),{name:n,content:t,passwordHash:h,parentId:replyParentId,createdAt:serverTimestamp()});
+    await updateDoc(doc(db,'posts',curPostId),{commentCount:increment(1)});
+    closeModal('m-reply');
+    toast('답글이 등록되었어요 💚','ok');
+    loadCmts(curPostId);
+  }catch(e){toast('오류: '+e.message,'err')}
+}
+function openDelCmt(pid,cid,storedHash){
+  document.getElementById('m-pw-val').value='';
+  pendPwFn=async()=>{
+    const p=document.getElementById('m-pw-val').value.trim();
+    if(!p){toast('비밀번호를 입력해주세요','err');return}
+    const h=await sha(p);
+    if(h!==storedHash){toast('비밀번호가 맞지 않아요','err');return}
+    await deleteDoc(doc(db,'posts',pid,'comments',cid));
+    await updateDoc(doc(db,'posts',pid),{commentCount:increment(-1)});
+    closeModal('m-pw');
+    toast('삭제되었어요','ok');
+    loadCmts(pid);
+  };
+  document.getElementById('m-pw-ok').onclick=()=>pendPwFn&&pendPwFn();
+  openModal('m-pw');
+}
+
+/* ─── GUESTBOOK ─── */
+async function loadGb(){
+  const list=document.getElementById('gb-list');
+  list.innerHTML='<div class="loading"><div class="spinner"></div></div>';
+  try{
+    const q2=query(collection(db,'guestbook'),orderBy('createdAt','desc'));
+    const s=await getDocs(q2);
+    if(s.empty){list.innerHTML=emptyHtml('🌸','첫 번째 글을 남겨보세요!');return}
+    list.innerHTML='';
+    s.forEach(doc=>{
+      const d=docSnap.data();
+      const div=document.createElement('div');
+      div.className='gb-entry';
+      div.innerHTML=`
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+          <span style="font-size:14px;font-weight:600">${esc(d.name||'익명')}</span>
+          <span style="font-size:11px;color:var(--text-l)">${d.createdAt?fmtTs(d.createdAt):''}</span>
+        </div>
+        <div style="font-size:14px;line-height:1.7;white-space:pre-wrap">${esc(d.content||'')}</div>
+        <button onclick="openDelGb('${doc.id}','${d.passwordHash||''}')" style="margin-top:8px;font-size:11px;color:var(--text-l)">🗑 삭제</button>`;
+      list.appendChild(div);
+    });
+  }catch(e){list.innerHTML=emptyHtml('😢','오류: '+e.message)}
+}
+async function submitGb(){
+  const n=document.getElementById('gb-name').value.trim();
+  const p=document.getElementById('gb-pw').value.trim();
+  const t=document.getElementById('gb-text').value.trim();
+  if(!n||!p||!t){toast('이름, 비밀번호, 내용을 모두 입력해주세요','err');return}
+  try{
+    const h=await sha(p);
+    await addDoc(collection(db,'guestbook'),{name:n,content:t,passwordHash:h,createdAt:serverTimestamp()});
+    document.getElementById('gb-name').value='';
+    document.getElementById('gb-pw').value='';
+    document.getElementById('gb-text').value='';
+    toast('글이 등록되었어요 🙏','ok');
+    loadGb();
+  }catch(e){toast('오류: '+e.message,'err')}
+}
+function openDelGb(id,storedHash){
+  document.getElementById('m-pw-val').value='';
+  pendPwFn=async()=>{
+    const p=document.getElementById('m-pw-val').value.trim();
+    if(!p){toast('비밀번호를 입력해주세요','err');return}
+    const h=await sha(p);
+    if(h!==storedHash){toast('비밀번호가 맞지 않아요','err');return}
+    await deleteDoc(doc(db,'guestbook',id));
+    closeModal('m-pw');
+    toast('삭제되었어요','ok');
+    loadGb();
+  };
+  document.getElementById('m-pw-ok').onclick=()=>pendPwFn&&pendPwFn();
+  openModal('m-pw');
+}
+
+/* ─── ADMIN ─── */
+function loadAdmin(){
+  if(isAdmin){showPanel();loadAdmPosts()}
+  else{document.getElementById('adm-login-v').style.display='flex';document.getElementById('adm-panel-v').style.display='none'}
+}
+function adminLogin(){
+  if(document.getElementById('adm-pw').value===ADMIN_PW){
+    isAdmin=true;document.getElementById('adm-pw').value='';
+    showPanel();loadAdmPosts();
+    toast('환영합니다, 형제님! 👋','ok');
+  }else toast('비밀번호가 맞지 않아요','err');
+}
+function adminLogout(){
+  isAdmin=false;
+  document.getElementById('adm-login-v').style.display='flex';
+  document.getElementById('adm-panel-v').style.display='none';
+}
+function showPanel(){
+  document.getElementById('adm-login-v').style.display='none';
+  document.getElementById('adm-panel-v').style.display='block';
+  document.getElementById('adm-form-v').style.display='none';
+}
+async function loadAdmPosts(){
+  const list=document.getElementById('adm-list');
+  list.innerHTML='<div class="loading"><div class="spinner"></div></div>';
+  try{
+    const q1=query(collection(db,'posts'),orderBy('createdAt','desc'));
+    const s=await getDocs(q1);
+    if(s.empty){list.innerHTML=emptyHtml('📝','아직 게시글이 없어요.');return}
+    list.innerHTML='';
+    s.forEach(doc=>{
+      const d=docSnap.data();
+      const div=document.createElement('div');
+      div.className='adm-post';
+      const thumb=(d.photos&&d.photos.length>0)
+        ?`<img class="adm-thumb" src="${d.photos[0]}" alt="" style="border-radius:8px;object-fit:cover">`
+        :`<div class="adm-thumb">🌿</div>`;
+      div.innerHTML=`${thumb}
+        <div class="adm-info">
+          <div class="adm-info-title">${esc(d.title||'제목 없음')}</div>
+          <div class="adm-info-date">${d.date?fmt2(d.date):''}</div>
+        </div>
+        <div class="adm-acts">
+          <button class="btn-ed" onclick="openEdit('${doc.id}')">수정</button>
+          <button class="btn-dl" onclick="confirmDelPost('${doc.id}')">삭제</button>
+        </div>`;
+      list.appendChild(div);
+    });
+  }catch(e){list.innerHTML=emptyHtml('😢','오류: '+e.message)}
+}
+function confirmDelPost(pid){
+  document.getElementById('m-del-txt').textContent='이 게시글을 삭제하면 복구할 수 없어요. 정말 삭제하시겠어요?';
+  pendDelFn=async()=>{
+    try{
+      await deleteDoc(doc(db,'posts',pid));
+      closeModal('m-del');toast('삭제되었어요','ok');loadAdmPosts();
+    }catch(e){toast('삭제 오류: '+e.message,'err')}
+  };
+  document.getElementById('m-del-ok').onclick=()=>pendDelFn&&pendDelFn();
+  openModal('m-del');
+}
+
+/* ─── Post Form ─── */
+function openForm(pid=null){
+  editId=pid;newFiles=[];exUrls=[];
+  document.getElementById('fi-date').value=new Date().toISOString().split('T')[0];
+  document.getElementById('fi-title').value='';
+  document.getElementById('fi-bro').value='';
+  document.getElementById('fi-content').value='';
+  document.getElementById('existing-photos').innerHTML='';
+  document.getElementById('new-photos').innerHTML='';
+  document.getElementById('fi-photos').value='';
+  document.getElementById('progress-wrap').style.display='none';
+  document.getElementById('form-title').textContent=pid?'소식 수정하기':'새 소식 올리기';
+  document.getElementById('adm-panel-v').style.display='none';
+  document.getElementById('adm-form-v').style.display='block';
+  window.scrollTo(0,0);
+}
+async function openEdit(pid){
+  openForm(pid);
+  try{
+    const docSnap=await getDoc(doc(db,'posts',pid));
+    if(!docSnap.exists())return;
+    const d=docSnap.data();
+    document.getElementById('fi-date').value=d.date||'';
+    document.getElementById('fi-title').value=d.title||'';
+    document.getElementById('fi-bro').value=d.brotherMessage||'';
+    document.getElementById('fi-content').value=d.content||'';
+    exUrls=d.photos||[];
+    renderExisting();
+  }catch(e){toast('불러오기 오류: '+e.message,'err')}
+}
+function renderExisting(){
+  const c=document.getElementById('existing-photos');
+  if(exUrls.length===0){c.innerHTML='';return}
+  c.innerHTML=`<div style="font-size:12px;color:var(--text-m);margin-bottom:5px;grid-column:1/-1">현재 사진 (✕ 클릭 = 삭제)</div>`;
+  const grid=document.createElement('div');grid.className='photo-grid';
+  exUrls.forEach((url,i)=>{
+    const d=document.createElement('div');d.className='photo-item';
+    d.innerHTML=`<img src="${url}" alt=""><button class="photo-del" onclick="removeEx(${i})">✕</button>`;
+    grid.appendChild(d);
+  });
+  c.appendChild(grid);
+}
+function removeEx(i){exUrls.splice(i,1);renderExisting()}
+function handlePhotos(inp){
+  newFiles=[...newFiles,...Array.from(inp.files)];
+  const g=document.getElementById('new-photos');
+  g.innerHTML=newFiles.length?`<div style="font-size:12px;color:var(--text-m);margin-bottom:5px;grid-column:1/-1">새로 추가 (${newFiles.length}장)</div>`:'';
+  newFiles.forEach((f,i)=>{
+    const d=document.createElement('div');d.className='photo-item';
+    d.innerHTML=`<img src="${URL.createObjectURL(f)}" alt=""><button class="photo-del" onclick="removeNew(${i})">✕</button>`;
+    g.appendChild(d);
+  });
+}
+function removeNew(i){
+  newFiles.splice(i,1);
+  const g=document.getElementById('new-photos');
+  g.innerHTML=newFiles.length?`<div style="font-size:12px;color:var(--text-m);margin-bottom:5px;grid-column:1/-1">새로 추가 (${newFiles.length}장)</div>`:'';
+  newFiles.forEach((f,j)=>{
+    const d=document.createElement('div');d.className='photo-item';
+    d.innerHTML=`<img src="${URL.createObjectURL(f)}" alt=""><button class="photo-del" onclick="removeNew(${j})">✕</button>`;
+    g.appendChild(d);
+  });
+}
+async function savePost(){
+  const title=document.getElementById('fi-title').value.trim();
+  const date=document.getElementById('fi-date').value;
+  const bro=document.getElementById('fi-bro').value.trim();
+  const content=document.getElementById('fi-content').value.trim();
+  if(!title){toast('제목을 입력해주세요','err');return}
+
+  const btn=document.getElementById('btn-save');
+  btn.disabled=true;btn.textContent='저장 중...';
+
+  try{
+    let uploaded=[];
+    if(newFiles.length>0){
+      document.getElementById('progress-wrap').style.display='block';
+      for(let i=0;i<newFiles.length;i++){
+        const f=newFiles[i];
+        const r=sRef(storage,`posts/${Date.now()}_${i}_${f.name}`);
+        document.getElementById('prog-txt').textContent=`사진 업로드 중... (${i+1}/${newFiles.length})`;
+        document.getElementById('prog-bar').style.width=`${(i/newFiles.length)*100}%`;
+        await uploadBytes(r,f);
+        const url=await getDownloadURL(r);
+        uploaded.push(url);
+        document.getElementById('prog-bar').style.width=`${((i+1)/newFiles.length)*100}%`;
+      }
+    }
+
+    const allPhotos=[...exUrls,...uploaded];
+    const data={title,date,brotherMessage:bro,content,photos:allPhotos,updatedAt:serverTimestamp()};
+
+    if(editId){
+      await updateDoc(doc(db,'posts',editId),data);
+      toast('수정되었어요 ✅','ok');
+    }else{
+      data.createdAt=serverTimestamp();
+      data.commentCount=0;
+      await addDoc(collection(db,'posts'),data);
+      toast('새 소식이 올라갔어요 🎉','ok');
+    }
+    closeForm();loadAdmPosts();
+  }catch(e){
+    toast('저장 오류: '+e.message,'err');
+    btn.disabled=false;btn.textContent='저장';
+  }
+}
+function closeForm(){
+  document.getElementById('adm-form-v').style.display='none';
+  document.getElementById('adm-panel-v').style.display='block';
+  document.getElementById('btn-save').disabled=false;
+  document.getElementById('btn-save').textContent='저장';
+  document.getElementById('progress-wrap').style.display='none';
+  window.scrollTo(0,0);
+}
+
+/* ─── Share ─── */
+function sharePost(){
+  if(navigator.share)navigator.share({title:'부산교회 2구역 청년 섞임',text:'따뜻한 2구역 청년들의 이야기를 나눠요!',url:location.href}).catch(()=>{});
+  else copyLink();
+}
+function copyLink(){
+  navigator.clipboard.writeText(location.href)
+    .then(()=>toast('링크가 복사되었어요!','ok'))
+    .catch(()=>toast('복사 실패','err'));
+}
+
+/* ─── Modals ─── */
+function openModal(id){document.getElementById(id).classList.add('open')}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+document.querySelectorAll('.modal-bg').forEach(el=>{
+  el.addEventListener('click',e=>{if(e.target===el)el.classList.remove('open')});
+});
+
+/* ─── Toast ─── */
+let toastT;
+function toast(msg,type=''){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast show'+(type?' '+type:'');
+  clearTimeout(toastT);
+  toastT=setTimeout(()=>t.className='toast',3000);
+}
+
+/* ─── Helpers ─── */
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function fmtTs(ts){
+  if(!ts||!ts.toDate)return'';
+  const d=ts.toDate(),now=new Date(),diff=(now-d)/1000;
+  if(diff<60)return'방금 전';
+  if(diff<3600)return`${Math.floor(diff/60)}분 전`;
+  if(diff<86400)return`${Math.floor(diff/3600)}시간 전`;
+  return`${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
+}
+function fmt2(s){
+  if(!s)return'';
+  const[y,m,dd]=s.split('-');
+  const days=['일','월','화','수','목','금','토'];
+  const day=new Date(s).getDay();
+  return`${y}년 ${parseInt(m)}월 ${parseInt(dd)}일 (${days[day]})`;
+}
+async function sha(s){
+  const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+function emptyHtml(icon,txt){return`<div class="empty"><div class="empty-icon">${icon}</div><div class="empty-txt">${txt}</div></div>`}
+
+/* ─── Key Events ─── */
+document.getElementById('adm-pw').addEventListener('keydown',e=>{if(e.key==='Enter')adminLogin()});
+document.getElementById('m-pw-val').addEventListener('keydown',e=>{if(e.key==='Enter'&&pendPwFn)pendPwFn()});
+
+/* ─── Init ─── */
+loadHome();
+
+/* ── Window export (module 함수 → 전역 접근 허용) ── */
+window.go = go;
+window.goBack = () => go(prevPage);
+window.sharePost = sharePost;
+window.copyLink = copyLink;
+window.submitGb = submitGb;
+window.adminLogin = () => {
+  if(document.getElementById('adm-pw').value === ADMIN_PW){
+    isAdmin=true; document.getElementById('adm-pw').value='';
+    showPanel(); loadAdmPosts(); toast('환영합니다, 형제님! 👋','ok');
+  } else toast('비밀번호가 맞지 않아요','err');
+};
+window.adminLogout = () => {
+  isAdmin=false;
+  document.getElementById('adm-login-v').style.display='flex';
+  document.getElementById('adm-panel-v').style.display='none';
+};
+window.openForm = openForm;
+window.closeForm = closeForm;
+window.savePost = savePost;
+window.openEdit = openEdit;
+window.confirmDelPost = confirmDelPost;
+window.closeModal = closeModal;
+window.submitReply = submitReply;
+window.toSlide = toSlide;
+window.submitCmt = submitCmt;
+window.openReply = openReply;
+window.openDelCmt = openDelCmt;
+window.openDelGb = openDelGb;
+window.removeEx = removeEx;
+window.removeNew = removeNew;
+</script>
+</body>
+</html>
