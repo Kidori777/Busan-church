@@ -555,7 +555,7 @@ body{
           <div style="font-size:14px;font-weight:600;color:var(--sage-d)">사진 선택하기</div>
           <div style="font-size:12px;color:var(--text-l);margin-top:3px">여러 장 동시 선택 · PC · 스마트폰 모두 OK</div>
         </div>
-        <input type="file" id="fi-photos" multiple accept="image/*" style="display:none" onchange="handlePhotos(this)">
+        <input type="file" id="fi-photos" multiple accept="image/*" style="display:none">
         <div class="photo-grid" id="new-photos"></div>
         <div id="progress-wrap" class="progress-wrap" style="display:none">
           <div class="prog-bar-bg"><div class="prog-bar" id="prog-bar" style="width:0%"></div></div>
@@ -680,7 +680,7 @@ async function loadHome(){
     if(s.empty){c.innerHTML=emptyHtml('🌱','아직 소식이 없어요.<br>첫 번째 섞임 소식을 기다리고 있어요!');return}
     c.innerHTML='';
     s.forEach(d=>c.appendChild(mkCard(d.id,d.data())));
-  }catch(e){c.innerHTML=emptyHtml('😢','불러오기 오류: '+e.message)}
+  }catch(e){console.error('[loadHome]',e);c.innerHTML=emptyHtml('😢','불러오기 오류: '+e.message)}
 }
 
 /* ─── FEED ─── */
@@ -693,7 +693,7 @@ async function loadFeed(){
     if(s.empty){c.innerHTML=emptyHtml('📸','아직 소식이 없어요!');return}
     c.innerHTML='';
     s.forEach(d=>c.appendChild(mkCard(d.id,d.data())));
-  }catch(e){c.innerHTML=emptyHtml('😢','오류: '+e.message)}
+  }catch(e){console.error('[loadFeed]',e);c.innerHTML=emptyHtml('😢','오류: '+e.message)}
 }
 
 function mkCard(id,d){
@@ -931,7 +931,7 @@ async function loadGb(){
         <button onclick="openDelGb('${doc.id}','${d.passwordHash||''}')" style="margin-top:8px;font-size:11px;color:var(--text-l)">🗑 삭제</button>`;
       list.appendChild(div);
     });
-  }catch(e){list.innerHTML=emptyHtml('😢','오류: '+e.message)}
+  }catch(e){console.error('[loadAdmPosts]',e);list.innerHTML=emptyHtml('😢','오류: '+e.message)}
 }
 async function submitGb(){
   const n=document.getElementById('gb-name').value.trim();
@@ -946,7 +946,7 @@ async function submitGb(){
     document.getElementById('gb-text').value='';
     toast('글이 등록되었어요 🙏','ok');
     loadGb();
-  }catch(e){toast('오류: '+e.message,'err')}
+  }catch(e){console.error('[submitGb]',e);toast('오류: '+e.message,'err')}
 }
 function openDelGb(id,storedHash){
   document.getElementById('m-pw-val').value='';
@@ -1012,7 +1012,7 @@ async function loadAdmPosts(){
         </div>`;
       list.appendChild(div);
     });
-  }catch(e){list.innerHTML=emptyHtml('😢','오류: '+e.message)}
+  }catch(e){console.error('[loadAdmPosts]',e);list.innerHTML=emptyHtml('😢','오류: '+e.message)}
 }
 function confirmDelPost(pid){
   document.getElementById('m-del-txt').textContent='이 게시글을 삭제하면 복구할 수 없어요. 정말 삭제하시겠어요?';
@@ -1129,6 +1129,7 @@ async function savePost(){
     }
     closeForm();loadAdmPosts();
   }catch(e){
+    console.error('[savePost 오류]', e);
     toast('저장 오류: '+e.message,'err');
     btn.disabled=false;btn.textContent='저장';
   }
@@ -1166,7 +1167,7 @@ function toast(msg,type=''){
   const t=document.getElementById('toast');
   t.textContent=msg;t.className='toast show'+(type?' '+type:'');
   clearTimeout(toastT);
-  toastT=setTimeout(()=>t.className='toast',3000);
+  toastT=setTimeout(()=>t.className='toast',type==='err'?6000:3000);
 }
 
 /* ─── Helpers ─── */
@@ -1199,6 +1200,22 @@ document.getElementById('m-pw-val').addEventListener('keydown',e=>{if(e.key==='E
 /* ─── Init ─── */
 loadHome();
 
+/* ── fi-photos change 이벤트 (module scope) ── */
+document.getElementById('fi-photos').addEventListener('change', function(){
+  newFiles = [...newFiles, ...Array.from(this.files)];
+  const g = document.getElementById('new-photos');
+  g.innerHTML = newFiles.length
+    ? `<div style="font-size:12px;color:var(--text-m);margin-bottom:5px;grid-column:1/-1">새로 추가 (${newFiles.length}장)</div>`
+    : '';
+  newFiles.forEach((f, i) => {
+    const d = document.createElement('div');
+    d.className = 'photo-item';
+    d.innerHTML = `<img src="${URL.createObjectURL(f)}" alt=""><button class="photo-del" onclick="removeNew(${i})">✕</button>`;
+    g.appendChild(d);
+  });
+  this.value = '';
+});
+
 /* ── Window export (module 함수 → 전역 접근 허용) ── */
 window.go = go;
 window.goBack = () => go(prevPage);
@@ -1230,6 +1247,7 @@ window.openDelCmt = openDelCmt;
 window.openDelGb = openDelGb;
 window.removeEx = removeEx;
 window.removeNew = removeNew;
+window.handlePhotos = handlePhotos;
 </script>
 </body>
 </html>
