@@ -622,9 +622,6 @@ import {
   updateDoc, deleteDoc, query, orderBy, limit,
   serverTimestamp, increment
 } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
-import {
-  getStorage, ref as sRef, uploadBytes, getDownloadURL
-} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js';
 
 /* ─── Firebase Init ─── */
 const app = initializeApp({
@@ -636,7 +633,6 @@ const app = initializeApp({
   appId:"1:980464442220:web:0b5977e0b57b770aadb149"
 });
 const db = getFirestore(app);
-const storage = getStorage(app);
 
 /* ─── ⚠️ 관리자 비밀번호 (여기서 변경하세요!) ─── */
 const ADMIN_PW = "2026";
@@ -1089,6 +1085,30 @@ function removeNew(i){
     g.appendChild(d);
   });
 }
+/* ── 이미지 압축 → base64 (Storage 없이 Firestore 직접 저장) ── */
+async function compressImage(file, maxW=1280, quality=0.82){
+  return new Promise((resolve)=>{
+    const img=new Image();
+    const url=URL.createObjectURL(file);
+    img.onload=()=>{
+      let w=img.width, h=img.height;
+      if(w>maxW){h=Math.round(h*maxW/w);w=maxW;}
+      const canvas=document.createElement('canvas');
+      canvas.width=w; canvas.height=h;
+      canvas.getContext('2d').drawImage(img,0,0,w,h);
+      URL.revokeObjectURL(url);
+      resolve(canvas.toDataURL('image/jpeg',quality));
+    };
+    img.onerror=()=>{
+      // 압축 실패 시 FileReader로 그대로 읽기
+      const reader=new FileReader();
+      reader.onload=e=>resolve(e.target.result);
+      reader.readAsDataURL(file);
+    };
+    img.src=url;
+  });
+}
+
 async function savePost(){
   const title=document.getElementById('fi-title').value.trim();
   const date=document.getElementById('fi-date').value;
@@ -1105,14 +1125,13 @@ async function savePost(){
       document.getElementById('progress-wrap').style.display='block';
       for(let i=0;i<newFiles.length;i++){
         const f=newFiles[i];
-        const r=sRef(storage,`posts/${Date.now()}_${i}_${f.name}`);
-        document.getElementById('prog-txt').textContent=`사진 업로드 중... (${i+1}/${newFiles.length})`;
+        document.getElementById('prog-txt').textContent=`사진 압축 중... (${i+1}/${newFiles.length})`;
         document.getElementById('prog-bar').style.width=`${(i/newFiles.length)*100}%`;
-        await uploadBytes(r,f);
-        const url=await getDownloadURL(r);
-        uploaded.push(url);
+        const b64=await compressImage(f,1280,0.82);
+        uploaded.push(b64);
         document.getElementById('prog-bar').style.width=`${((i+1)/newFiles.length)*100}%`;
       }
+      document.getElementById('prog-txt').textContent='저장 중...';
     }
 
     const allPhotos=[...exUrls,...uploaded];
