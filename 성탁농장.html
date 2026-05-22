@@ -1,0 +1,1805 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>그린팜 레시피 — 스마트 재배 시뮬레이터</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root {
+  --bg: #f4f0e8;
+  --bg2: #ede8dc;
+  --bg3: #ffffff;
+  --surface: #ffffff;
+  --border: #d8d0bc;
+  --border2: #c8bfa8;
+  --green: #2d6a4f;
+  --green2: #40916c;
+  --green3: #74c69d;
+  --green-light: #d8f3dc;
+  --amber: #b5451b;
+  --amber2: #e67c3b;
+  --amber-light: #fde8d8;
+  --text: #1e1a14;
+  --text2: #5a5040;
+  --text3: #8a7d6a;
+  --text-inv: #ffffff;
+  --shadow: rgba(30,26,20,0.08);
+  --shadow2: rgba(30,26,20,0.15);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --serif: 'Playfair Display', Georgia, serif;
+  --sans: 'Noto Sans KR', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--sans); background: var(--bg); color: var(--text); min-height: 100vh; }
+
+/* ─── LAYOUT ─── */
+.app-shell { display: flex; min-height: 100vh; }
+
+/* ─── SIDEBAR ─── */
+.sidebar {
+  width: 220px; min-height: 100vh; background: var(--green);
+  display: flex; flex-direction: column; flex-shrink: 0;
+  position: sticky; top: 0; height: 100vh; overflow-y: auto;
+}
+.sidebar-logo {
+  padding: 28px 20px 24px;
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+}
+.sidebar-logo .logo-leaf { font-size: 28px; margin-bottom: 4px; }
+.sidebar-logo h1 {
+  font-family: var(--serif); font-size: 18px; font-weight: 600;
+  color: #fff; line-height: 1.2;
+}
+.sidebar-logo p { font-size: 11px; color: rgba(255,255,255,0.6); margin-top: 3px; }
+.sidebar-nav { padding: 16px 12px; flex: 1; }
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 14px; border-radius: var(--radius-sm);
+  cursor: pointer; color: rgba(255,255,255,0.72);
+  font-size: 14px; font-weight: 400; transition: all 0.2s;
+  margin-bottom: 4px; user-select: none;
+}
+.nav-item:hover { background: rgba(255,255,255,0.1); color: #fff; }
+.nav-item.active { background: rgba(255,255,255,0.18); color: #fff; font-weight: 500; }
+.nav-icon { font-size: 18px; width: 22px; text-align: center; flex-shrink: 0; }
+.sidebar-farm-status {
+  margin: 16px 12px; padding: 14px;
+  background: rgba(255,255,255,0.1); border-radius: var(--radius-sm);
+  border: 1px solid rgba(255,255,255,0.15);
+}
+.farm-status-label { font-size: 10px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
+.farm-status-crop { font-size: 14px; color: #fff; font-weight: 500; }
+.farm-status-week { font-size: 12px; color: rgba(255,255,255,0.65); margin-top: 2px; }
+
+/* ─── MAIN ─── */
+.main { flex: 1; overflow-x: hidden; }
+.page { display: none; padding: 28px; max-width: 900px; }
+.page.active { display: block; }
+
+/* ─── HEADER STRIP ─── */
+.page-header { margin-bottom: 24px; }
+.page-header h2 { font-family: var(--serif); font-size: 26px; font-weight: 600; color: var(--text); }
+.page-header p { font-size: 14px; color: var(--text2); margin-top: 6px; }
+
+/* ─── CARDS ─── */
+.card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 20px; margin-bottom: 16px;
+}
+.card-title {
+  font-size: 13px; font-weight: 500; color: var(--text2);
+  text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 14px;
+}
+.card-title-lg {
+  font-family: var(--serif); font-size: 17px; font-weight: 600;
+  color: var(--text); margin-bottom: 12px;
+}
+
+/* ─── FORM ─── */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-group.full { grid-column: 1 / -1; }
+label { font-size: 13px; font-weight: 500; color: var(--text2); }
+input, select, textarea {
+  font-family: var(--sans); font-size: 14px;
+  padding: 10px 14px; border: 1px solid var(--border2);
+  border-radius: var(--radius-sm); background: var(--bg);
+  color: var(--text); outline: none; transition: border 0.2s;
+}
+input:focus, select:focus, textarea:focus { border-color: var(--green2); }
+textarea { resize: vertical; min-height: 80px; }
+
+/* ─── BUTTONS ─── */
+.btn {
+  font-family: var(--sans); font-size: 14px; font-weight: 500;
+  padding: 11px 20px; border-radius: var(--radius-sm);
+  cursor: pointer; transition: all 0.2s; border: none;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-primary { background: var(--green); color: #fff; }
+.btn-primary:hover { background: var(--green2); }
+.btn-outline {
+  background: transparent; color: var(--green);
+  border: 1px solid var(--green); font-size: 13px; padding: 8px 16px;
+}
+.btn-outline:hover { background: var(--green-light); }
+.btn-sm { padding: 7px 14px; font-size: 13px; }
+.btn-danger { background: #c0392b; color: #fff; }
+.btn-danger:hover { background: #e74c3c; }
+
+/* ─── BADGE ─── */
+.badge {
+  display: inline-block; padding: 3px 10px; border-radius: 20px;
+  font-size: 12px; font-weight: 500; white-space: nowrap;
+}
+.badge-green { background: var(--green-light); color: var(--green); }
+.badge-amber { background: var(--amber-light); color: var(--amber); }
+.badge-red { background: #fde8e8; color: #c0392b; }
+.badge-gray { background: var(--bg2); color: var(--text2); }
+.badge-blue { background: #e0eeff; color: #1a5cb8; }
+
+/* ─── METRIC CARDS ─── */
+.metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+.metric-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 14px 16px;
+}
+.metric-label { font-size: 11px; color: var(--text3); margin-bottom: 6px; }
+.metric-value { font-size: 22px; font-weight: 700; color: var(--text); font-family: var(--serif); }
+.metric-unit { font-size: 12px; font-weight: 400; color: var(--text2); margin-left: 2px; }
+.metric-sub { font-size: 11px; color: var(--text3); margin-top: 4px; }
+
+/* ─── WEEK TIMELINE ─── */
+.week-timeline { display: flex; flex-direction: column; gap: 12px; }
+.week-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+.week-card:hover { box-shadow: 0 4px 16px var(--shadow); }
+.week-card.current-week { border-color: var(--green2); border-width: 2px; }
+.week-card-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 18px; cursor: pointer; user-select: none;
+  background: var(--bg);
+}
+.week-card.current-week .week-card-header { background: #e8f5ed; }
+.week-num { font-size: 13px; font-weight: 700; color: var(--green); width: 60px; }
+.week-stage { font-size: 14px; font-weight: 500; color: var(--text); flex: 1; margin: 0 12px; }
+.week-tags { display: flex; gap: 6px; align-items: center; }
+.week-arrow { font-size: 12px; color: var(--text3); transition: transform 0.2s; }
+.week-card.open .week-arrow { transform: rotate(180deg); }
+.week-card-body { display: none; padding: 16px 18px; border-top: 1px solid var(--border); }
+.week-card.open .week-card-body { display: block; }
+.week-params { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; }
+.wparam { background: var(--bg); border-radius: 8px; padding: 10px 12px; }
+.wparam-label { font-size: 11px; color: var(--text3); margin-bottom: 4px; }
+.wparam-val { font-size: 16px; font-weight: 600; color: var(--text); }
+.wparam-unit { font-size: 11px; color: var(--text2); }
+.week-actions { margin-top: 10px; }
+.week-actions ul { padding-left: 16px; }
+.week-actions li { font-size: 13px; color: var(--text2); line-height: 1.8; }
+.week-note {
+  margin-top: 10px; padding: 10px 12px;
+  background: #fff8e8; border-radius: 8px;
+  font-size: 13px; color: var(--amber); border-left: 3px solid var(--amber2);
+}
+
+/* ─── CHECKLIST ─── */
+.check-section { margin-bottom: 20px; }
+.check-section-title {
+  font-size: 13px; font-weight: 700; color: var(--text2);
+  text-transform: uppercase; letter-spacing: 0.6px;
+  margin-bottom: 10px; padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.check-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 12px 14px; margin-bottom: 6px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); cursor: pointer;
+  transition: all 0.15s;
+}
+.check-item:hover { border-color: var(--green3); }
+.check-item.done { background: #f0fbf4; border-color: var(--green3); }
+.check-box {
+  width: 20px; height: 20px; border: 2px solid var(--border2);
+  border-radius: 4px; flex-shrink: 0; margin-top: 1px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s; font-size: 13px;
+}
+.check-item.done .check-box { background: var(--green2); border-color: var(--green2); color: #fff; }
+.check-content { flex: 1; }
+.check-title { font-size: 14px; font-weight: 500; color: var(--text); }
+.check-desc { font-size: 12px; color: var(--text3); margin-top: 3px; }
+.check-range {
+  font-size: 12px; font-weight: 600; color: var(--green);
+  background: var(--green-light); padding: 2px 8px; border-radius: 4px; white-space: nowrap;
+}
+.check-item.done .check-title { text-decoration: line-through; color: var(--text3); }
+.check-progress {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
+  padding: 14px 16px; background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.progress-bar-wrap { flex: 1; background: var(--bg2); border-radius: 4px; height: 8px; overflow: hidden; }
+.progress-bar { height: 100%; background: var(--green2); border-radius: 4px; transition: width 0.3s; }
+.progress-text { font-size: 13px; font-weight: 600; color: var(--green); white-space: nowrap; }
+
+/* ─── PEST ALERTS ─── */
+.pest-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.pest-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 16px; transition: box-shadow 0.2s;
+}
+.pest-card:hover { box-shadow: 0 3px 12px var(--shadow); }
+.pest-card.high { border-left: 3px solid #e74c3c; }
+.pest-card.medium { border-left: 3px solid var(--amber2); }
+.pest-card.low { border-left: 3px solid var(--green3); }
+.pest-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 10px; }
+.pest-name { font-size: 15px; font-weight: 600; color: var(--text); }
+.pest-type { font-size: 12px; color: var(--text3); margin-top: 2px; }
+.pest-desc { font-size: 13px; color: var(--text2); line-height: 1.6; margin-bottom: 10px; }
+.pest-prevention { font-size: 12px; color: var(--green); background: var(--green-light); padding: 8px 10px; border-radius: 6px; }
+.pest-prevention strong { display: block; margin-bottom: 3px; }
+
+/* ─── JOURNAL ─── */
+.journal-form { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 20px; }
+.journal-entry-list { display: flex; flex-direction: column; gap: 12px; }
+.journal-entry {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 16px;
+}
+.entry-date { font-size: 12px; color: var(--text3); margin-bottom: 6px; }
+.entry-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+.entry-body { font-size: 13px; color: var(--text2); line-height: 1.7; }
+.entry-tags { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+.entry-weather { font-size: 22px; }
+.entry-header { display: flex; align-items: flex-start; justify-content: space-between; }
+.entry-del { font-size: 12px; color: var(--text3); cursor: pointer; border: none; background: none; padding: 2px 6px; border-radius: 4px; }
+.entry-del:hover { color: #e74c3c; background: #fde8e8; }
+
+/* ─── CROP SELECTOR ─── */
+.crop-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+.crop-option {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 14px 10px; background: var(--bg); border: 2px solid var(--border);
+  border-radius: var(--radius); cursor: pointer; transition: all 0.2s;
+  text-align: center;
+}
+.crop-option:hover { border-color: var(--green2); background: #f0fbf4; }
+.crop-option.selected { border-color: var(--green); background: var(--green-light); }
+.crop-emoji { font-size: 28px; margin-bottom: 6px; }
+.crop-name { font-size: 13px; font-weight: 500; color: var(--text); }
+.crop-sub { font-size: 11px; color: var(--text3); margin-top: 2px; }
+.crop-option.selected .crop-name { color: var(--green); }
+
+/* ─── CHART ─── */
+.chart-wrap { position: relative; height: 260px; margin: 16px 0; }
+
+/* ─── IRRIGATION TYPES ─── */
+.irr-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 16px; }
+.irr-option {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 14px; background: var(--bg); border: 2px solid var(--border);
+  border-radius: var(--radius-sm); cursor: pointer; transition: all 0.2s;
+}
+.irr-option:hover { border-color: var(--green2); }
+.irr-option.selected { border-color: var(--green); background: var(--green-light); }
+.irr-icon { font-size: 22px; }
+.irr-name { font-size: 14px; font-weight: 500; color: var(--text); }
+.irr-desc { font-size: 12px; color: var(--text3); }
+
+/* ─── STATUS BOX ─── */
+.status-banner {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 18px; border-radius: var(--radius);
+  margin-bottom: 20px; border: 1px solid var(--border);
+}
+.status-banner.good { background: #edfaf3; border-color: var(--green3); }
+.status-banner.warn { background: #fff8ed; border-color: #f0a800; }
+.status-banner .status-icon { font-size: 24px; }
+.status-banner .status-text { font-size: 13px; color: var(--text2); }
+.status-banner .status-text strong { color: var(--text); display: block; font-size: 14px; margin-bottom: 2px; }
+
+/* ─── AI CHAT ─── */
+.ai-msg { display:flex; align-items:flex-start; gap:10px; }
+.ai-msg-bot { flex-direction:row; }
+.ai-msg-user { flex-direction:row-reverse; }
+.ai-avatar { width:32px; height:32px; border-radius:50%; background:var(--green-light); display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; border:1px solid var(--border); }
+.ai-bubble {
+  max-width: 82%; padding: 11px 15px; border-radius: 14px;
+  font-size: 14px; line-height: 1.7; color: var(--text);
+}
+.ai-msg-bot .ai-bubble { background: var(--bg); border: 1px solid var(--border); border-radius: 4px 14px 14px 14px; }
+.ai-msg-user .ai-bubble { background: var(--green); color: #fff; border-radius: 14px 4px 14px 14px; }
+.ai-bubble strong { font-weight: 700; }
+.ai-bubble ul, .ai-bubble ol { padding-left: 18px; margin: 6px 0; }
+.ai-bubble li { margin-bottom: 3px; }
+.ai-typing { display:flex; gap:5px; align-items:center; padding: 8px 0 4px; }
+.ai-dot { width:7px; height:7px; border-radius:50%; background:var(--green3); animation: bounce 1.2s infinite; }
+.ai-dot:nth-child(2) { animation-delay:.2s; }
+.ai-dot:nth-child(3) { animation-delay:.4s; }
+@keyframes bounce { 0%,80%,100%{transform:translateY(0)} 40%{transform:translateY(-6px)} }
+.ai-chip {
+  padding: 7px 14px; font-size: 13px; cursor: pointer;
+  background: var(--surface); border: 1px solid var(--border2);
+  border-radius: 20px; color: var(--text2); transition: all 0.18s; white-space:nowrap;
+}
+.ai-chip:hover { border-color: var(--green2); color: var(--green); background: var(--green-light); }
+
+/* ─── NUTRIENT TABLE ─── */
+.fert-table { width:100%; border-collapse:collapse; font-size:14px; }
+.fert-table th { text-align:left; padding:8px 10px; font-size:12px; font-weight:500; color:var(--text3); border-bottom:1px solid var(--border); background:var(--bg); }
+.fert-table td { padding:10px 10px; border-bottom:1px solid var(--border); color:var(--text); }
+.fert-table tr:last-child td { border-bottom:none; }
+.fert-amount { font-weight:700; color:var(--green); }
+.fert-bar-wrap { height:6px; background:var(--bg2); border-radius:3px; margin-top:4px; width:100%; }
+.fert-bar { height:6px; background:var(--green2); border-radius:3px; }
+
+/* ─── SENSITIVITY TABLE ─── */
+.sens-table { width:100%; border-collapse:collapse; font-size:13px; }
+.sens-table th { padding:8px 12px; background:var(--bg); color:var(--text3); font-size:12px; font-weight:500; text-align:center; border-bottom:1px solid var(--border); }
+.sens-table td { padding:9px 12px; text-align:center; border-bottom:1px solid var(--border); }
+.sens-table tr:last-child td { border-bottom:none; }
+.sens-positive { color:var(--green); font-weight:600; }
+.sens-negative { color:#c0392b; font-weight:600; }
+.sens-highlight { background:#f0fbf4; }
+
+/* ─── MOBILE ─── */
+.mobile-nav {
+  display: none; position: fixed; bottom: 0; left: 0; right: 0;
+  background: var(--green); border-top: 1px solid rgba(255,255,255,0.15);
+  z-index: 100; padding: 8px 0 12px;
+}
+.mobile-nav-items { display: flex; justify-content: space-around; }
+.mnav-item {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 3px; padding: 6px 10px; cursor: pointer;
+  color: rgba(255,255,255,0.6); font-size: 10px; font-weight: 400; transition: all 0.2s;
+}
+.mnav-item.active { color: #fff; }
+.mnav-icon { font-size: 20px; }
+
+@media (max-width: 700px) {
+  .sidebar { display: none; }
+  .mobile-nav { display: block; }
+  .main { padding-bottom: 80px; }
+  .page { padding: 18px; }
+  .metrics { grid-template-columns: repeat(2, 1fr); }
+  .form-grid { grid-template-columns: 1fr; }
+  .pest-grid { grid-template-columns: 1fr; }
+  .crop-grid { grid-template-columns: repeat(2, 1fr); }
+  .week-params { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ─── DIVIDER ─── */
+hr { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+.section-sep { height: 1px; background: var(--border); margin: 20px 0; }
+
+/* ─── EMPTY STATE ─── */
+.empty-state { text-align: center; padding: 48px 24px; color: var(--text3); }
+.empty-icon { font-size: 48px; margin-bottom: 12px; }
+.empty-text { font-size: 14px; }
+
+/* ─── ALERT ─── */
+.alert {
+  padding: 12px 16px; border-radius: var(--radius-sm);
+  font-size: 13px; margin-bottom: 16px; display: flex; align-items: flex-start; gap: 10px;
+}
+.alert-warn { background: #fff8e8; border: 1px solid #f0c060; color: #7a4a00; }
+.alert-info { background: #e8f0ff; border: 1px solid #88aaee; color: #1a3080; }
+.alert-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+  <!-- SIDEBAR (desktop) -->
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-leaf">🌿</div>
+      <h1>그린팜 레시피</h1>
+      <p>스마트 재배 시뮬레이터</p>
+    </div>
+    <div class="sidebar-nav">
+      <div class="nav-item active" onclick="showPage('setup')" data-page="setup">
+        <span class="nav-icon">⚙️</span> 성탁농장 설정
+      </div>
+      <div class="nav-item" onclick="showPage('recipe')" data-page="recipe">
+        <span class="nav-icon">📋</span> 주차별 레시피
+      </div>
+      <div class="nav-item" onclick="showPage('checklist')" data-page="checklist">
+        <span class="nav-icon">✅</span> 일일 체크리스트
+      </div>
+      <div class="nav-item" onclick="showPage('pests')" data-page="pests">
+        <span class="nav-icon">🐛</span> 병해충 주의보
+      </div>
+      <div class="nav-item" onclick="showPage('journal')" data-page="journal">
+        <span class="nav-icon">📔</span> 농업 일지
+      </div>
+      <div class="nav-item" onclick="showPage('nutrient')" data-page="nutrient">
+        <span class="nav-icon">🧪</span> 영양액 계산기
+      </div>
+      <div class="nav-item" onclick="showPage('income')" data-page="income">
+        <span class="nav-icon">💰</span> 수익 예측기
+      </div>
+      <div class="nav-item" onclick="showPage('ai')" data-page="ai">
+        <span class="nav-icon">🤖</span> AI 재배 상담
+      </div>
+    </div>
+    <div class="sidebar-farm-status" id="sidebar-status">
+      <div class="farm-status-label">현재 설정</div>
+      <div class="farm-status-crop" id="status-crop-name">작물 미설정</div>
+      <div class="farm-status-week" id="status-week-info">설정 탭에서 시작하세요</div>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+
+    <!-- ═══ PAGE: SETUP ═══ -->
+    <div class="page active" id="page-setup">
+      <div class="page-header">
+        <h2>성탁농장 설정</h2>
+        <p>내 온실·텃밭 조건을 입력하면 맞춤형 재배 레시피가 생성됩니다</p>
+      </div>
+
+      <!-- Crop Selection -->
+      <div class="card">
+        <div class="card-title">✦ 재배 작물 선택</div>
+        <div class="crop-grid" id="crop-grid">
+          <!-- generated by JS -->
+        </div>
+      </div>
+
+      <!-- Farm Details -->
+      <div class="card">
+        <div class="card-title">✦ 하우스 기본 정보</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>하우스 규모 (평수)</label>
+            <input type="number" id="farm-size" placeholder="예: 30" min="1" max="5000">
+          </div>
+          <div class="form-group">
+            <label>정식(아주심기) 날짜</label>
+            <input type="date" id="planting-date">
+          </div>
+          <div class="form-group full">
+            <label>하우스 유형</label>
+            <select id="house-type">
+              <option value="vinyl">비닐하우스 (단동)</option>
+              <option value="multi-span">비닐하우스 (연동)</option>
+              <option value="glass">유리온실</option>
+              <option value="smart">스마트팜 (환경제어)</option>
+              <option value="outdoor">노지 텃밭</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Irrigation -->
+      <div class="card">
+        <div class="card-title">✦ 관수 시스템 선택</div>
+        <div class="irr-grid" id="irr-grid">
+          <div class="irr-option selected" data-irr="drip" onclick="selectIrr(this, 'drip')">
+            <span class="irr-icon">💧</span>
+            <div><div class="irr-name">점적관수</div><div class="irr-desc">드립 호스로 직접 관수, 수분 절약</div></div>
+          </div>
+          <div class="irr-option" data-irr="mist" onclick="selectIrr(this, 'mist')">
+            <span class="irr-icon">🌫️</span>
+            <div><div class="irr-name">분무관수 (미스트)</div><div class="irr-desc">안개형 살수, 습도 관리 병행</div></div>
+          </div>
+          <div class="irr-option" data-irr="bottom" onclick="selectIrr(this, 'bottom')">
+            <span class="irr-icon">🪣</span>
+            <div><div class="irr-name">저면관수</div><div class="irr-desc">하단 급수, 화분·포트 재배에 적합</div></div>
+          </div>
+          <div class="irr-option" data-irr="manual" onclick="selectIrr(this, 'manual')">
+            <span class="irr-icon">🚿</span>
+            <div><div class="irr-name">자연·수동관수</div><div class="irr-desc">호스·물뿌리개 직접 관수</div></div>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" onclick="applySetup()" style="width:100%; justify-content:center; padding:14px;">
+        🌱 재배 레시피 생성하기
+      </button>
+    </div>
+
+    <!-- ═══ PAGE: RECIPE ═══ -->
+    <div class="page" id="page-recipe">
+      <div class="page-header">
+        <h2>주차별 재배 레시피</h2>
+        <p id="recipe-subtitle">정식일부터 수확까지 주차별 관리 프로토콜</p>
+      </div>
+
+      <div id="recipe-no-setup" style="display:none;">
+        <div class="status-banner warn">
+          <span class="status-icon">⚠️</span>
+          <div class="status-text">
+            <strong>농장 설정이 필요합니다</strong>
+            설정 탭에서 작물과 농장 정보를 먼저 입력해 주세요.
+          </div>
+        </div>
+      </div>
+
+      <div id="recipe-content">
+        <div class="metrics" id="recipe-metrics">
+          <!-- generated -->
+        </div>
+
+        <div class="card" style="padding:16px 20px 20px;">
+          <div class="card-title">EC · pH · 온도 변화 추이</div>
+          <div class="chart-wrap">
+            <canvas id="recipeChart" role="img" aria-label="주차별 EC, pH, 온도 변화 차트"></canvas>
+          </div>
+        </div>
+
+        <div class="week-timeline" id="week-timeline">
+          <!-- generated -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ PAGE: CHECKLIST ═══ -->
+    <div class="page" id="page-checklist">
+      <div class="page-header">
+        <h2>일일 체크리스트</h2>
+        <p id="checklist-date-label">오늘 관리 항목을 체크하세요</p>
+      </div>
+
+      <div class="check-progress">
+        <span style="font-size:13px; color:var(--text2);">오늘 진행률</span>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar" id="check-progress-bar" style="width:0%"></div>
+        </div>
+        <span class="progress-text" id="check-progress-text">0 / 0</span>
+        <button class="btn btn-outline btn-sm" onclick="resetChecklist()">초기화</button>
+      </div>
+
+      <div id="checklist-content">
+        <!-- generated by JS -->
+      </div>
+    </div>
+
+    <!-- ═══ PAGE: PESTS ═══ -->
+    <div class="page" id="page-pests">
+      <div class="page-header">
+        <h2>병해충 주의보</h2>
+        <p id="pest-subtitle">현재 시기 주요 발생 병해충 및 예방 대책</p>
+      </div>
+
+      <div id="pest-alert-banner"></div>
+      <div class="pest-grid" id="pest-grid">
+        <!-- generated -->
+      </div>
+    </div>
+
+    <!-- ═══ PAGE: JOURNAL ═══ -->
+    <div class="page" id="page-journal">
+      <div class="page-header">
+        <h2>농업 일지</h2>
+        <p>날씨, 관수 기록, 작업 내용을 간편하게 남기세요</p>
+      </div>
+
+      <div class="journal-form">
+        <div class="card-title">✦ 새 일지 작성</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>날짜</label>
+            <input type="date" id="j-date">
+          </div>
+          <div class="form-group">
+            <label>날씨</label>
+            <select id="j-weather">
+              <option value="☀️">☀️ 맑음</option>
+              <option value="⛅">⛅ 구름 조금</option>
+              <option value="☁️">☁️ 흐림</option>
+              <option value="🌧️">🌧️ 비</option>
+              <option value="❄️">❄️ 눈</option>
+              <option value="🌬️">🌬️ 바람</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>오늘 최고 기온 (°C)</label>
+            <input type="number" id="j-maxtemp" placeholder="예: 24">
+          </div>
+          <div class="form-group">
+            <label>오늘 최저 기온 (°C)</label>
+            <input type="number" id="j-mintemp" placeholder="예: 14">
+          </div>
+          <div class="form-group full">
+            <label>작업 내용 / 메모</label>
+            <textarea id="j-memo" placeholder="관수량, 비료 투여, 병해 증상, 생육 상황 등을 기록하세요..."></textarea>
+          </div>
+          <div class="form-group full">
+            <label>태그 (쉼표로 구분)</label>
+            <input type="text" id="j-tags" placeholder="예: 관수, 적심, 농약살포, 수확">
+          </div>
+        </div>
+        <div style="margin-top: 14px;">
+          <button class="btn btn-primary" onclick="saveJournal()">📝 일지 저장</button>
+        </div>
+      </div>
+
+      <div id="journal-list" class="journal-entry-list">
+        <!-- loaded from localStorage -->
+      </div>
+    </div>
+
+    <!-- ═══ PAGE: NUTRIENT CALCULATOR ═══ -->
+    <div class="page" id="page-nutrient">
+      <div class="page-header">
+        <h2>영양액 계산기</h2>
+        <p>탱크 용량과 목표 EC를 입력하면 비료별 투여량을 자동 계산합니다</p>
+      </div>
+      <div class="card">
+        <div class="card-title">✦ 관수 조건 입력</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>탱크(원수) 용량 (L)</label>
+            <input type="number" id="nt-tank" value="500" min="10" max="50000" oninput="calcNutrient()">
+          </div>
+          <div class="form-group">
+            <label>목표 EC (mS/cm)</label>
+            <input type="number" id="nt-ec" value="2.0" min="0.1" max="6.0" step="0.1" oninput="calcNutrient()">
+          </div>
+          <div class="form-group">
+            <label>원수 EC (mS/cm)</label>
+            <input type="number" id="nt-rawec" value="0.3" min="0" max="2.0" step="0.1" oninput="calcNutrient()">
+          </div>
+          <div class="form-group">
+            <label>원수 pH</label>
+            <input type="number" id="nt-rawph" value="7.2" min="4" max="9" step="0.1" oninput="calcNutrient()">
+          </div>
+          <div class="form-group">
+            <label>목표 pH</label>
+            <input type="number" id="nt-targetph" value="6.0" min="4" max="8" step="0.1" oninput="calcNutrient()">
+          </div>
+          <div class="form-group">
+            <label>비료 세트 선택</label>
+            <select id="nt-fertset" onchange="calcNutrient()">
+              <option value="hoagland">호글랜드 배양액 (범용)</option>
+              <option value="yamazaki">야마자키 배양액 (과채류)</option>
+              <option value="berry">베리류 전용 (산성)</option>
+              <option value="root">뿌리채소 전용</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="metrics" id="nt-metrics" style="grid-template-columns:repeat(3,1fr);"></div>
+      <div class="card" id="nt-result-card">
+        <div class="card-title">✦ 비료별 투여량</div>
+        <div id="nt-fert-table"></div>
+        <div id="nt-ph-advice" style="margin-top:14px;"></div>
+      </div>
+      <div class="card" style="padding:16px 20px 20px;">
+        <div class="card-title">✦ 희석 비율에 따른 EC 변화 시뮬레이션</div>
+        <div class="chart-wrap" style="height:220px;">
+          <canvas id="ntChart" role="img" aria-label="희석 비율별 EC 변화"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">✦ 일일 관수 스케줄 계산</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>재식 주수 (주)</label>
+            <input type="number" id="nt-plants" value="100" min="1" oninput="calcIrrSchedule()">
+          </div>
+          <div class="form-group">
+            <label>1주당 1회 관수량 (mL)</label>
+            <input type="number" id="nt-per-plant" value="200" min="10" oninput="calcIrrSchedule()">
+          </div>
+          <div class="form-group">
+            <label>일 관수 횟수</label>
+            <select id="nt-freq" onchange="calcIrrSchedule()">
+              <option value="1">1회</option>
+              <option value="2" selected>2회</option>
+              <option value="3">3회</option>
+              <option value="4">4회</option>
+              <option value="6">6회</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>관수 시작 시각</label>
+            <input type="time" id="nt-start-time" value="08:00" oninput="calcIrrSchedule()">
+          </div>
+        </div>
+        <div id="nt-schedule-result" style="margin-top:14px;"></div>
+      </div>
+    </div>
+
+    <!-- ═══ PAGE: INCOME ESTIMATOR ═══ -->
+    <div class="page" id="page-income">
+      <div class="page-header">
+        <h2>수익 예측기</h2>
+        <p>농장 규모와 시장 단가를 입력해 예상 소득을 시뮬레이션합니다</p>
+      </div>
+      <div class="card">
+        <div class="card-title">✦ 재배 조건 입력</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>재배 면적 (평)</label>
+            <input type="number" id="ic-size" value="30" min="1" oninput="calcIncome()">
+          </div>
+          <div class="form-group">
+            <label>예상 단수 (kg/평)</label>
+            <input type="number" id="ic-yield" value="8" min="0.1" step="0.1" oninput="calcIncome()">
+          </div>
+          <div class="form-group">
+            <label>판매 단가 (원/kg)</label>
+            <input type="number" id="ic-price" value="15000" min="100" step="100" oninput="calcIncome()">
+          </div>
+          <div class="form-group">
+            <label>연 작기 횟수</label>
+            <select id="ic-cycles" onchange="calcIncome()">
+              <option value="1">1작기/년</option>
+              <option value="2">2작기/년</option>
+              <option value="3">3작기/년</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>비료·농약비 (원/평/작기)</label>
+            <input type="number" id="ic-fert" value="5000" min="0" step="500" oninput="calcIncome()">
+          </div>
+          <div class="form-group">
+            <label>인건비 (원/평/작기)</label>
+            <input type="number" id="ic-labor" value="8000" min="0" step="500" oninput="calcIncome()">
+          </div>
+          <div class="form-group">
+            <label>에너지·기타 (원/평/작기)</label>
+            <input type="number" id="ic-energy" value="4000" min="0" step="500" oninput="calcIncome()">
+          </div>
+          <div class="form-group">
+            <label>초기 시설 투자비 (만원)</label>
+            <input type="number" id="ic-invest" value="500" min="0" step="10" oninput="calcIncome()">
+          </div>
+        </div>
+      </div>
+      <div id="ic-metrics" class="metrics" style="grid-template-columns:repeat(4,1fr);"></div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
+        <div class="card" style="padding:16px 18px 18px;">
+          <div class="card-title">수익 구성</div>
+          <div style="position:relative; height:200px;">
+            <canvas id="icPieChart" role="img" aria-label="수익 구성 도넛 차트"></canvas>
+          </div>
+          <div id="ic-pie-legend" style="margin-top:12px;"></div>
+        </div>
+        <div class="card" style="padding:16px 18px 18px;">
+          <div class="card-title">연도별 누적 수익</div>
+          <div style="position:relative; height:200px;">
+            <canvas id="icBarChart" role="img" aria-label="연도별 누적 순이익 바 차트"></canvas>
+          </div>
+        </div>
+      </div>
+      <div class="card" id="ic-breakeven">
+        <div class="card-title">✦ 손익분기점 분석</div>
+        <div id="ic-breakeven-content"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">✦ 단가 변동 시나리오 (연 순이익)</div>
+        <div id="ic-sensitivity"></div>
+      </div>
+    </div>
+
+    <!-- ═══ PAGE: AI CONSULTANT ═══ -->
+    <div class="page" id="page-ai">
+      <div class="page-header">
+        <h2>AI 재배 상담사</h2>
+        <p>생육 문제, 병해 증상, 재배 방법 등 무엇이든 물어보세요</p>
+      </div>
+      <div class="alert alert-info" style="margin-bottom:18px;">
+        <span class="alert-icon">🌿</span>
+        <div>농장 설정 정보를 자동으로 반영해 <strong>내 작물·시기에 맞는 맞춤 답변</strong>을 드립니다. 병해 증상, 생육 이상, 영양 결핍 증상을 구체적으로 입력해보세요.</div>
+      </div>
+      <div id="ai-quick-chips" style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:18px;"></div>
+      <div style="background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); display:flex; flex-direction:column; overflow:hidden; margin-bottom:14px;">
+        <div id="ai-messages" style="flex:1; padding:18px; overflow-y:auto; display:flex; flex-direction:column; gap:14px; min-height:300px; max-height:460px;"></div>
+        <div style="border-top:1px solid var(--border); padding:12px 14px; display:flex; gap:10px; align-items:flex-end; background:var(--bg);">
+          <textarea id="ai-input" placeholder="질문을 입력하세요... (예: 잎 끝이 타들어가요, 왜 그럴까요?)" style="flex:1; resize:none; min-height:44px; max-height:120px; border-radius:var(--radius-sm); font-size:14px; padding:10px 14px;" rows="2" onkeydown="aiKeydown(event)"></textarea>
+          <button class="btn btn-primary" onclick="sendAiMessage()" id="ai-send-btn" style="height:44px; padding:0 20px; white-space:nowrap;">전송</button>
+        </div>
+      </div>
+      <div style="display:flex; justify-content:flex-end;">
+        <button class="btn btn-outline btn-sm" onclick="clearAiChat()">대화 초기화</button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- MOBILE NAV -->
+<nav class="mobile-nav">
+  <div class="mobile-nav-items">
+    <div class="mnav-item active" onclick="showPage('setup')" data-page="setup">
+      <span class="mnav-icon">⚙️</span> 설정
+    </div>
+    <div class="mnav-item" onclick="showPage('recipe')" data-page="recipe">
+      <span class="mnav-icon">📋</span> 레시피
+    </div>
+    <div class="mnav-item" onclick="showPage('checklist')" data-page="checklist">
+      <span class="mnav-icon">✅</span> 체크
+    </div>
+    <div class="mnav-item" onclick="showPage('pests')" data-page="pests">
+      <span class="mnav-icon">🐛</span> 병해충
+    </div>
+    <div class="mnav-item" onclick="showPage('journal')" data-page="journal">
+      <span class="mnav-icon">📔</span> 일지
+    </div>
+    <div class="mnav-item" onclick="showPage('nutrient')" data-page="nutrient">
+      <span class="mnav-icon">🧪</span> 영양액
+    </div>
+    <div class="mnav-item" onclick="showPage('income')" data-page="income">
+      <span class="mnav-icon">💰</span> 수익
+    </div>
+    <div class="mnav-item" onclick="showPage('ai')" data-page="ai">
+      <span class="mnav-icon">🤖</span> AI
+    </div>
+  </div>
+</nav>
+
+<script>
+// ═══════════════════════════════════════════════
+//  CROP DATABASE
+// ═══════════════════════════════════════════════
+const CROPS = {
+  'raspberry': {
+    emoji: '🍓', name: '산딸기', sub: '고부가가치 특수 작물', harvestDays: 120,
+    icon: '🍓',
+    desc: '항산화 성분 풍부, kg당 2~4만원 고소득 작물',
+    params: { dayTemp: '18~22', nightTemp: '12~15', humidity: '60~70', ph: '5.8~6.2', ec: '1.2~2.0' },
+    stages: [
+      { week: 1, label: '활착기', ec: 1.0, ph: 6.0, dayT: 20, nightT: 14, hum: 70, actions: ['정식 후 차광 40% 처리', '관수 1일 1회 충분히', '뿌리 활착 확인'], note: '정식 초기 스트레스 최소화, 직사광선 차단' },
+      { week: 2, label: '발근·착생기', ec: 1.2, ph: 6.0, dayT: 20, nightT: 14, hum: 68, actions: ['차광 제거 (맑은 날)', '질소 위주 비료 시작', '잡초 제거'], note: '뿌리 활착 시 새잎 전개 확인' },
+      { week: 3, label: '영양 생장기', ec: 1.5, ph: 6.0, dayT: 21, nightT: 13, hum: 65, actions: ['런너(포복지) 제거', '2일 1회 관수', '잎 상태 점검'], note: '런너를 방치하면 모주 약화, 즉시 제거' },
+      { week: 4, label: '영양 생장기', ec: 1.6, ph: 6.1, dayT: 21, nightT: 13, hum: 65, actions: ['칼슘·붕소 엽면 시비', '환기 강화', '진딧물 예찰'], note: '고온 시 창문 개방, 야간 결로 주의' },
+      { week: 5, label: '화아 분화기', ec: 1.5, ph: 6.1, dayT: 18, nightT: 10, hum: 62, actions: ['단일 처리 (14h 이하)', '질소 감량, 인산 증량', '저온 유지'], note: '꽃눈 분화 위해 야간 온도 10°C 유지 중요' },
+      { week: 6, label: '화아 분화기', ec: 1.5, ph: 6.1, dayT: 18, nightT: 10, hum: 62, actions: ['꽃눈 분화 확인', '2,4-D 제초 주의', '병해충 예방약 살포'], note: '분화 확인 후 영양 관리 재강화' },
+      { week: 7, label: '현뢰·개화기', ec: 1.8, ph: 6.0, dayT: 20, nightT: 12, hum: 60, actions: ['꽃 핀 후 벌·곤충 방화', '꽃 솎기 (3~4개/화방)', '흰가루병 예방'], note: '인공수분 필요 시 화분 솔로 화분 교체' },
+      { week: 8, label: '착과·비대기', ec: 2.0, ph: 5.9, dayT: 21, nightT: 13, hum: 60, actions: ['인산·칼리 증량', '꼭지 부분 비대 확인', '관수 균일화'], note: '관수 불균일 시 열과(裂果) 발생 주의' },
+      { week: 9, label: '과실 비대기', ec: 2.0, ph: 5.9, dayT: 21, nightT: 13, hum: 58, actions: ['칼리 증량 시비', '착색 위해 광 확보', '잎 따주기 (과실 주변)'], note: '적엽으로 통풍·광 투과 개선' },
+      { week: 10, label: '과실 비대기', ec: 1.8, ph: 5.9, dayT: 20, nightT: 12, hum: 58, actions: ['수확 예비 확인', '당도 측정 (Brix 8 이상)', '병해 최종 점검'], note: 'Brix 8 이상, 착색 90% 이상 시 수확 가능' },
+      { week: 11, label: '수확기', ec: 1.5, ph: 6.0, dayT: 20, nightT: 12, hum: 60, actions: ['아침 이슬 마른 후 수확', '냉장 보관 (2~5°C)', '2차 화방 관리'], note: '수확 후 탄저병 확인, 손상 과실 즉시 제거' },
+      { week: 12, label: '수확·후기 관리', ec: 1.5, ph: 6.0, dayT: 20, nightT: 12, hum: 60, actions: ['연속 수확', '노화 잎 정리', '포복지 유인 준비'], note: '초촉성 재배 시 12월~이듬해 5월 수확 가능' },
+    ],
+    pests: ['gray_mold', 'aphids', 'spider_mite', 'powdery_mildew', 'leaf_spot']
+  },
+  'phellinus': {
+    emoji: '🍄', name: '상황버섯', sub: '고부가가치 약용 버섯', harvestDays: 365,
+    desc: '항암·면역 기능성 버섯, kg당 10~30만원 초고소득',
+    params: { dayTemp: '22~28', nightTemp: '18~22', humidity: '80~95', ph: '5.5~6.5', ec: '0.3~0.8' },
+    stages: [
+      { week: 1, label: '종균 접종기', ec: 0.3, ph: 6.0, dayT: 25, nightT: 20, hum: 90, actions: ['참나무 원목·배지 준비 (멸균 완료 확인)', '종균 무균 접종 (알코올 램프·클린벤치)', '접종 후 비닐 봉지 밀봉'], note: '접종 시 잡균 오염이 가장 큰 위험. 무균 환경 철저히 준수' },
+      { week: 2, label: '균사 배양 초기', ec: 0.3, ph: 6.0, dayT: 25, nightT: 20, hum: 85, actions: ['배양실 온도 24~26°C 유지', '직사광선 완전 차단 (암배양)', '균사 활착 여부 육안 확인'], note: '흰색 균사가 서서히 퍼지면 정상. 녹색·검정색 반점은 잡균 오염' },
+      { week: 3, label: '균사 배양 중기', ec: 0.3, ph: 6.0, dayT: 25, nightT: 20, hum: 85, actions: ['균사 만연도 30~40% 확인', '배양실 CO₂ 농도 관리 (환기 1일 1회)', '잡균 오염 배지 즉시 격리 폐기'], note: '환기 시 직접 바람이 배지에 닿지 않도록 주의' },
+      { week: 4, label: '균사 배양 후기', ec: 0.3, ph: 5.9, dayT: 24, nightT: 19, hum: 85, actions: ['균사 만연도 60~70% 확인', '배양 온도 1~2°C 낮춰 자실체 형성 자극', '배지 무게 감소 확인 (균사 소화 중)'], note: '균사 배양에 4~8주 소요, 충분히 기다릴 것' },
+      { week: 5, label: '균사 완전 만연기', ec: 0.3, ph: 5.9, dayT: 24, nightT: 18, hum: 88, actions: ['균사 만연도 90% 이상 확인', '비닐 봉지 제거 (개봉 준비)', '발이 유도 환경 전환 시작'], note: '개봉 전 균사가 완전히 배지를 덮어야 자실체 형성 원활' },
+      { week: 6, label: '발이(자실체 원기) 유도기', ec: 0.4, ph: 5.9, dayT: 23, nightT: 17, hum: 92, actions: ['봉지 개봉 및 봉지 입구 절단', '습도 90~95% 이상 유지 (미스트 분무)', '광 조사 시작 (300~500 lux, 12h/일)'], note: '광과 습도 변화가 발이 자극. 이 시기 관리가 수량을 좌우' },
+      { week: 7, label: '원기 형성기', ec: 0.4, ph: 5.9, dayT: 23, nightT: 18, hum: 92, actions: ['황갈색 원기 돌기 확인', '분무 횟수 하루 3~4회로 증가', 'CO₂ 농도 1,000 ppm 이하 유지'], note: '원기 표면에 직접 분무 금지. 주변 공중 습도 관리' },
+      { week: 8, label: '자실체 초기 성장기', ec: 0.5, ph: 5.9, dayT: 24, nightT: 18, hum: 90, actions: ['황갈색~갈색 자실체 성장 확인', '환기 강화 (에틸렌 가스 배출)', '물관리 배지 과습 방지'], note: '에틸렌 가스 축적 시 기형 자실체 발생. 환기 필수' },
+      { week: 9, label: '자실체 성장기', ec: 0.5, ph: 5.9, dayT: 24, nightT: 18, hum: 88, actions: ['자실체 두께·크기 성장 모니터링', '습도 약간 낮춰 표면 경화 유도', '세균성 갈변 예찰'], note: '상황버섯은 다년생. 이 시기 이후 수년간 계속 성장' },
+      { week: 10, label: '성숙·경화기', ec: 0.5, ph: 6.0, dayT: 24, nightT: 18, hum: 85, actions: ['자실체 표면 경화(코르크화) 확인', '갓 하부 황색 포자 분출 관찰', '배지 영양 보충 검토'], note: '포자 분출은 성숙의 신호. 이 시기 포자 흡입 주의 (마스크 착용)' },
+      { week: 11, label: '성장 지속기 (다년 관리)', ec: 0.6, ph: 6.0, dayT: 24, nightT: 18, hum: 85, actions: ['정기 분무 및 환기 유지', '원목 배지 추가 수분 공급', '자실체 무게·직경 기록'], note: '상황버섯은 보통 3~5년 이상 배양하며 가치가 상승. 장기 관리 계획 수립' },
+      { week: 12, label: '연간 수확·관리', ec: 0.6, ph: 6.0, dayT: 23, nightT: 17, hum: 85, actions: ['자실체 가장자리 성장 정지 확인 후 수확', '건조 처리 (40~50°C, 24시간)', '다음 해 관리 계획 수립'], note: '건중량 기준 수확. 건조 후 진공 포장하면 2~3년 저장 가능' },
+    ],
+    pests: ['green_mold', 'bacterial_rot', 'fungus_gnat', 'slug', 'competitor_fungi']
+  },
+  'chinese-artichoke': {
+    emoji: '🌱', name: '초석잠', sub: '건강 기능성 특수 뿌리채소', harvestDays: 180,
+    desc: '치매예방 성분 풍부, 웰빙 수요 급증',
+    params: { dayTemp: '15~20', nightTemp: '8~12', humidity: '55~65', ph: '6.0~6.5', ec: '1.0~1.8' },
+    stages: [
+      { week: 1, label: '파종·발아기', ec: 0.8, ph: 6.2, dayT: 18, nightT: 10, hum: 70, actions: ['씨앗 24시간 침종', '점파 10×15cm', '비닐 멀칭'], note: '발아 적온 15~18°C, 지온 확인 필수' },
+      { week: 2, label: '발아·출현기', ec: 0.8, ph: 6.2, dayT: 18, nightT: 10, hum: 68, actions: ['발아 확인 (5~7일)', '토양 건조 방지', '잡초 억제'], note: '발아 불균일 시 보식 실시' },
+      { week: 3, label: '초기 생장기', ec: 1.0, ph: 6.2, dayT: 18, nightT: 10, hum: 65, actions: ['본잎 3~4장 시 솎기', '1차 비료 투여', '병해 예찰'], note: '밀식 시 덩이줄기 발달 저해' },
+      { week: 4, label: '줄기 생장기', ec: 1.2, ph: 6.2, dayT: 19, nightT: 11, hum: 62, actions: ['지주 설치', '순지르기 검토', '관수 조절'], note: '줄기 도복 방지 지주 조기 설치' },
+      { week: 5, label: '줄기·분지기', ec: 1.3, ph: 6.1, dayT: 19, nightT: 11, hum: 62, actions: ['질소 시비 강화', '곁가지 유인', '통풍 확보'], note: '분지 적절히 관리해 수관 형성' },
+      { week: 6, label: '지상부 성장기', ec: 1.4, ph: 6.1, dayT: 20, nightT: 12, hum: 60, actions: ['인산·칼리 추비', '뿌리 발달 촉진', '역병 예찰'], note: '침수 주의, 배수 상태 점검' },
+      { week: 7, label: '지상부 성장기', ec: 1.5, ph: 6.1, dayT: 20, nightT: 12, hum: 60, actions: ['토양 수분 55~60%', '완전히 비료흡수 확인', '잡초 철저 제거'], note: '지상부 왕성할수록 덩이줄기 발달 우수' },
+      { week: 8, label: '덩이줄기 형성기', ec: 1.5, ph: 6.0, dayT: 18, nightT: 10, hum: 58, actions: ['질소 감량', '칼리 증량', '지온 관리 (18°C)'], note: '덩이줄기 형성 시작, 고온 시 발달 억제' },
+      { week: 9, label: '덩이줄기 비대기', ec: 1.6, ph: 6.0, dayT: 17, nightT: 9, hum: 55, actions: ['낙엽 낙화 시 관수 감소', '칼리·칼슘 강화', '뿌리 파악 주의'], note: '덩이줄기 비대 최성기, 굴취 금지' },
+      { week: 10, label: '덩이줄기 비대기', ec: 1.6, ph: 6.0, dayT: 16, nightT: 8, hum: 55, actions: ['관수 최소화', '지상부 황화 확인', '수확 시기 판단'], note: '서리 전 수확, 지상부 고사 직후 최적' },
+      { week: 11, label: '성숙기', ec: 1.2, ph: 6.0, dayT: 16, nightT: 8, hum: 55, actions: ['지상부 완전 고사 확인', '조기 굴취 준비', '건조 처리 계획'], note: '너무 늦으면 품질 저하, 빠른 수확 검토' },
+      { week: 12, label: '수확·굴취기', ec: 0.8, ph: 6.0, dayT: 15, nightT: 7, hum: 50, actions: ['기계 또는 삽으로 굴취', '덩이줄기 세척', '0~2°C 저온 저장'], note: '굴취 후 음지에서 말린 후 선별' },
+    ],
+    pests: ['root_rot', 'blight', 'aphids', 'mole_cricket', 'cutworm']
+  },
+  'cherry-tomato': {
+    emoji: '🍅', name: '방울토마토', sub: '고소득 시설 원예 작물', harvestDays: 90,
+    desc: '수요 안정적, 연중 재배·수확 가능',
+    params: { dayTemp: '22~26', nightTemp: '15~18', humidity: '65~75', ph: '5.8~6.2', ec: '2.5~4.0' },
+    stages: [
+      { week: 1, label: '활착기', ec: 1.8, ph: 6.0, dayT: 24, nightT: 16, hum: 75, actions: ['차광 30~40%', '관수량 억제', '순 착생 확인'], note: '정식 후 수분 스트레스 최소화' },
+      { week: 2, label: '영양 생장기', ec: 2.0, ph: 6.0, dayT: 24, nightT: 16, hum: 72, actions: ['유인끈 설치', '1화방 착화 확인', '2일 1회 관수'], note: '측지 초기 확인, 일아 단순 관리' },
+      { week: 3, label: '영양 생장기', ec: 2.5, ph: 5.9, dayT: 25, nightT: 17, hum: 70, actions: ['곁눈 제거 (일차지)', '환기 적극적으로', '칼슘 엽면 시비'], note: '측지 제거 타이밍이 수량을 결정' },
+      { week: 4, label: '개화·착과기', ec: 3.0, ph: 5.9, dayT: 25, nightT: 17, hum: 68, actions: ['꽃 진동 (인공수분)', '배꼽썩음병 예방', '4~5절 적심 여부 결정'], note: '24°C 이상 시 수분 저해, 환기 필수' },
+      { week: 5, label: '착과·비대기', ec: 3.2, ph: 5.9, dayT: 25, nightT: 17, hum: 68, actions: ['1화방 착과 수 확인', '엽채 제거 (하부)', '점적 EC 조정'], note: '한 화방 당 8~12개 착과 유지' },
+      { week: 6, label: '과실 비대기', ec: 3.5, ph: 5.8, dayT: 25, nightT: 17, hum: 65, actions: ['칼리·칼슘 증량', '관수 균일화', '흰가루병 예찰'], note: '관수 불균일 → 열과 원인' },
+      { week: 7, label: '착색·수확 준비기', ec: 3.5, ph: 5.8, dayT: 24, nightT: 16, hum: 63, actions: ['착색 시작 확인', '관수량 약간 감소', '잎따기 (하부 2~3매)'], note: '착색 위해 충분한 광량 확보' },
+      { week: 8, label: '수확기', ec: 3.0, ph: 5.9, dayT: 24, nightT: 16, hum: 65, actions: ['80~90% 착색 시 수확', '수확 후 상온 유통', '2~3일 간격 수확'], note: 'Brix 8~10 목표' },
+      { week: 9, label: '수확·연속 착과', ec: 3.0, ph: 5.9, dayT: 24, nightT: 16, hum: 65, actions: ['연속 수확', '상부 새 화방 관리', '노화 잎 정리'], note: '화방 연속 착과로 장기 수확 가능' },
+      { week: 10, label: '고단기 수확기', ec: 2.8, ph: 6.0, dayT: 23, nightT: 15, hum: 65, actions: ['전체 생장 점검', '양액 조정', '병해 집중 점검'], note: '장기 재배 피로도 체크' },
+      { week: 11, label: '후기 수확기', ec: 2.5, ph: 6.0, dayT: 23, nightT: 15, hum: 65, actions: ['수량·품질 모니터링', '다음 작기 준비', '정식 계획 수립'], note: '' },
+      { week: 12, label: '수확 마무리', ec: 2.0, ph: 6.0, dayT: 22, nightT: 14, hum: 65, actions: ['마지막 수확', '잔식물 정리', '토양 소독 계획'], note: '재배 후 하우스 청소, 토양 소독 필수' },
+    ],
+    pests: ['gray_mold', 'whitefly', 'aphids', 'powdery_mildew', 'leaf_mold', 'blossom_end_rot']
+  },
+  'paprika': {
+    emoji: '🫑', name: '파프리카', sub: '수출 경쟁력 높은 고소득 채소', harvestDays: 100,
+    desc: 'kg당 3~5천원, 네덜란드 수출형 재배',
+    params: { dayTemp: '22~28', nightTemp: '15~18', humidity: '70~80', ph: '5.8~6.5', ec: '2.5~3.5' },
+    stages: [
+      { week: 1, label: '활착기', ec: 1.5, ph: 6.2, dayT: 25, nightT: 17, hum: 80, actions: ['고온 차광 필수', '관수 억제', '비닐 멀칭 확인'], note: '정식 초기 과도한 관수는 뿌리 질식 유발' },
+      { week: 2, label: '영양 생장기', ec: 2.0, ph: 6.2, dayT: 25, nightT: 17, hum: 78, actions: ['지주 조기 설치', '분지 확인', '차광 해제'], note: '분지 수에 따라 수량 결정' },
+      { week: 3, label: '영양 생장기', ec: 2.5, ph: 6.0, dayT: 26, nightT: 17, hum: 75, actions: ['2~3줄기 유인', '불필요 곁가지 제거', '환기 충분히'], note: '줄기 유인 틀 조기 설치' },
+      { week: 4, label: '개화기', ec: 2.8, ph: 6.0, dayT: 26, nightT: 17, hum: 73, actions: ['초과 꽃 솎기', '칼슘 강화', '야간 온도 유지'], note: '야간 온도 15°C 이하 시 수정 불량' },
+      { week: 5, label: '착과기', ec: 3.0, ph: 5.9, dayT: 26, nightT: 17, hum: 72, actions: ['착과 수 조정', '인산·칼리 증량', '응애 예찰'], note: '과실 경쟁 줄이기 위해 약한 꽃 제거' },
+      { week: 6, label: '과실 비대기', ec: 3.2, ph: 5.9, dayT: 26, nightT: 16, hum: 72, actions: ['관수 균일화', '칼리·칼슘 집중', '잎따기 (하부)'], note: '균일한 관수가 품질을 결정' },
+      { week: 7, label: '과실 비대기', ec: 3.3, ph: 5.9, dayT: 25, nightT: 16, hum: 70, actions: ['과실 직경 확인', '착색 준비', '병해 집중 방제'], note: '비대가 불균일하면 관수 스케줄 재조정' },
+      { week: 8, label: '착색기', ec: 3.0, ph: 6.0, dayT: 24, nightT: 16, hum: 68, actions: ['광 투과율 극대화', '잎 적절히 제거', '착색별 수확 계획'], note: '착색 기간: 적색 3~4주, 황색 2~3주' },
+      { week: 9, label: '착색·수확기', ec: 2.8, ph: 6.0, dayT: 24, nightT: 16, hum: 68, actions: ['90% 착색 시 수확', '쾌적한 보관 (7~10°C)', '다음 화방 유인'], note: '' },
+      { week: 10, label: '연속 착과기', ec: 2.8, ph: 6.0, dayT: 24, nightT: 16, hum: 68, actions: ['수확·착과 동시 관리', '양분 균형 점검', '총채벌레 예찰'], note: '파프리카 총채벌레 주요 피해 시기' },
+      { week: 11, label: '수확·후기', ec: 2.5, ph: 6.1, dayT: 23, nightT: 15, hum: 68, actions: ['수확량 모니터링', '식물 생리 상태 점검', '겨울 가온 계획'], note: '' },
+      { week: 12, label: '수확 마무리', ec: 2.0, ph: 6.2, dayT: 22, nightT: 15, hum: 65, actions: ['마지막 수확', '식물 제거', '청결 소독'], note: '재배 후 하우스 훈증 소독 권장' },
+    ],
+    pests: ['aphids', 'spider_mite', 'thrips', 'gray_mold', 'powdery_mildew', 'bacterial_spot']
+  },
+  'strawberry': {
+    emoji: '🍓', name: '딸기', sub: '겨울 시설재배 대표 작물', harvestDays: 150,
+    desc: '11월~5월 수확, 안정적 고수익',
+    params: { dayTemp: '18~23', nightTemp: '10~13', humidity: '65~75', ph: '5.8~6.2', ec: '1.0~1.5' },
+    stages: [
+      { week: 1, label: '정식·활착기', ec: 0.8, ph: 6.0, dayT: 20, nightT: 12, hum: 75, actions: ['차광 40~50%', '충분 관수', '활착 확인'], note: '정식 초기 차광 및 야간 온도 관리가 핵심' },
+      { week: 2, label: '활착기', ec: 1.0, ph: 6.0, dayT: 20, nightT: 12, hum: 73, actions: ['런너 즉시 제거', '차광 단계적 해제', '질소 시비 시작'], note: '' },
+      { week: 3, label: '영양 생장기', ec: 1.2, ph: 6.0, dayT: 20, nightT: 12, hum: 70, actions: ['잎 3~5매 확인', '엽병 신장 확인', '1차 추비'], note: '엽색이 진녹색이면 질소 과다 의심' },
+      { week: 4, label: '화아 분화기', ec: 1.0, ph: 6.1, dayT: 18, nightT: 8, hum: 68, actions: ['저온 단일 처리', '질소 감량', '인산 증량'], note: '이 시기 저온 부족 시 화아 분화 지연' },
+      { week: 5, label: '화아 분화기', ec: 1.0, ph: 6.1, dayT: 18, nightT: 8, hum: 65, actions: ['화아 분화 현미경 확인', '가온 시스템 점검', '관수 2~3일 1회'], note: '분화 확인 후 가온 시작' },
+      { week: 6, label: '현뢰기', ec: 1.2, ph: 6.0, dayT: 19, nightT: 10, hum: 65, actions: ['꽃봉오리 확인', '벌 방사 준비', '흰가루병 예찰'], note: '현뢰 직후 벌 방사 타이밍' },
+      { week: 7, label: '개화·수분기', ec: 1.3, ph: 5.9, dayT: 20, nightT: 11, hum: 68, actions: ['벌 방사 (서양벌)', '꽃 진동 금지', 'EC 점검'], note: '수분 불량 시 기형과 발생' },
+      { week: 8, label: '착과·비대기', ec: 1.4, ph: 5.9, dayT: 21, nightT: 12, hum: 68, actions: ['1화방 착과 수 확인 (7~10개)', '칼슘 엽면시비', '배꼽썩음 예방'], note: '' },
+      { week: 9, label: '과실 비대기', ec: 1.5, ph: 5.9, dayT: 21, nightT: 12, hum: 67, actions: ['관수 균일화', '착색 위해 잎따기', '잿빛곰팡이 예방'], note: '잿빛곰팡이 고위험 시기, 약제 예방 살포' },
+      { week: 10, label: '수확기', ec: 1.3, ph: 6.0, dayT: 20, nightT: 11, hum: 65, actions: ['70~80% 착색 수확', '오전 수확 후 냉장', '2화방 착과 관리'], note: 'Brix 9 이상 목표' },
+      { week: 11, label: '연속 수확기', ec: 1.3, ph: 6.0, dayT: 20, nightT: 11, hum: 65, actions: ['2화방 연속 수확', '런너 재차 제거', '엽수 관리'], note: '' },
+      { week: 12, label: '후기 관리', ec: 1.2, ph: 6.0, dayT: 19, nightT: 10, hum: 65, actions: ['수확 지속', '생산량 관리', '다음 작기 모종 계획'], note: '3~4월 이후 기온 상승 시 품질 저하 주의' },
+    ],
+    pests: ['gray_mold', 'powdery_mildew', 'aphids', 'spider_mite', 'thrips', 'blossom_end_rot']
+  },
+  'blueberry': {
+    emoji: '🫐', name: '블루베리', sub: '강산성 토양 필요, 고수익 베리류', harvestDays: 365,
+    desc: '정식 후 3~5년 장기 투자, kg 1~2만원',
+    params: { dayTemp: '20~25', nightTemp: '12~16', humidity: '60~70', ph: '4.5~5.5', ec: '0.5~1.2' },
+    stages: [
+      { week: 1, label: '정식기', ec: 0.4, ph: 4.8, dayT: 20, nightT: 12, hum: 70, actions: ['황산 용액으로 pH 조정', '펄라이트·피트모스 혼합', '정식 후 충분 관수'], note: '블루베리는 pH 4.5~5.5 강산성이 필수' },
+      { week: 2, label: '활착기', ec: 0.5, ph: 4.8, dayT: 20, nightT: 12, hum: 68, actions: ['차광 40%', '뿌리 활착 확인', '황산암모늄 소량 시비'], note: '활착 전 질소는 최소한으로' },
+      { week: 3, label: '새 잎 전개기', ec: 0.6, ph: 4.8, dayT: 22, nightT: 13, hum: 65, actions: ['새순 전개 확인', '질소(황산암모늄) 시비', '멀칭 유지'], note: '일반 질소 비료는 pH 상승 유발, 황산암모늄만 사용' },
+      { week: 4, label: '영양 생장기', ec: 0.7, ph: 4.9, dayT: 22, nightT: 13, hum: 65, actions: ['수형 기초 형성', '인산·유기질 추비', 'pH 재측정'], note: '3~4주마다 pH 측정 필수' },
+      { week: 5, label: '영양 생장기', ec: 0.8, ph: 5.0, dayT: 23, nightT: 14, hum: 63, actions: ['생장 모니터링', '병해 예찰', '관수 조절'], note: '' },
+      { week: 6, label: '영양 생장기', ec: 0.9, ph: 5.0, dayT: 23, nightT: 14, hum: 62, actions: ['꽃눈 형성 촉진', '칼리·칼슘 시비', '통풍 확보'], note: '꽃눈 형성 위해 단일·저온 처리 시작' },
+      { week: 7, label: '화아 분화기', ec: 0.8, ph: 5.0, dayT: 20, nightT: 10, hum: 60, actions: ['저온·단일 처리', '질소 감량', '가지 유인'], note: '저온 500~800시간 필요, 미만 시 개화 불량' },
+      { week: 8, label: '동면기·휴면 준비', ec: 0.5, ph: 5.0, dayT: 15, nightT: 5, hum: 55, actions: ['관수 대폭 감량', '질소 중단', '적설·결빙 대비'], note: '겨울 동면 관리가 내년 수량 결정' },
+      { week: 9, label: '동면기', ec: 0.3, ph: 5.0, dayT: 10, nightT: 2, hum: 50, actions: ['최저온 관리', '부직포 덮기', '관수 최소화'], note: '완전 동면 중, 개입 최소화' },
+      { week: 10, label: '기상·개화기', ec: 0.6, ph: 4.9, dayT: 18, nightT: 10, hum: 60, actions: ['기상 확인 (망울 팽창)', '부직포 제거', '벌 방사'], note: '개화기 야간 0°C 이하 시 동해 위험' },
+      { week: 11, label: '개화·수분기', ec: 0.7, ph: 4.9, dayT: 20, nightT: 12, hum: 62, actions: ['교차 수분 확인', '냉해 방지 가온', '꽃 상태 매일 점검'], note: '2품종 이상 혼식 시 수량 30% 향상' },
+      { week: 12, label: '착과·비대기', ec: 1.0, ph: 5.0, dayT: 22, nightT: 13, hum: 63, actions: ['칼리·칼슘 집중', '착과 수 확인', '조류 피해 대비 그물망'], note: '익은 열매 조류 피해 주의' },
+    ],
+    pests: ['mummy_berry', 'leaf_spot', 'stem_blight', 'aphids', 'spotted_wing']
+  }
+};
+
+// ═══════════════════════════════════════════════
+//  PEST DATABASE
+// ═══════════════════════════════════════════════
+const PESTS = {
+  gray_mold: { name: '잿빛곰팡이병', type: '곰팡이 병', risk: 'high', icon: '🍄', desc: '저온 다습 조건에서 급격히 발생. 과실·줄기·잎에 회색 포자 형성 후 썩음. 밀식·환기 불량 시 폭발적 확산.', prevention: '예방: 환기 철저, 감염 잎·과실 즉시 제거, 과실 접촉 방지. 약제: 사이프로디닐, 아이프로디온 계통 예방 살포.' },
+  aphids: { name: '진딧물', type: '해충', risk: 'medium', icon: '🪲', desc: '신초·잎 뒷면에 집단 기생. 즙액 흡수 후 그을음병 유발. 바이러스 매개체 역할도 하여 2차 피해 위험.', prevention: '예방: 반사 멀칭 설치, 천적(무당벌레) 활용. 약제: 아세타미프리드, 플로니카미드 계통 로테이션 살포.' },
+  spider_mite: { name: '응애', type: '해충', risk: 'high', icon: '🕷️', desc: '고온 건조 시 엽저에서 급속 증식. 잎에 황백색 반점 형성 후 생장 저해. 약제 저항성 발달 빠름.', prevention: '예방: 습도 유지, 잎 뒷면 중점 관찰. 약제: 계통 다른 살비제 3~4종 로테이션, 아바멕틴+비펜아제이트 조합.' },
+  powdery_mildew: { name: '흰가루병', type: '곰팡이 병', risk: 'medium', icon: '⬜', desc: '잎 표면에 흰 밀가루 같은 균총 형성. 광합성 저해, 과실 착색 불량. 건조한 조건에서 잘 발생.', prevention: '예방: 환기 확보, 밀식 금지. 약제: 트리플루미졸, 마이클로부타닐 계통, 또는 중조(탄산수소나트륨) 살포.' },
+  whitefly: { name: '온실가루이', type: '해충', risk: 'high', icon: '🦟', desc: '잎 뒷면에 흰 성충 다수 기생. 즙액 흡수 + 그을음병 유발 + 바이러스 매개. 시설 내 밀도가 급격히 증가.', prevention: '예방: 황색 끈끈이트랩 설치, 방충망. 천적: 황온좀벌. 약제: 스피네토람, 디노테푸란 계통.' },
+  root_rot: { name: '뿌리썩음병', type: '토양 병', risk: 'high', icon: '🌑', desc: '과습, 배수 불량 시 Pythium·Fusarium균에 의해 뿌리 갈변·부패. 지상부 시듦→고사. 초기 발견 어려움.', prevention: '예방: 배수 철저, 정식 전 토양 소독. 약제: 메탈락실 계통 관주처리, 길항 미생물(트리코더마) 활용.' },
+  blight: { name: '역병', type: '토양·기상 병', risk: 'high', icon: '🟤', desc: '강우 후 고온다습 시 줄기·잎·과실 급격히 침범. 암녹색 수침 병반 후 갈변. 확산 속도가 매우 빠름.', prevention: '예방: 빗물 튀김 방지 멀칭, 환기. 약제: 메탈락실+만코제브 혼합제, 초기 방제 중요.' },
+  leaf_mold: { name: '잎곰팡이병', type: '곰팡이 병', risk: 'medium', icon: '🍂', desc: '잎 뒷면에 올리브색~갈색 포자 형성. 광합성 저해. 고온 다습한 시설 내 빈번 발생.', prevention: '예방: 하우스 환기, 야간 온도 관리. 약제: 클로로탈로닐, 디페노코나졸 계통.' },
+  thrips: { name: '총채벌레', type: '해충', risk: 'high', icon: '🦎', desc: '꽃·잎·과실에 집단 가해. 은백색 반점 형성, TSWV 바이러스 매개체. 파프리카 주요 해충.', prevention: '예방: 파란 끈끈이트랩 설치, 방충망 30mesh. 천적: 애꽃노린재. 약제: 스피네토람, 에마멕틴벤조에이트.' },
+  bacterial_spot: { name: '세균성반점병', type: '세균 병', risk: 'medium', icon: '🔴', desc: '잎·과실에 수침상 갈색 반점. 고온 다습, 강우 후 상처 부위 통해 침입. 습도 80% 이상에서 급속 확산.', prevention: '예방: 환기, 상처 방지, 과실 밀착 금지. 약제: 구리 계통 살균제, 스트렙토마이신 소량.' },
+  mole_cricket: { name: '땅강아지(두더지)', type: '해충', risk: 'medium', icon: '🦗', desc: '지하에서 뿌리 갉아 먹음. 불규칙 생육 부진 원인. 밤에 지상 활동.', prevention: '예방: 토양 소독, 격자 설치. 약제: 클로르피리포스 입제 토양 혼화처리.' },
+  cutworm: { name: '거세미나방', type: '해충', risk: 'medium', icon: '🐛', desc: '어린 모종 지제부 절단 피해. 주로 야간 활동, 낮에는 토양 속 숨음. 정식 초기 집중 피해.', prevention: '예방: 정식 전 입제 살충제 토양 혼화. 약제: 인독사카브, 클로르피리포스 계통.' },
+  blossom_end_rot: { name: '배꼽썩음병', type: '생리 장해', risk: 'medium', icon: '⬛', desc: '과실 배꼽 부위 흑갈색 함몰. 칼슘 결핍 + 관수 불균일이 원인. 병원균 없음, 생리 장해.', prevention: '예방: 균일 관수, 칼슘 엽면 시비 (질산칼슘 0.3%). 환경: EC 급변 방지, 과도한 질소 억제.' },
+  mummy_berry: { name: '미라병(블루베리)', type: '곰팡이 병', risk: 'high', icon: '💀', desc: '과실이 회색 미라 형태로 고사. 개화기 냉해 + 모니리아균 복합 발생. 수확량 대폭 감소.', prevention: '예방: 낙엽 제거(월동 포자 제거), 석회 보르도액 살포. 약제: 테부코나졸, 개화 전 예방 살포.' },
+  leaf_spot: { name: '점무늬병', type: '곰팡이 병', risk: 'low', icon: '🔵', desc: '잎에 원형~타원형 갈색 반점. 노화 잎부터 발생. 심하면 조기 낙엽.', prevention: '예방: 통풍 개선, 이병 잎 제거. 약제: 클로로탈로닐, 만코제브 계통 예방 살포.' },
+  stem_blight: { name: '줄기마름병', type: '곰팡이 병', risk: 'medium', icon: '🌿', desc: '줄기가 붉은 갈색으로 변하며 고사. 상처 부위나 약한 지점 침입.', prevention: '예방: 전정 시 살균제 도포, 강전정 후 상처 보호제. 약제: 이프로디온, 티오파네이트메틸.' },
+  spotted_wing: { name: '점박이날개초파리(SWD)', type: '해충', risk: 'high', icon: '🪰', desc: '성숙 중인 열매 속에 산란. 유충이 과육 가해 후 물러짐. 블루베리 최대 적, 최근 국내 확산.', prevention: '예방: 수확 즉시 냉장, 과수원 청결 유지. 방충망 설치. 약제: 스피네토람, 람다사이할로트린.' },
+  green_mold: { name: '푸른곰팡이 (트리코더마·페니실리움)', type: '경쟁 잡균', risk: 'high', icon: '🟢', desc: '배지 접종 후 가장 빈번한 오염원. 녹색·청록색 균총이 배지를 뒤덮으며 상황버섯 균사와 경쟁, 재배 실패의 1순위 원인.', prevention: '예방: 접종 전 배지 완전 멸균(121°C 60분), 클린벤치·무균 접종, 알코올 75% 소독. 오염 배지 즉시 격리·폐기하여 포자 확산 차단.' },
+  bacterial_rot: { name: '세균성 부패', type: '세균 병', risk: 'high', icon: '🤎', desc: '배지 과습 시 슈도모나스·버크홀데리아균에 의한 갈변·악취·연화 발생. 한번 감염되면 확산이 빠름.', prevention: '예방: 배지 수분 함량 60~65% 적정 유지, 분무 후 과습 금지. 배양실 환기 철저. 감염 배지 즉시 제거.' },
+  fungus_gnat: { name: '버섯파리(균류모기)', type: '해충', risk: 'medium', icon: '🦟', desc: '성충이 배지 표면에 산란, 유충이 균사·자실체 내부를 식해. 자실체에 구멍이 뚫리거나 상품 가치 하락. 고습 환경에서 대발생.', prevention: '예방: 황색 끈끈이 트랩 설치, 방충망(50mesh) 설치. 재배사 청결 유지. 약제: 스피네토람 훈증 또는 네마선충(생물적 방제).' },
+  slug: { name: '민달팽이·달팽이', type: '해충', risk: 'medium', icon: '🐌', desc: '야간에 자실체 표면을 갉아먹어 상품성 저하. 고습 재배 환경에서 특히 빈번하게 발생.', prevention: '예방: 재배사 주변 잡초 제거, 석회 산포(진입 차단). 유인제(메타알데히드 입제) 배치. 야간 점검 후 포살.' },
+  competitor_fungi: { name: '경쟁 잡균 (목이·느타리 혼입)', type: '경쟁 생물', risk: 'low', icon: '🍄', desc: '원목 배지에 다른 목재부후균이 혼입하여 영양 경쟁 발생. 수확량 저하 원인이지만 독소 없음.', prevention: '예방: 원목 배지 완전 멸균, 종균 순도 확인. 배지 1개에 종균 1종만 접종. 잡균 확인 시 해당 배지만 분리 관리.' },
+};
+
+// ═══════════════════════════════════════════════
+//  APP STATE
+// ═══════════════════════════════════════════════
+let state = {
+  cropKey: null,
+  farmSize: 30,
+  plantingDate: null,
+  houseType: 'vinyl',
+  irrigation: 'drip',
+  checklistState: {},
+  chart: null
+};
+
+// ═══════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════
+window.onload = function() {
+  renderCropGrid();
+  loadSavedState();
+  initJournalDate();
+  renderJournal();
+  updateChecklistDate();
+};
+
+function renderCropGrid() {
+  const grid = document.getElementById('crop-grid');
+  grid.innerHTML = Object.entries(CROPS).map(([key, c]) => `
+    <div class="crop-option ${state.cropKey===key?'selected':''}" onclick="selectCrop('${key}')">
+      <div class="crop-emoji">${c.emoji}</div>
+      <div class="crop-name">${c.name}</div>
+      <div class="crop-sub">${c.sub}</div>
+    </div>
+  `).join('');
+}
+
+function selectCrop(key) {
+  state.cropKey = key;
+  renderCropGrid();
+}
+
+function selectIrr(el, type) {
+  document.querySelectorAll('.irr-option').forEach(e => e.classList.remove('selected'));
+  el.classList.add('selected');
+  state.irrigation = type;
+}
+
+function loadSavedState() {
+  const saved = localStorage.getItem('gf_state');
+  if (saved) {
+    const s = JSON.parse(saved);
+    Object.assign(state, s);
+    if (state.cropKey) renderCropGrid();
+    if (state.farmSize) document.getElementById('farm-size').value = state.farmSize;
+    if (state.plantingDate) document.getElementById('planting-date').value = state.plantingDate;
+    if (state.houseType) document.getElementById('house-type').value = state.houseType;
+    document.querySelectorAll('.irr-option').forEach(e => {
+      e.classList.toggle('selected', e.dataset.irr === state.irrigation);
+    });
+    if (state.cropKey && state.plantingDate) {
+      updateSidebarStatus();
+    }
+  }
+  // Set default planting date if empty
+  if (!document.getElementById('planting-date').value) {
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('planting-date').value = today;
+  }
+}
+
+function saveState() {
+  state.farmSize = parseInt(document.getElementById('farm-size').value) || 30;
+  state.plantingDate = document.getElementById('planting-date').value;
+  state.houseType = document.getElementById('house-type').value;
+  localStorage.setItem('gf_state', JSON.stringify({
+    cropKey: state.cropKey,
+    farmSize: state.farmSize,
+    plantingDate: state.plantingDate,
+    houseType: state.houseType,
+    irrigation: state.irrigation
+  }));
+}
+
+function applySetup() {
+  if (!state.cropKey) { alert('재배 작물을 선택해주세요!'); return; }
+  if (!document.getElementById('planting-date').value) { alert('정식 날짜를 입력해주세요!'); return; }
+  saveState();
+  updateSidebarStatus();
+  buildRecipePage();
+  buildChecklist();
+  buildPestPage();
+  showPage('recipe');
+}
+
+function updateSidebarStatus() {
+  if (!state.cropKey) return;
+  const crop = CROPS[state.cropKey];
+  document.getElementById('status-crop-name').textContent = `${crop.emoji} ${crop.name}`;
+  const week = getCurrentWeek();
+  const size = state.farmSize || '?';
+  document.getElementById('status-week-info').textContent =
+    week > 0 ? `정식 ${week}주차 · ${size}평` : `정식일 예정 · ${size}평`;
+}
+
+function getCurrentWeek() {
+  if (!state.plantingDate) return 1;
+  const planted = new Date(state.plantingDate);
+  const now = new Date();
+  const diff = Math.floor((now - planted) / (7 * 24 * 3600 * 1000));
+  return Math.max(1, Math.min(diff + 1, 12));
+}
+
+// ═══════════════════════════════════════════════
+//  RECIPE PAGE
+// ═══════════════════════════════════════════════
+function buildRecipePage() {
+  if (!state.cropKey || !state.plantingDate) {
+    document.getElementById('recipe-no-setup').style.display = 'block';
+    document.getElementById('recipe-content').style.display = 'none';
+    return;
+  }
+  document.getElementById('recipe-no-setup').style.display = 'none';
+  document.getElementById('recipe-content').style.display = 'block';
+
+  const crop = CROPS[state.cropKey];
+  const currentWeek = getCurrentWeek();
+
+  // Subtitle
+  const planted = new Date(state.plantingDate);
+  const harvestDate = new Date(planted.getTime() + crop.harvestDays * 86400000);
+  document.getElementById('recipe-subtitle').textContent =
+    `${crop.name} · 정식 ${currentWeek}주차 · 예상 수확일 ${harvestDate.toLocaleDateString('ko-KR')}`;
+
+  // Metrics
+  const currentStage = crop.stages[Math.min(currentWeek-1, 11)];
+  const irrigationNames = {drip:'점적관수', mist:'분무관수', bottom:'저면관수', manual:'수동관수'};
+  document.getElementById('recipe-metrics').innerHTML = `
+    <div class="metric-card">
+      <div class="metric-label">현재 생육 단계</div>
+      <div class="metric-value" style="font-size:16px;">${currentStage.label}</div>
+      <div class="metric-sub">${currentWeek}주차</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">목표 EC 농도</div>
+      <div class="metric-value">${currentStage.ec.toFixed(1)}<span class="metric-unit">mS/cm</span></div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">주간 목표 온도</div>
+      <div class="metric-value">${currentStage.dayT}<span class="metric-unit">°C</span></div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">관수 시스템</div>
+      <div class="metric-value" style="font-size:15px;">${irrigationNames[state.irrigation]}</div>
+    </div>
+  `;
+
+  // Chart
+  buildRecipeChart(crop, currentWeek);
+
+  // Week cards
+  const timeline = document.getElementById('week-timeline');
+  timeline.innerHTML = crop.stages.map((s, i) => {
+    const wk = i + 1;
+    const isCurrentWeek = wk === currentWeek;
+    const isPast = wk < currentWeek;
+    return `
+      <div class="week-card ${isCurrentWeek?'current-week':''} ${wk===currentWeek?'open':''}" id="wcard-${wk}">
+        <div class="week-card-header" onclick="toggleWeek(${wk})">
+          <span class="week-num">Week ${wk}</span>
+          <span class="week-stage">${s.label}</span>
+          <div class="week-tags">
+            ${isCurrentWeek ? '<span class="badge badge-green">🌿 현재</span>' : ''}
+            ${isPast ? '<span class="badge badge-gray">완료</span>' : ''}
+            <span style="color:var(--text3); font-size:14px;">▾</span>
+          </div>
+        </div>
+        <div class="week-card-body">
+          <div class="week-params">
+            <div class="wparam">
+              <div class="wparam-label">🧪 EC 농도</div>
+              <div class="wparam-val">${s.ec.toFixed(1)}<span class="wparam-unit"> mS/cm</span></div>
+            </div>
+            <div class="wparam">
+              <div class="wparam-label">🔬 pH 목표</div>
+              <div class="wparam-val">${s.ph.toFixed(1)}</div>
+            </div>
+            <div class="wparam">
+              <div class="wparam-label">🌡️ 주간 온도</div>
+              <div class="wparam-val">${s.dayT}<span class="wparam-unit">°C</span></div>
+            </div>
+            <div class="wparam">
+              <div class="wparam-label">🌙 야간 온도</div>
+              <div class="wparam-val">${s.nightT}<span class="wparam-unit">°C</span></div>
+            </div>
+            <div class="wparam">
+              <div class="wparam-label">💧 습도 목표</div>
+              <div class="wparam-val">${s.hum}<span class="wparam-unit">%</span></div>
+            </div>
+          </div>
+          <div class="week-actions">
+            <div class="card-title" style="margin-bottom:8px;">📌 주요 작업</div>
+            <ul>${s.actions.map(a => `<li>${a}</li>`).join('')}</ul>
+          </div>
+          ${s.note ? `<div class="week-note">💡 ${s.note}</div>` : ''}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function toggleWeek(wk) {
+  const card = document.getElementById('wcard-' + wk);
+  card.classList.toggle('open');
+}
+
+function buildRecipeChart(crop, currentWeek) {
+  const labels = crop.stages.map((s, i) => `W${i+1}`);
+  const ecData = crop.stages.map(s => s.ec);
+  const phData = crop.stages.map(s => s.ph);
+  const tempData = crop.stages.map(s => s.dayT);
+
+  if (state.chart) { state.chart.destroy(); state.chart = null; }
+
+  const ctx = document.getElementById('recipeChart').getContext('2d');
+  state.chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'EC (mS/cm)',
+          data: ecData,
+          borderColor: '#2d6a4f',
+          backgroundColor: 'rgba(45,106,79,0.08)',
+          borderWidth: 2,
+          pointRadius: labels.map((_, i) => i+1===currentWeek ? 6 : 3),
+          pointBackgroundColor: labels.map((_, i) => i+1===currentWeek ? '#2d6a4f' : '#40916c'),
+          tension: 0.4, yAxisID: 'y',
+          borderDash: [],
+        },
+        {
+          label: 'pH',
+          data: phData,
+          borderColor: '#b5451b',
+          backgroundColor: 'rgba(181,69,27,0.05)',
+          borderWidth: 2,
+          pointRadius: labels.map((_, i) => i+1===currentWeek ? 6 : 3),
+          pointBackgroundColor: labels.map((_, i) => i+1===currentWeek ? '#b5451b' : '#e67c3b'),
+          tension: 0.4, yAxisID: 'y',
+          borderDash: [6, 3],
+        },
+        {
+          label: '주간 온도 (°C)',
+          data: tempData,
+          borderColor: '#1a5cb8',
+          backgroundColor: 'rgba(26,92,184,0.05)',
+          borderWidth: 1.5,
+          pointRadius: 3,
+          tension: 0.4, yAxisID: 'y2',
+          borderDash: [3, 3],
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { mode: 'index', intersect: false }
+      },
+      scales: {
+        x: { grid: { color: 'rgba(0,0,0,0.05)' } },
+        y: { position: 'left', min: 0, max: 8, grid: { color: 'rgba(0,0,0,0.05)' },
+          title: { display: true, text: 'EC / pH', font: { size: 11 } } },
+        y2: { position: 'right', min: 0, max: 35, grid: { display: false },
+          title: { display: true, text: '온도 (°C)', font: { size: 11 } } }
+      }
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════
+//  CHECKLIST PAGE
+// ═══════════════════════════════════════════════
+function getChecklist() {
+  if (!state.cropKey) return [];
+  const crop = CROPS[state.cropKey];
+  const stage = crop.stages[Math.min(getCurrentWeek()-1, 11)];
+  const irr = state.irrigation;
+
+  const items = [
+    { id:'temp-day', category:'환경 관리', title:'주간 온도 확인', desc:`목표: ${stage.dayT}°C`, range:`${stage.dayT}°C` },
+    { id:'temp-night', category:'환경 관리', title:'야간 온도 확인', desc:`목표: ${stage.nightT}°C (야간 최저)`, range:`${stage.nightT}°C` },
+    { id:'humidity', category:'환경 관리', title:'습도 확인', desc:`목표 습도 범위`, range:`${stage.hum}%` },
+    { id:'ventilation', category:'환경 관리', title:'환기 실시', desc:'오전·오후 적정 환기, 결로 방지', range:'-' },
+    { id:'irrigation', category:'관수·시비', title:`관수 실시 (${{drip:'점적',mist:'미스트',bottom:'저면',manual:'수동'}[irr]})`, desc:`EC 목표: ${stage.ec.toFixed(1)} mS/cm · pH: ${stage.ph.toFixed(1)}`, range:`EC ${stage.ec.toFixed(1)}` },
+    { id:'leaf-check', category:'생육 점검', title:'잎 상태 육안 점검', desc:'황화, 반점, 병해 증상 이상 여부 확인', range:'-' },
+    { id:'root-check', category:'생육 점검', title:'뿌리·줄기 상태 확인', desc:'수분 흡수, 뿌리색, 생육 불균일 여부', range:'-' },
+    { id:'pest-check', category:'병해충 예찰', title:'주요 해충 예찰', desc:'잎 뒷면, 신초 부위 해충 육안 확인', range:'-' },
+    { id:'disease-check', category:'병해충 예찰', title:'병해 증상 확인', desc:'이상 병반, 균사, 포자 유무 확인', range:'-' },
+    { id:'fertilizer', category:'관수·시비', title:'영양액 조제 확인', desc:'원액 잔량, 탱크 청결도 점검', range:'-' },
+  ];
+  // Add stage-specific actions
+  stage.actions.forEach((a, i) => {
+    items.push({ id:`stage-${i}`, category:'주간 작업', title: a, desc: `${stage.label} 주요 작업`, range:'-' });
+  });
+  return items;
+}
+
+function buildChecklist() {
+  const today = new Date().toISOString().split('T')[0];
+  const items = getChecklist();
+  if (!state.checklistState[today]) state.checklistState[today] = {};
+
+  const categories = [...new Set(items.map(i => i.category))];
+  const container = document.getElementById('checklist-content');
+
+  container.innerHTML = categories.map(cat => {
+    const catItems = items.filter(i => i.category === cat);
+    return `
+      <div class="check-section">
+        <div class="check-section-title">${cat}</div>
+        ${catItems.map(item => {
+          const done = !!state.checklistState[today][item.id];
+          return `
+            <div class="check-item ${done?'done':''}" onclick="toggleCheck('${item.id}')">
+              <div class="check-box">${done?'✓':''}</div>
+              <div class="check-content">
+                <div class="check-title">${item.title}</div>
+                <div class="check-desc">${item.desc}</div>
+              </div>
+              ${item.range !== '-' ? `<div class="check-range">${item.range}</div>` : ''}
+            </div>
+          `;
+        }).join('')}
+      </div>
+    `;
+  }).join('');
+
+  updateProgress();
+}
+
+function toggleCheck(id) {
+  const today = new Date().toISOString().split('T')[0];
+  if (!state.checklistState[today]) state.checklistState[today] = {};
+  state.checklistState[today][id] = !state.checklistState[today][id];
+  buildChecklist();
+  localStorage.setItem('gf_checks', JSON.stringify(state.checklistState));
+}
+
+function resetChecklist() {
+  const today = new Date().toISOString().split('T')[0];
+  state.checklistState[today] = {};
+  buildChecklist();
+  localStorage.setItem('gf_checks', JSON.stringify(state.checklistState));
+}
+
+function updateProgress() {
+  const today = new Date().toISOString().split('T')[0];
+  const items = getChecklist();
+  const total = items.length;
+  const done = Object.values(state.checklistState[today] || {}).filter(Boolean).length;
+  const pct = total ? Math.round((done / total) * 100) : 0;
+  document.getElementById('check-progress-bar').style.width = pct + '%';
+  document.getElementById('check-progress-text').textContent = `${done} / ${total}`;
+}
+
+function updateChecklistDate() {
+  const today = new Date();
+  const label = today.toLocaleDateString('ko-KR', { year:'numeric', month:'long', day:'numeric', weekday:'long' });
+  document.getElementById('checklist-date-label').textContent = label;
+  const checks = localStorage.getItem('gf_checks');
+  if (checks) state.checklistState = JSON.parse(checks);
+  if (state.cropKey) buildChecklist();
+}
+
+// ═══════════════════════════════════════════════
+//  PEST PAGE
+// ═══════════════════════════════════════════════
+function buildPestPage() {
+  if (!state.cropKey) return;
+  const crop = CROPS[state.cropKey];
+  const currentWeek = getCurrentWeek();
+  const pestKeys = crop.pests;
+
+  // Alert banner
+  const highRiskPests = pestKeys.filter(k => PESTS[k] && PESTS[k].risk === 'high');
+  const banner = document.getElementById('pest-alert-banner');
+  if (highRiskPests.length > 0 && currentWeek >= 3) {
+    banner.innerHTML = `
+      <div class="alert alert-warn">
+        <span class="alert-icon">⚠️</span>
+        <div>
+          <strong>${currentWeek}주차 주의 병해충:</strong>
+          ${highRiskPests.map(k => PESTS[k].name).join(', ')} — 예찰 강화 및 예방 약제 준비 권장
+        </div>
+      </div>
+    `;
+  } else {
+    banner.innerHTML = `
+      <div class="alert alert-info">
+        <span class="alert-icon">ℹ️</span>
+        <div>${currentWeek}주차 현재 고위험 병해충 없음. 기본 예찰 유지하세요.</div>
+      </div>
+    `;
+  }
+
+  document.getElementById('pest-subtitle').textContent =
+    `${crop.name} 주요 병해충 · 현재 ${currentWeek}주차 (${crop.stages[Math.min(currentWeek-1,11)].label})`;
+
+  const grid = document.getElementById('pest-grid');
+  grid.innerHTML = pestKeys.filter(k => PESTS[k]).map(k => {
+    const p = PESTS[k];
+    const riskLabel = {high:'⚠️ 고위험', medium:'🔸 중위험', low:'🟢 저위험'}[p.risk];
+    return `
+      <div class="pest-card ${p.risk}">
+        <div class="pest-header">
+          <div>
+            <div class="pest-name">${p.icon} ${p.name}</div>
+            <div class="pest-type">${p.type}</div>
+          </div>
+          <span class="badge badge-${p.risk==='high'?'red':p.risk==='medium'?'amber':'green'}">${riskLabel}</span>
+        </div>
+        <div class="pest-desc">${p.desc}</div>
+        <div class="pest-prevention">
+          <strong>📋 방제 대책</strong>
+          ${p.prevention}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════
+//  JOURNAL
+// ═══════════════════════════════════════════════
+function initJournalDate() {
+  document.getElementById('j-date').value = new Date().toISOString().split('T')[0];
+}
+
+function saveJournal() {
+  const date = document.getElementById('j-date').value;
+  const weather = document.getElementById('j-weather').value;
+  const maxtemp = document.getElementById('j-maxtemp').value;
+  const mintemp = document.getElementById('j-mintemp').value;
+  const memo = document.getElementById('j-memo').value.trim();
+  const tags = document.getElementById('j-tags').value.split(',').map(t=>t.trim()).filter(Boolean);
+  if (!memo) { alert('작업 내용을 입력해주세요.'); return; }
+
+  const entries = getJournalEntries();
+  entries.unshift({ id: Date.now(), date, weather, maxtemp, mintemp, memo, tags,
+    crop: state.cropKey ? CROPS[state.cropKey].name : '-',
+    week: getCurrentWeek() });
+  localStorage.setItem('gf_journal', JSON.stringify(entries));
+
+  document.getElementById('j-memo').value = '';
+  document.getElementById('j-tags').value = '';
+  renderJournal();
+}
+
+function getJournalEntries() {
+  const raw = localStorage.getItem('gf_journal');
+  return raw ? JSON.parse(raw) : [];
+}
+
+function deleteEntry(id) {
+  if (!confirm('이 일지를 삭제할까요?')) return;
+  const entries = getJournalEntries().filter(e => e.id !== id);
+  localStorage.setItem('gf_journal', JSON.stringify(entries));
+  renderJournal();
+}
+
+function renderJournal() {
+  const entries = getJournalEntries();
+  const list = document.getElementById('journal-list');
+  if (entries.length === 0) {
+    list.innerHTML = `<div class="empty-state"><div class="empty-icon">📔</div><div class="empty-text">아직 기록된 일지가 없습니다.<br>첫 번째 농업 일지를 작성해보세요!</div></div>`;
+    return;
+  }
+  list.innerHTML = entries.map(e => {
+    const dateStr = new Date(e.date).toLocaleDateString('ko-KR', {month:'long',day:'numeric',weekday:'short'});
+    const tempStr = (e.maxtemp || e.mintemp) ? `최고 ${e.maxtemp||'-'}°C / 최저 ${e.mintemp||'-'}°C` : '';
+    return `
+      <div class="journal-entry">
+        <div class="entry-header">
+          <div>
+            <div class="entry-date">${dateStr} ${e.weather || ''} ${tempStr}</div>
+            <div class="entry-title">${e.crop || '-'} · ${e.week || '?'}주차</div>
+          </div>
+          <button class="entry-del" onclick="deleteEntry(${e.id})">삭제</button>
+        </div>
+        <div class="entry-body">${e.memo.replace(/\n/g,'<br>')}</div>
+        ${e.tags.length ? `<div class="entry-tags">${e.tags.map(t=>`<span class="badge badge-green">${t}</span>`).join('')}</div>` : ''}
+      </div>
+    `;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════
+//  NAVIGATION
+// ═══════════════════════════════════════════════
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelectorAll('.mnav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  document.querySelectorAll(`[data-page="${name}"]`).forEach(el => el.classList.add('active'));
+  if (name === 'recipe') {
+    if (!state.cropKey) { document.getElementById('recipe-no-setup').style.display='block'; document.getElementById('recipe-content').style.display='none'; }
+    else { buildRecipePage(); }
+  }
+  if (name === 'checklist') {
+    updateChecklistDate();
+    if (!state.cropKey) { document.getElementById('checklist-content').innerHTML=`<div class="status-banner warn"><span class="status-icon">⚠️</span><div class="status-text"><strong>농장 설정 필요</strong>설정 탭에서 작물과 정식 날짜를 먼저 입력해주세요.</div></div>`; }
+    else { buildChecklist(); }
+  }
+  if (name === 'pests') {
+    if (!state.cropKey) { document.getElementById('pest-grid').innerHTML=`<div class="status-banner warn" style="grid-column:1/-1"><span class="status-icon">⚠️</span><div class="status-text"><strong>농장 설정 필요</strong>설정 탭에서 작물을 먼저 선택해주세요.</div></div>`; document.getElementById('pest-alert-banner').innerHTML=''; }
+    else { buildPestPage(); }
+  }
+  if (name === 'nutrient') { setTimeout(calcNutrient, 50); }
+  if (name === 'income') { if(state.cropKey&&state.farmSize){document.getElementById('ic-size').value=state.farmSize;} setTimeout(calcIncome, 50); }
+  if (name === 'ai') { initAiPage(); }
+}
+
+// ═══════════════════════════════════════════════
+//  NUTRIENT CALCULATOR
+// ═══════════════════════════════════════════════
+const FERT_SETS = {
+  hoagland: { name: '호글랜드 배양액', base_per_ec: [
+    { name: '질산칼슘 Ca(NO3)2', g_per: 945, role: '칼슘·질소', color: '#2d6a4f' },
+    { name: '질산칼륨 KNO3', g_per: 606, role: '칼리·질소', color: '#40916c' },
+    { name: '황산마그네슘 MgSO4', g_per: 493, role: '마그네슘', color: '#74c69d' },
+    { name: '인산암모늄 NH4H2PO4', g_per: 115, role: '인산', color: '#b5451b' },
+    { name: '미량원소 혼합 (Fe·Mn·Zn 등)', g_per: 2.5, role: '미량원소', color: '#888' },
+  ]},
+  yamazaki: { name: '야마자키 배양액', base_per_ec: [
+    { name: '질산칼슘 Ca(NO3)2', g_per: 826, role: '칼슘·질소', color: '#2d6a4f' },
+    { name: '질산칼륨 KNO3', g_per: 404, role: '칼리·질소', color: '#40916c' },
+    { name: '황산마그네슘 MgSO4', g_per: 246, role: '마그네슘', color: '#74c69d' },
+    { name: '인산이수소칼륨 KH2PO4', g_per: 136, role: '인산·칼리', color: '#b5451b' },
+    { name: '질산암모늄 NH4NO3', g_per: 80, role: '질소 보완', color: '#e67c3b' },
+    { name: '미량원소 혼합', g_per: 2.0, role: '미량원소', color: '#888' },
+  ]},
+  berry: { name: '베리류 전용 배양액', base_per_ec: [
+    { name: '황산암모늄 (NH4)2SO4', g_per: 264, role: '질소 (산성화)', color: '#2d6a4f' },
+    { name: '황산칼륨 K2SO4', g_per: 174, role: '칼리', color: '#40916c' },
+    { name: '황산마그네슘 MgSO4', g_per: 493, role: '마그네슘', color: '#74c69d' },
+    { name: '인산암모늄 NH4H2PO4', g_per: 230, role: '인산', color: '#b5451b' },
+    { name: '황산철 FeSO4 (킬레이트)', g_per: 8, role: '철분 (산성 유리형)', color: '#e67c3b' },
+    { name: '미량원소 혼합', g_per: 2.0, role: '미량원소', color: '#888' },
+  ]},
+  root: { name: '뿌리채소 전용 배양액', base_per_ec: [
+    { name: '질산칼슘 Ca(NO3)2', g_per: 700, role: '칼슘·질소', color: '#2d6a4f' },
+    { name: '질산칼륨 KNO3', g_per: 808, role: '칼리 강화', color: '#40916c' },
+    { name: '황산마그네슘 MgSO4', g_per: 369, role: '마그네슘', color: '#74c69d' },
+    { name: '인산이수소칼륨 KH2PO4', g_per: 272, role: '인산·칼리', color: '#b5451b' },
+    { name: '미량원소 혼합', g_per: 2.5, role: '미량원소', color: '#888' },
+  ]}
+};
+
+let ntChart = null;
+function calcNutrient() {
+  const tank = parseFloat(document.getElementById('nt-tank').value) || 500;
+  const targetEC = parseFloat(document.getElementById('nt-ec').value) || 2.0;
+  const rawEC = parseFloat(document.getElementById('nt-rawec').value) || 0.3;
+  const rawPH = parseFloat(document.getElementById('nt-rawph').value) || 7.2;
+  const targetPH = parseFloat(document.getElementById('nt-targetph').value) || 6.0;
+  const setKey = document.getElementById('nt-fertset').value;
+  const fset = FERT_SETS[setKey];
+  const ecRise = Math.max(0, targetEC - rawEC);
+  const scaleFactor = (tank / 1000) * ecRise;
+
+  document.getElementById('nt-metrics').innerHTML = `
+    <div class="metric-card"><div class="metric-label">필요 EC 상승폭</div><div class="metric-value">${ecRise.toFixed(1)}<span class="metric-unit"> mS/cm</span></div><div class="metric-sub">원수 ${rawEC} → 목표 ${targetEC}</div></div>
+    <div class="metric-card"><div class="metric-label">탱크 용량</div><div class="metric-value">${tank.toLocaleString()}<span class="metric-unit"> L</span></div></div>
+    <div class="metric-card"><div class="metric-label">pH 교정 여부</div><div class="metric-value" style="font-size:15px;">${rawPH>targetPH+0.3?'산 첨가 필요':rawPH<targetPH-0.3?'알칼리 필요':'적정 범위'}</div><div class="metric-sub">${rawPH} → ${targetPH}</div></div>
+  `;
+
+  const maxG = Math.max(...fset.base_per_ec.map(f => f.g_per * scaleFactor));
+  const rows = fset.base_per_ec.map(f => {
+    const amount = f.g_per * scaleFactor;
+    const barPct = maxG > 0 ? Math.round((amount / maxG) * 100) : 0;
+    const isSmall = f.g_per < 10;
+    const display = isSmall ? (amount * 1000).toFixed(1) : amount.toFixed(1);
+    const unit = isSmall ? 'mL' : 'g';
+    return `<tr><td><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:${f.color};margin-right:6px;vertical-align:-1px;"></span><strong>${f.name}</strong><br><span style="font-size:12px;color:var(--text3);">${f.role}</span></td><td><span class="fert-amount">${display} ${unit}</span><div class="fert-bar-wrap"><div class="fert-bar" style="width:${barPct}%;background:${f.color};"></div></div></td></tr>`;
+  }).join('');
+
+  document.getElementById('nt-fert-table').innerHTML = `<table class="fert-table"><thead><tr><th>비료 종류</th><th>투여량 (탱크 ${tank}L 기준)</th></tr></thead><tbody>${rows}</tbody></table>`;
+
+  const phDiff = rawPH - targetPH;
+  let phAdvice = '';
+  if (phDiff > 0.3) {
+    const acidMl = Math.round(phDiff * tank * 0.15);
+    phAdvice = `<div class="week-note">💧 pH 교정: 원수 pH ${rawPH} → 목표 ${targetPH}로 낮추려면 인산(85% H3PO4) 약 ${acidMl}mL을 소량씩 첨가하며 pH미터로 확인하세요.</div>`;
+  } else if (phDiff < -0.3) {
+    phAdvice = `<div class="week-note">💧 pH 교정: 수산화칼륨(KOH) 희석액을 소량씩 첨가하며 pH를 목표 ${targetPH}로 올리세요.</div>`;
+  } else {
+    phAdvice = `<div class="status-banner good" style="margin-top:0;"><span class="status-icon">✅</span><div class="status-text"><strong>pH 적정</strong>원수 pH ${rawPH}는 목표 ${targetPH}에 근접합니다. 별도 교정 불필요.</div></div>`;
+  }
+  document.getElementById('nt-ph-advice').innerHTML = phAdvice;
+
+  if (ntChart) { ntChart.destroy(); ntChart = null; }
+  const ecSteps = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0];
+  const totalG = fset.base_per_ec.reduce((s, f) => s + f.g_per, 0);
+  const ctx = document.getElementById('ntChart').getContext('2d');
+  ntChart = new Chart(ctx, {
+    type: 'line',
+    data: { labels: ecSteps.map(e => `EC ${e}`), datasets: [{ label: '총 비료량', data: ecSteps.map(ec => Math.round(totalG * Math.max(0, ec - rawEC))), borderColor: '#2d6a4f', backgroundColor: 'rgba(45,106,79,0.08)', borderWidth: 2, fill: true, tension: 0.3, pointRadius: ecSteps.map(ec => Math.abs(ec - targetEC) < 0.3 ? 7 : 4), pointBackgroundColor: ecSteps.map(ec => Math.abs(ec - targetEC) < 0.3 ? '#b5451b' : '#2d6a4f') }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { color: 'rgba(0,0,0,0.04)' } }, y: { grid: { color: 'rgba(0,0,0,0.04)' }, title: { display: true, text: '총 비료량 (g)', font: { size: 11 } } } } }
+  });
+  calcIrrSchedule();
+}
+
+function calcIrrSchedule() {
+  const plants = parseInt(document.getElementById('nt-plants').value) || 100;
+  const perPlant = parseInt(document.getElementById('nt-per-plant').value) || 200;
+  const freq = parseInt(document.getElementById('nt-freq').value) || 2;
+  const startTime = document.getElementById('nt-start-time').value || '08:00';
+  const tank = parseFloat(document.getElementById('nt-tank').value) || 500;
+  const dailyTotal = (plants * perPlant * freq) / 1000;
+  const tankDays = (tank / Math.max(1, dailyTotal)).toFixed(1);
+  const [sh, sm] = startTime.split(':').map(Number);
+  const startMins = sh * 60 + sm;
+  const endMins = 17 * 60;
+  const interval = freq > 1 ? Math.floor((endMins - startMins) / (freq - 1)) : 0;
+  const times = Array.from({length: freq}, (_, i) => {
+    const mins = startMins + i * interval;
+    return `${String(Math.floor(mins/60)).padStart(2,'0')}:${String(mins%60).padStart(2,'0')}`;
+  });
+  document.getElementById('nt-schedule-result').innerHTML = `
+    <div class="metrics" style="grid-template-columns:repeat(3,1fr);margin-bottom:14px;">
+      <div class="metric-card"><div class="metric-label">일 총 관수량</div><div class="metric-value">${dailyTotal.toFixed(0)}<span class="metric-unit"> L</span></div><div class="metric-sub">${plants}주 x ${perPlant}mL x ${freq}회</div></div>
+      <div class="metric-card"><div class="metric-label">탱크 지속 일수</div><div class="metric-value">${tankDays}<span class="metric-unit"> 일</span></div></div>
+      <div class="metric-card"><div class="metric-label">1회 관수량</div><div class="metric-value">${(dailyTotal/freq).toFixed(0)}<span class="metric-unit"> L</span></div></div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">${times.map((t,i)=>`<div style="background:var(--green-light);border:1px solid var(--green3);border-radius:8px;padding:8px 16px;text-align:center;"><div style="font-size:11px;color:var(--green);margin-bottom:2px;">관수 ${i+1}회</div><div style="font-size:18px;font-weight:700;color:var(--green);">${t}</div></div>`).join('')}</div>`;
+}
+
+// ═══════════════════════════════════════════════
+//  INCOME ESTIMATOR
+// ═══════════════════════════════════════════════
+let icPie = null, icBar = null;
+function calcIncome() {
+  const size = parseFloat(document.getElementById('ic-size').value) || 30;
+  const yld = parseFloat(document.getElementById('ic-yield').value) || 8;
+  const price = parseFloat(document.getElementById('ic-price').value) || 15000;
+  const cycles = parseInt(document.getElementById('ic-cycles').value) || 1;
+  const fertCost = parseFloat(document.getElementById('ic-fert').value) || 5000;
+  const laborCost = parseFloat(document.getElementById('ic-labor').value) || 8000;
+  const energyCost = parseFloat(document.getElementById('ic-energy').value) || 4000;
+  const invest = parseFloat(document.getElementById('ic-invest').value) * 10000 || 5000000;
+  const revenuePerCycle = size * yld * price;
+  const costPerCycle = size * (fertCost + laborCost + energyCost);
+  const netPerCycle = revenuePerCycle - costPerCycle;
+  const annualRevenue = revenuePerCycle * cycles;
+  const annualCost = costPerCycle * cycles;
+  const annualNet = netPerCycle * cycles;
+  const roi = invest > 0 ? ((annualNet / invest) * 100) : 0;
+  const breakEvenYears = annualNet > 0 ? (invest / annualNet) : 999;
+  const fmt = v => v<0?`-${Math.abs(Math.round(v/10000)).toLocaleString()}만원`:`${Math.round(v/10000).toLocaleString()}만원`;
+
+  document.getElementById('ic-metrics').innerHTML = `
+    <div class="metric-card"><div class="metric-label">연 매출액</div><div class="metric-value" style="font-size:17px;">${fmt(annualRevenue)}</div><div class="metric-sub">${cycles}작기 합산</div></div>
+    <div class="metric-card"><div class="metric-label">연 순이익</div><div class="metric-value" style="font-size:17px;color:${annualNet>=0?'var(--green)':'#c0392b'};">${fmt(annualNet)}</div><div class="metric-sub">이익률 ${Math.round((annualNet/Math.max(1,annualRevenue))*100)}%</div></div>
+    <div class="metric-card"><div class="metric-label">투자 회수기간</div><div class="metric-value" style="font-size:17px;">${breakEvenYears>50?'장기':breakEvenYears.toFixed(1)}<span class="metric-unit">년</span></div></div>
+    <div class="metric-card"><div class="metric-label">연 ROI</div><div class="metric-value" style="font-size:17px;color:${roi>=0?'var(--green)':'#c0392b'};">${roi.toFixed(1)}<span class="metric-unit">%</span></div></div>
+  `;
+
+  if (icPie) { icPie.destroy(); icPie = null; }
+  const ctx1 = document.getElementById('icPieChart').getContext('2d');
+  const fertT=fertCost*size*cycles, laborT=laborCost*size*cycles, energyT=energyCost*size*cycles;
+  icPie = new Chart(ctx1, { type:'doughnut', data:{ labels:['순이익','비료·농약','인건비','에너지·기타'], datasets:[{data:[Math.max(0,annualNet),fertT,laborT,energyT],backgroundColor:['#2d6a4f','#b5451b','#1a5cb8','#888'],borderWidth:0,cutout:'60%'}] }, options:{ responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${Math.round(c.raw/10000).toLocaleString()}만원`}}} } });
+  document.getElementById('ic-pie-legend').innerHTML = [{label:'순이익',color:'#2d6a4f',val:annualNet},{label:'비료·농약',color:'#b5451b',val:fertT},{label:'인건비',color:'#1a5cb8',val:laborT},{label:'에너지·기타',color:'#888',val:energyT}].map(l=>`<span style="display:inline-flex;align-items:center;gap:5px;margin-right:12px;margin-bottom:4px;font-size:12px;color:var(--text2);"><span style="width:10px;height:10px;border-radius:2px;background:${l.color};flex-shrink:0;"></span>${l.label} ${Math.round(l.val/10000)}만원</span>`).join('');
+
+  if (icBar) { icBar.destroy(); icBar = null; }
+  const ctx2 = document.getElementById('icBarChart').getContext('2d');
+  const years=[1,2,3,4,5,6,7];
+  const cumNet=years.map(y=>Math.round((annualNet*y-invest)/10000));
+  icBar = new Chart(ctx2, { type:'bar', data:{labels:years.map(y=>`${y}년`),datasets:[{label:'누적',data:cumNet,backgroundColor:cumNet.map(v=>v>=0?'rgba(45,106,79,0.75)':'rgba(192,57,43,0.65)'),borderRadius:4,borderSkipped:false}]}, options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`${c.raw.toLocaleString()}만원`}}},scales:{x:{grid:{display:false}},y:{grid:{color:'rgba(0,0,0,0.04)'}}}} });
+
+  document.getElementById('ic-breakeven-content').innerHTML = `
+    <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+      <div style="flex:1;min-width:200px;"><p style="font-size:14px;color:var(--text2);line-height:1.9;">초기 투자 <strong>${Math.round(invest/10000).toLocaleString()}만원</strong> 회수에<br>연 순이익 <strong>${fmt(annualNet)}</strong> 기준<br><strong style="color:var(--green);font-size:20px;">${breakEvenYears>50?'장기 투자 필요':breakEvenYears.toFixed(1)+'년 소요 예상'}</strong></p></div>
+      <div style="flex:1;min-width:150px;background:var(--bg);border-radius:var(--radius-sm);padding:14px 16px;"><div style="font-size:12px;color:var(--text3);margin-bottom:4px;">회수 완료 예상 연도</div><div style="font-size:22px;font-weight:700;color:${breakEvenYears<=5?'var(--green)':'var(--amber)'};">${breakEvenYears<=50?new Date().getFullYear()+Math.ceil(breakEvenYears)+'년':'장기 투자'}</div></div>
+    </div>`;
+
+  const scenarios=[0.6,0.7,0.8,0.9,1.0,1.1,1.2,1.3];
+  document.getElementById('ic-sensitivity').innerHTML = `
+    <table class="sens-table"><thead><tr><th>단가 시나리오</th><th>kg당 단가</th><th>연 순이익</th><th>ROI</th><th>회수기간</th></tr></thead>
+    <tbody>${scenarios.map(r=>{
+      const p2=price*r,r2=size*yld*p2*cycles,n2=r2-annualCost;
+      const roi2=invest>0?((n2/invest)*100).toFixed(1):'-';
+      const be2=n2>0?(invest/n2).toFixed(1)+'년':'회수불가';
+      const cur=r===1.0;
+      return `<tr class="${cur?'sens-highlight':''}"><td>${cur?'<strong>현재</strong>':r>=1?`+${Math.round((r-1)*100)}%`:`-${Math.round((1-r)*100)}%`}</td><td>${Math.round(p2).toLocaleString()}원</td><td class="${n2>=0?'sens-positive':'sens-negative'}">${Math.round(n2/10000).toLocaleString()}만원</td><td class="${roi2>=0?'sens-positive':'sens-negative'}">${roi2}%</td><td>${be2}</td></tr>`;
+    }).join('')}</tbody></table>`;
+}
+
+// ═══════════════════════════════════════════════
+//  AI CONSULTANT
+// ═══════════════════════════════════════════════
+let aiHistory = [];
+const AI_QUICK = ['잎 끝이 타들어가요. 원인이 뭔가요?','지금 시기 관수 간격이 궁금해요','흰가루병 초기 증상이 보여요. 어떻게 해야 하나요?','EC가 목표보다 높게 나와요. 어떻게 조정하나요?','꽃이 잘 안 달려요. 원인과 해결법을 알려주세요','수확량을 늘리려면 어떤 관리가 중요한가요?','질소과다 증상은 어떻게 나타나나요?','현재 주차에 가장 중요한 관리 포인트는?'];
+let aiInited = false;
+
+function initAiPage() {
+  document.getElementById('ai-quick-chips').innerHTML = AI_QUICK.map(p=>`<span class="ai-chip" onclick="aiChipClick(this)">${p}</span>`).join('');
+  if (!aiInited) {
+    aiInited = true;
+    const crop = state.cropKey ? CROPS[state.cropKey] : null;
+    const week = getCurrentWeek();
+    const stageLabel = crop ? crop.stages[Math.min(week-1,11)].label : null;
+    const greeting = crop
+      ? `안녕하세요! 그린팜 AI 재배 상담사입니다 🌱<br>현재 <strong>${crop.name}</strong> ${week}주차 <strong>${stageLabel}</strong> 단계를 재배 중이시군요. 이 시기 재배 궁금증을 편하게 물어보세요.`
+      : `안녕하세요! 그린팜 AI 재배 상담사입니다 🌱<br>작물 생육, 병해충 방제, 영양 관리, 환경 조절 등 재배 관련 질문을 편하게 물어보세요.`;
+    addAiMsg('bot', greeting);
+  }
+}
+
+function aiChipClick(el) { document.getElementById('ai-input').value = el.textContent; sendAiMessage(); }
+function aiKeydown(e) { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendAiMessage();} }
+
+function addAiMsg(role, html) {
+  const msgs = document.getElementById('ai-messages');
+  const isBot = role==='bot';
+  const div = document.createElement('div');
+  div.className = `ai-msg ai-msg-${role}`;
+  div.innerHTML = `<div class="ai-avatar">${isBot?'🌱':'👤'}</div><div class="ai-bubble">${html}</div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function addTyping() {
+  const msgs = document.getElementById('ai-messages');
+  const div = document.createElement('div'); div.className='ai-msg ai-msg-bot'; div.id='ai-typing';
+  div.innerHTML=`<div class="ai-avatar">🌱</div><div class="ai-bubble"><div class="ai-typing"><div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div></div></div>`;
+  msgs.appendChild(div); msgs.scrollTop=msgs.scrollHeight;
+}
+function removeTyping() { const t=document.getElementById('ai-typing'); if(t)t.remove(); }
+
+async function sendAiMessage() {
+  const input = document.getElementById('ai-input');
+  const text = input.value.trim();
+  if (!text) return;
+  const btn = document.getElementById('ai-send-btn');
+  btn.disabled=true; btn.textContent='...'; input.value='';
+  addAiMsg('user', text.replace(/</g,'&lt;'));
+  aiHistory.push({ role:'user', content: text });
+  addTyping();
+  const crop = state.cropKey ? CROPS[state.cropKey] : null;
+  const week = getCurrentWeek();
+  const stage = crop ? crop.stages[Math.min(week-1,11)] : null;
+  const irrName = {drip:'점적관수',mist:'분무관수',bottom:'저면관수',manual:'수동관수'}[state.irrigation]||'-';
+  const systemPrompt = `당신은 한국의 전문 원예·시설농업 컨설턴트입니다. 친절하고 실용적으로 답변하세요.
+현재 농장: ${crop?crop.name:'미설정'} / ${week}주차(${stage?stage.label:'-'}) / ${state.farmSize||'?'}평 / ${irrName}
+목표 EC: ${stage?stage.ec:'-'} mS/cm, pH: ${stage?stage.ph:'-'}, 주간 ${stage?stage.dayT:'-'}C / 야간 ${stage?stage.nightT:'-'}C
+답변: 핵심 원인 먼저 → 구체적 조치 1~3단계. 한국 농업 현장 용어 사용. HTML 태그(<strong><br><ul><li>) 사용, 마크다운 없음.`;
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:1000, system:systemPrompt, messages:aiHistory })
+    });
+    const data = await res.json();
+    removeTyping();
+    const reply = data.content?.[0]?.text || '응답을 받지 못했습니다. 다시 시도해주세요.';
+    const htmlReply = reply.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>');
+    aiHistory.push({ role:'assistant', content: reply });
+    addAiMsg('bot', htmlReply);
+  } catch(err) {
+    removeTyping();
+    addAiMsg('bot','연결 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+    aiHistory.pop();
+  }
+  btn.disabled=false; btn.textContent='전송';
+}
+
+function clearAiChat() { aiHistory=[]; aiInited=false; document.getElementById('ai-messages').innerHTML=''; initAiPage(); }
+
+// ── BOOT ──
+document.getElementById('recipe-no-setup').style.display = state.cropKey ? 'none' : 'block';
+document.getElementById('recipe-content').style.display = state.cropKey ? 'block' : 'none';
+if (state.cropKey && state.plantingDate) { buildRecipePage(); buildPestPage(); }
+</script>
+</body>
+</html>
