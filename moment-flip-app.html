@@ -1088,6 +1088,42 @@ body{
 
 </div><!-- #app -->
 
+<!-- Firebase SDK -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getDatabase, ref, set, get, onValue, update, push, serverTimestamp }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
+
+/* ══════════════════ FIREBASE CONFIG ══════════════════ */
+const firebaseConfig = {
+  apiKey: "AIzaSyBCz54UBVbRa9dTeRGjjo3jP8NLPN70lek",
+  authDomain: "busanch-youngth.firebaseapp.com",
+  databaseURL: "https://busanch-youngth-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "busanch-youngth",
+  storageBucket: "busanch-youngth.firebasestorage.app",
+  messagingSenderId: "980464442220",
+  appId: "1:980464442220:web:0b5977e0b57b770aadb149"
+};
+const firebaseApp = initializeApp(firebaseConfig);
+const FDB = getDatabase(firebaseApp);
+
+/* ══════════════════ Firebase helpers (global) ══════════════════ */
+window.FB = {
+  ref: (path) => ref(FDB, path),
+  set: (path, val) => set(ref(FDB, path), val),
+  get: async (path) => { const s = await get(ref(FDB, path)); return s.exists() ? s.val() : null; },
+  update: (path, val) => update(ref(FDB, path), val),
+  push: (path, val) => push(ref(FDB, path), val),
+  on: (path, cb) => onValue(ref(FDB, path), snap => cb(snap.exists() ? snap.val() : null)),
+  serverTimestamp,
+};
+window._fbListeners = []; // track active listeners for cleanup
+
+/* signal that Firebase is ready */
+window._fbReady = true;
+document.dispatchEvent(new Event('fb-ready'));
+</script>
+
 <script>
 /* ══════════════════════════════════════════════════════
    APP STATE & DATA
@@ -1114,45 +1150,49 @@ const MOOD_BGS = [
   { emoji:'🎑', bg:'linear-gradient(135deg,#D8C0E0,#B890C8)', label:'보랏빛' },
 ];
 
-// Sample pre-loaded partner entries (demo data)
-const SAMPLE_ENTRIES = [
-  { id:'s1', date:'2025-05-20', author:'partner', moodBg:0, emotion:EMOTIONS[0], text:'퇴근하다가 하늘이 너무 예뻐서 사진 찍었어 😊', stickers:[], visible:true },
-  { id:'s2', date:'2025-05-20', author:'me',      moodBg:1, emotion:EMOTIONS[3], text:'오늘 야근했는데 네가 보내준 사진 보고 힘 났어', stickers:[], visible:true },
-  { id:'s3', date:'2025-05-21', author:'partner', moodBg:2, emotion:EMOTIONS[2], text:'공원 산책했어. 너랑 같이 오고 싶다', stickers:[{type:'heart',emoji:'❤️',x:65,y:40}], visible:true },
-  { id:'s4', date:'2025-05-21', author:'me',      moodBg:3, emotion:EMOTIONS[1], text:'오늘 드디어 그 카페 갔어! 네 생각 났어', stickers:[], visible:true },
-  { id:'s5', date:'2025-05-22', author:'partner', moodBg:5, emotion:EMOTIONS[4], text:'비 오는 날엔 왜 이렇게 네가 보고 싶지', stickers:[], visible:true },
-];
+// Sample pre-loaded partner entries (demo data — shown before Firebase connection)
+const SAMPLE_ENTRIES = [];
 
 const DB = {
   get: (k, def) => { try { const v = localStorage.getItem('mf_'+k); return v ? JSON.parse(v) : def; } catch(e){ return def; } },
   set: (k, v)   => { try { localStorage.setItem('mf_'+k, JSON.stringify(v)); } catch(e){} },
 };
 
+/* ── UID: 이 기기의 고유 ID (서버 인증 대신 사용) ── */
+function getMyUid() {
+  let uid = DB.get('uid','');
+  if (!uid) { uid = 'u_'+Math.random().toString(36).slice(2,10); DB.set('uid', uid); }
+  return uid;
+}
+
+function genCode() {
+  let code = DB.get('inviteCode','');
+  if (!code) { code = Math.random().toString(36).slice(2,8).toUpperCase(); DB.set('inviteCode', code); }
+  return code;
+}
+
 const State = {
   screen: 'cover',
+  uid: getMyUid(),
   myName: DB.get('myName',''),
   partnerName: DB.get('partnerName',''),
+  partnerUid: DB.get('partnerUid',''),
   coupleName: DB.get('coupleName',''),
-  inviteCode: DB.get('inviteCode', genCode()),
+  coupleId: DB.get('coupleId',''),
+  inviteCode: genCode(),
   blindMode: DB.get('blindMode', true),
-  entries: DB.get('entries', SAMPLE_ENTRIES),
+  entries: [],           // 실시간 Firebase 데이터
   writeStep: 1,
-  writePhoto: null,       // data URL or null
-  writeMoodBg: null,      // index
+  writePhoto: null,
+  writeMoodBg: null,
   writeEmotion: null,
   writeText: '',
   detailEntry: null,
   audioPlaying: false,
-  audioTimer: null,
   audioSeconds: 0,
   setupDone: DB.get('setupDone', false),
+  fbConnected: false,
 };
-
-function genCode() {
-  const c = Math.random().toString(36).slice(2,8).toUpperCase();
-  DB.set('inviteCode', c);
-  return c;
-}
 
 /* ══════════════════════════════════════════════════════
    APP OBJECT
@@ -1198,24 +1238,86 @@ const App = {
   goSetup() { this.goTo('setup'); },
 
   /* ── SETUP ── */
-  completeSetup() {
-    const n1 = document.getElementById('input-myname').value.trim() || '지민';
-    const n2 = document.getElementById('input-partnername').value.trim() || '서준';
+  async completeSetup() {
+    const n1 = document.getElementById('input-myname').value.trim() || '이름없음';
+    const n2 = document.getElementById('input-partnername').value.trim() || '파트너';
     State.myName = n1; State.partnerName = n2;
     State.coupleName = n1 + ' & ' + n2;
     State.setupDone = true;
     DB.set('myName', n1); DB.set('partnerName', n2);
     DB.set('coupleName', State.coupleName);
     DB.set('setupDone', true);
-    toast('✅ 일기장이 열렸어요!');
+
+    // Firebase에 내 정보 등록 (초대 코드로 찾을 수 있게)
+    try {
+      await FB.set('users/'+State.uid, {
+        name: n1,
+        inviteCode: State.inviteCode,
+        coupleId: State.coupleId || '',
+        updatedAt: Date.now(),
+      });
+      await FB.set('inviteCodes/'+State.inviteCode, {
+        uid: State.uid,
+        name: n1,
+        coupleId: State.coupleId || '',
+      });
+      toast('✅ 내 정보가 서버에 저장됐어요!');
+    } catch(e) {
+      toast('⚠️ 오프라인 — 로컬로 저장했어요');
+    }
     this.goTo('home');
   },
 
-  useInviteCode() {
+  async useInviteCode() {
     const code = document.getElementById('input-invite').value.trim().toUpperCase();
     if (code.length < 4) { toast('⚠️ 올바른 초대 코드를 입력해주세요'); return; }
-    toast('💌 파트너와 연결됐어요!');
-    document.getElementById('input-invite').value = '';
+    if (code === State.inviteCode) { toast('⚠️ 내 코드는 입력할 수 없어요'); return; }
+
+    toast('🔍 파트너를 찾는 중...');
+    try {
+      const partnerData = await FB.get('inviteCodes/'+code);
+      if (!partnerData) { toast('❌ 코드를 찾을 수 없어요. 다시 확인해주세요'); return; }
+
+      const partnerUid = partnerData.uid;
+      const partnerName = partnerData.name || '파트너';
+
+      // 커플 방 생성 or 기존 사용
+      let coupleId = partnerData.coupleId || State.coupleId;
+      if (!coupleId) {
+        coupleId = 'couple_' + State.uid.slice(2,6) + '_' + partnerUid.slice(2,6);
+      }
+
+      State.partnerUid = partnerUid;
+      State.partnerName = partnerName;
+      State.coupleId = coupleId;
+      State.coupleName = State.myName + ' & ' + partnerName;
+
+      DB.set('partnerUid', partnerUid);
+      DB.set('partnerName', partnerName);
+      DB.set('coupleId', coupleId);
+      DB.set('coupleName', State.coupleName);
+
+      // Firebase에 커플 방 정보 저장
+      await FB.update('couples/'+coupleId+'/meta', {
+        [State.uid]: State.myName,
+        [partnerUid]: partnerName,
+        blindMode: State.blindMode,
+        createdAt: Date.now(),
+      });
+      // 두 사람 모두 coupleId 업데이트
+      await FB.update('users/'+State.uid, { coupleId });
+      await FB.update('inviteCodes/'+State.inviteCode, { coupleId });
+      await FB.update('inviteCodes/'+code, { coupleId });
+
+      // 실시간 리스너 시작
+      this.startFirebaseListener();
+
+      document.getElementById('input-invite').value = '';
+      toast('🎉 '+partnerName+'님과 연결됐어요!');
+      document.getElementById('input-partnername').value = partnerName;
+    } catch(e) {
+      toast('❌ 연결 실패: '+e.message);
+    }
   },
 
   /* ══════════════════════════════════════════════
@@ -1224,33 +1326,33 @@ const App = {
   renderTimeline() {
     const me = State.myName || '나';
     const partner = State.partnerName || '파트너';
-    // Update header
     document.getElementById('home-couple-label').textContent = (State.coupleName || (me+' & '+partner))+'의 일기장';
     const now = new Date();
     document.getElementById('home-month-label').textContent = (now.getMonth()+1)+'월의 기록';
-
-    // Streak
     const streak = this.calcStreak();
     document.getElementById('home-streak-num').textContent = streak;
 
-    // FAB state
     const todayStr = toDateStr(new Date());
-    const wrotToday = State.entries.some(e => e.date===todayStr && e.author==='me');
+    const wroteToday = State.entries.some(e => e.authorUid===State.uid && e.date===todayStr);
     const fab = document.getElementById('nav-fab');
-    fab.classList.toggle('wrote', wrotToday);
-    fab.textContent = wrotToday ? '✓' : '📷';
+    fab.classList.toggle('wrote', wroteToday);
+    fab.textContent = wroteToday ? '✓' : '📷';
 
-    // Group entries by date desc
+    // 연결 상태 표시
+    if (!State.coupleId) {
+      document.getElementById('home-couple-label').textContent = '⚠️ 파트너와 연결되지 않았어요';
+    }
+
     const grouped = {};
     State.entries.forEach(e => {
       if (!grouped[e.date]) grouped[e.date] = [];
       grouped[e.date].push(e);
     });
     const dates = Object.keys(grouped).sort((a,b) => b.localeCompare(a));
-
     const container = document.getElementById('timeline-list');
+
     if (dates.length === 0) {
-      container.innerHTML = `<div class="empty-state"><div class="es-icon">📷</div><div class="es-msg">아직 일기가 없어요.<br>📷 버튼을 눌러 오늘의 일기를 써보세요!</div></div>`;
+      container.innerHTML = `<div class="empty-state"><div class="es-icon">📷</div><div class="es-msg">${State.coupleId ? '아직 일기가 없어요!<br>📷 버튼을 눌러 오늘의 일기를 써보세요' : '⚙️ 먼저 설정에서 파트너와 연결해주세요'}</div></div>`;
       return;
     }
 
@@ -1259,16 +1361,13 @@ const App = {
     const yesterday = toDateStr(new Date(Date.now()-86400000));
 
     dates.forEach(date => {
-      const entries = grouped[date];
-      const meEntry      = entries.find(e => e.author==='me');
-      const partnerEntry = entries.find(e => e.author==='partner');
+      const dayEntries = grouped[date];
+      const meEntry      = dayEntries.find(e => e.authorUid === State.uid);
+      const partnerEntry = dayEntries.find(e => e.authorUid !== State.uid);
       const isToday      = date === today;
-      const isYesterday  = date === yesterday;
-      const dateLabel    = isToday ? '오늘' : isYesterday ? '어제' : fmtDate(date);
-
-      // Blind logic
-      const myWrote = !!meEntry;
-      const showPartner = !State.blindMode || myWrote;
+      const dateLabel    = isToday ? '오늘' : date === yesterday ? '어제' : fmtDate(date);
+      const myWrote      = !!meEntry;
+      const showPartner  = !State.blindMode || myWrote;
 
       const group = document.createElement('div');
       group.className = 'day-group';
@@ -1276,61 +1375,29 @@ const App = {
       const row = document.createElement('div');
       row.className = 'cards-row';
 
-      // Me card
+      // 내 카드
       if (meEntry) {
         row.appendChild(this.buildCard(meEntry, me, isToday));
       } else if (isToday) {
-        // Write prompt
         const div = document.createElement('div');
-        div.className = 'pcard me';
-        div.style.setProperty('--r','-1.2deg');
-        div.innerHTML = `
-          <div class="pcard-photo" style="background:var(--cream3);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;">
-            <span style="font-size:22px;color:var(--ink3)">+</span>
-            <span style="font-size:8.5px;color:var(--ink3);text-align:center;line-height:1.5">오늘 일기를<br>써보세요</span>
-          </div>
-          <div class="pcard-body">
-            <div class="pcard-emotion" style="font-size:14px;color:var(--ink3)">?</div>
-            <div class="pcard-text" style="color:var(--ink3)">아직 작성 전이에요</div>
-            <div class="pcard-author">${me}</div>
-          </div>`;
+        div.className = 'pcard me'; div.style.setProperty('--r','-1.2deg');
+        div.innerHTML = `<div class="pcard-photo" style="background:var(--cream3);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;"><span style="font-size:22px;color:var(--ink3)">+</span><span style="font-size:8.5px;color:var(--ink3);text-align:center;line-height:1.5">오늘 일기를<br>써보세요</span></div><div class="pcard-body"><div class="pcard-emotion" style="font-size:14px;color:var(--ink3)">?</div><div class="pcard-text" style="color:var(--ink3)">아직 작성 전이에요</div><div class="pcard-author">${me}</div></div>`;
         div.onclick = () => this.goTo('write');
         row.appendChild(div);
       }
 
-      // Partner card
+      // 파트너 카드
       if (partnerEntry && showPartner) {
-        row.appendChild(this.buildCard(partnerEntry, partner, isToday));
+        row.appendChild(this.buildCard(partnerEntry, partnerEntry.authorName || partner, isToday));
       } else if (partnerEntry && !showPartner) {
-        // Blind card
         const div = document.createElement('div');
-        div.className = 'pcard partner pcard-blind';
-        div.style.setProperty('--r','1.2deg');
-        div.innerHTML = `
-          <div class="pcard-photo">
-            <span class="lock-icon">🔒</span>
-            <span class="lock-msg">일기를 쓰면<br>열려요</span>
-          </div>
-          <div class="pcard-body">
-            <div class="pcard-emotion" style="color:var(--ink3)">?</div>
-            <div class="pcard-text" style="color:var(--ink3)">오늘 일기를 쓰면<br>파트너 일기가 공개돼요</div>
-            <div class="pcard-author">${partner}</div>
-          </div>`;
+        div.className = 'pcard partner pcard-blind'; div.style.setProperty('--r','1.2deg');
+        div.innerHTML = `<div class="pcard-photo"><span class="lock-icon">🔒</span><span class="lock-msg">일기를 쓰면<br>열려요</span></div><div class="pcard-body"><div class="pcard-emotion" style="color:var(--ink3)">?</div><div class="pcard-text" style="color:var(--ink3)">오늘 일기를 쓰면<br>파트너 일기 공개!</div><div class="pcard-author">${partner}</div></div>`;
         row.appendChild(div);
-      } else if (!partnerEntry && isToday) {
+      } else if (!partnerEntry && State.coupleId) {
         const div = document.createElement('div');
-        div.className = 'pcard partner pcard-blind';
-        div.style.setProperty('--r','1.2deg');
-        div.innerHTML = `
-          <div class="pcard-photo">
-            <span class="lock-icon">⏳</span>
-            <span class="lock-msg">아직 작성<br>안 했어요</span>
-          </div>
-          <div class="pcard-body">
-            <div class="pcard-emotion" style="color:var(--ink3)">...</div>
-            <div class="pcard-text" style="color:var(--ink3)">파트너가 일기를<br>쓰는 중이에요</div>
-            <div class="pcard-author">${partner}</div>
-          </div>`;
+        div.className = 'pcard partner pcard-blind'; div.style.setProperty('--r','1.2deg');
+        div.innerHTML = `<div class="pcard-photo"><span class="lock-icon">⏳</span><span class="lock-msg">아직 작성<br>안 했어요</span></div><div class="pcard-body"><div class="pcard-emotion" style="color:var(--ink3)">...</div><div class="pcard-text" style="color:var(--ink3)">파트너 일기 기다리는 중</div><div class="pcard-author">${partner}</div></div>`;
         row.appendChild(div);
       }
 
@@ -1341,19 +1408,15 @@ const App = {
 
   buildCard(entry, authorName, isNew) {
     const div = document.createElement('div');
-    const isMe = entry.author === 'me';
+    const isMe = entry.authorUid === State.uid;
     div.className = 'pcard '+(isMe?'me':'partner')+(isNew?' pcard-new':'');
     div.style.setProperty('--r', isMe?'-1.2deg':'1.2deg');
-
     const photoContent = entry.photoDataUrl
       ? `<img src="${entry.photoDataUrl}" alt="">`
       : `<div class="photo-bg" style="background:${MOOD_BGS[entry.moodBg||0].bg}">${MOOD_BGS[entry.moodBg||0].emoji}</div>`;
-
-    // stickers
     const stickerHtml = (entry.stickers||[]).map(s =>
       `<span class="sticker-dot" style="left:${s.x}%;top:${s.y}%">${s.emoji}</span>`
     ).join('');
-
     div.innerHTML = `
       <div class="pcard-photo">
         ${photoContent}
@@ -1372,7 +1435,7 @@ const App = {
     let streak = 0; let d = new Date();
     while (true) {
       const ds = toDateStr(d);
-      if (State.entries.some(e => e.author==='me' && e.date===ds)) { streak++; d.setDate(d.getDate()-1); }
+      if (State.entries.some(e => e.authorUid===State.uid && e.date===ds)) { streak++; d.setDate(d.getDate()-1); }
       else break;
     }
     return streak;
@@ -1506,38 +1569,53 @@ const App = {
     wp.textContent = el.value || '한 줄 글귀가 여기 표시돼요';
   },
 
-  submitDiary() {
+  async submitDiary() {
     if (!State.writeEmotion) { toast('⚠️ 감정 아이콘을 먼저 선택해주세요'); return; }
     const text = document.getElementById('write-textarea').value.trim();
     if (!text) { toast('⚠️ 한 줄 글귀를 입력해주세요'); return; }
 
     const todayStr = toDateStr(new Date());
-    const already = State.entries.some(e => e.date===todayStr && e.author==='me');
+    const already = State.entries.some(e => e.authorUid===State.uid && e.date===todayStr);
     if (already) { toast('오늘은 이미 일기를 작성했어요 ✓'); this.goTo('home'); return; }
 
     const entry = {
-      id: 'e'+Date.now(),
       date: todayStr,
-      author: 'me',
-      photoDataUrl: State.writePhoto || null,
+      authorUid: State.uid,
+      authorName: State.myName,
       moodBg: State.writeMoodBg ?? 0,
       emotion: State.writeEmotion,
       text: text,
       stickers: [],
-      visible: true,
+      createdAt: Date.now(),
+      // 사진은 base64 — Firebase 저장 (용량 주의)
+      photoDataUrl: State.writePhoto || null,
     };
-    State.entries.unshift(entry);
-    DB.set('entries', State.entries);
 
-    // Unlock partner entry for today
-    const blind = State.entries.find(e => e.date===todayStr && e.author==='partner');
-    if (blind) {
-      toast('🎉 파트너의 오늘 일기가 공개됐어요!');
-      setTimeout(() => toast('📸 '+State.partnerName+'의 기분: '+blind.emotion.label+' '+blind.emotion.icon), 800);
-    } else {
-      toast('✅ 오늘 일기를 저장했어요!');
+    const btnSubmit = document.getElementById('btn-submit');
+    btnSubmit.disabled = true; btnSubmit.textContent = '저장 중...';
+
+    try {
+      if (State.coupleId) {
+        // Firebase에 저장
+        await FB.push('couples/'+State.coupleId+'/entries', entry);
+        toast('✅ 일기가 저장됐어요!');
+        // 파트너에게 알림 (파트너 카드 공개 여부는 실시간으로 반영)
+        const partnerEntry = State.entries.find(e =>
+          e.authorUid !== State.uid && e.date === todayStr
+        );
+        if (partnerEntry) toast('🎉 파트너의 오늘 일기가 공개됐어요!');
+      } else {
+        // 커플 연결 안 됐을 때 — 로컬 저장
+        entry.authorUid = State.uid;
+        State.entries.unshift({...entry, id:'local_'+Date.now()});
+        DB.set('entries', State.entries);
+        toast('✅ 저장됐어요 (파트너 연결 후 공유돼요)');
+      }
+    } catch(e) {
+      toast('❌ 저장 실패: '+e.message);
+    } finally {
+      btnSubmit.disabled = false; btnSubmit.textContent = '일기 저장하기 📎';
     }
-
     this.goTo('home');
   },
 
@@ -1591,19 +1669,16 @@ const App = {
     document.getElementById('detail-text').textContent = e.text;
 
     // Show sticker panel only for partner entries
-    document.getElementById('sticker-panel-wrap').style.display = isMe ? 'none' : '';
+    document.getElementById('sticker-panel-wrap').style.display = (e.authorUid === State.uid) ? 'none' : '';
   },
 
-  addSticker(type, emoji) {
-    const e = State.detailEntry; if (!e || e.author==='me') return;
+  async addSticker(type, emoji) {
+    const e = State.detailEntry; if (!e || e.authorUid===State.uid) return;
     const x = 30 + Math.random()*40;
     const y = 20 + Math.random()*50;
-    if (!e.stickers) e.stickers = [];
-    e.stickers.push({ type, emoji, x, y });
-    const idx = State.entries.findIndex(en => en.id === e.id);
-    if (idx !== -1) State.entries[idx] = e;
-    DB.set('entries', State.entries);
-    // Add to DOM
+    const sticker = { type, emoji, x, y };
+
+    // DOM 즉시 반영
     const sl = document.getElementById('detail-sticker-layer');
     const span = document.createElement('span');
     span.className = 'sticker-dot';
@@ -1611,6 +1686,55 @@ const App = {
     span.textContent = emoji;
     sl.appendChild(span);
     toast(emoji+' 스티커를 붙였어요!');
+
+    // Firebase 업데이트
+    if (State.coupleId && e.fbId) {
+      try {
+        const path = 'couples/'+State.coupleId+'/entries/'+e.fbId+'/stickers';
+        const current = await FB.get(path) || [];
+        const arr = Array.isArray(current) ? current : Object.values(current);
+        arr.push(sticker);
+        await FB.set(path, arr);
+      } catch(err) { console.warn('sticker save failed', err); }
+    }
+  },
+
+  /* ══════════════════════════════════════════════
+     FIREBASE REALTIME LISTENER
+  ══════════════════════════════════════════════ */
+  startFirebaseListener() {
+    if (!State.coupleId) return;
+    const path = 'couples/'+State.coupleId+'/entries';
+    let prevCount = 0;
+    FB.on(path, (data) => {
+      if (!data) { State.entries = []; }
+      else {
+        State.entries = Object.entries(data).map(([fbId, entry]) => ({
+          ...entry,
+          fbId, // Firebase key 저장
+        }));
+      }
+      // 파트너 새 일기 알림
+      if (State.entries.length > prevCount && prevCount > 0) {
+        const latest = State.entries[State.entries.length-1];
+        if (latest.authorUid !== State.uid) {
+          toast('📸 '+( latest.authorName||State.partnerName)+'님이 일기를 작성했어요!', 4000);
+        }
+      }
+      prevCount = State.entries.length;
+
+      // 화면 업데이트
+      if (State.screen === 'home') App.renderTimeline();
+      State.fbConnected = true;
+    });
+
+    // 블라인드 모드 동기화
+    FB.on('couples/'+State.coupleId+'/meta/blindMode', (val) => {
+      if (val !== null && val !== State.blindMode) {
+        State.blindMode = val;
+        DB.set('blindMode', val);
+      }
+    });
   },
 
   /* ══════════════════════════════════════════════
@@ -1890,10 +2014,10 @@ const App = {
      SETTINGS
   ══════════════════════════════════════════════ */
   renderSettings() {
-    document.getElementById('my-profile-name').textContent = State.myName||'지민';
-    document.getElementById('my-profile-sub').textContent = 'Moment Flip 사용자';
+    document.getElementById('my-profile-name').textContent = State.myName||'이름없음';
+    document.getElementById('my-profile-sub').textContent = State.coupleId ? '🟢 파트너 연결됨' : '🔴 파트너 미연결';
     document.getElementById('cn1-name').textContent = State.myName||'나';
-    document.getElementById('cn2-name').textContent = State.partnerName||'파트너';
+    document.getElementById('cn2-name').textContent = State.partnerName||(State.coupleId?'파트너':'미연결');
     document.getElementById('my-invite-code').textContent = State.inviteCode;
     const bt = document.getElementById('blind-toggle');
     bt.classList.toggle('on', State.blindMode);
@@ -1904,6 +2028,9 @@ const App = {
     DB.set('blindMode', State.blindMode);
     document.getElementById('blind-toggle').classList.toggle('on', State.blindMode);
     toast(State.blindMode ? '🔒 블라인드 모드 켜짐' : '🔓 블라인드 모드 꺼짐');
+    if (State.coupleId) {
+      FB.update('couples/'+State.coupleId+'/meta', { blindMode: State.blindMode }).catch(()=>{});
+    }
   },
 
   copyInviteCode() {
@@ -1961,12 +2088,25 @@ setInterval(updateClock, 30000); updateClock();
 ══════════════════════════════════════════════════════ */
 window.addEventListener('DOMContentLoaded', () => {
   App.updateCover();
-  if (State.setupDone) {
-    // Already set up: go straight to home
-    App.goTo('home');
+
+  // Firebase 준비되면 리스너 시작
+  const startFB = () => {
+    if (State.setupDone && State.coupleId) {
+      App.startFirebaseListener();
+    }
+    if (State.setupDone) {
+      App.goTo('home');
+    } else {
+      App.goTo('cover');
+    }
+  };
+
+  if (window._fbReady) {
+    startFB();
   } else {
-    // First time
-    App.goTo('cover');
+    document.addEventListener('fb-ready', startFB, { once: true });
+    // fallback: Firebase 로드 안 됐을 때
+    setTimeout(() => { if (!window._fbReady) { App.goTo(State.setupDone?'home':'cover'); } }, 3000);
   }
 
   // Swipe gesture (cover → home)
@@ -1980,7 +2120,6 @@ window.addEventListener('DOMContentLoaded', () => {
     if (State.screen==='cover' && dx > 60 && Math.abs(dy)<50) App.loginOrOpen();
   }, {passive:true});
 
-  // Cover tap to open
   document.querySelector('.cover-main').addEventListener('click', () => {
     if (State.screen==='cover') App.loginOrOpen();
   });
