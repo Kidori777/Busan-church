@@ -177,9 +177,22 @@ body{
   background:rgba(0,0,0,.45);color:#fff;
   font-size:11px;padding:3px 9px;border-radius:20px;letter-spacing:.3px;
 }
-.slider-dots{display:flex;justify-content:center;gap:5px;padding:10px 0;background:var(--white)}
-.dot{width:6px;height:6px;border-radius:50%;background:var(--border);transition:width .2s,background .2s;cursor:pointer}
-.dot.on{width:20px;border-radius:3px;background:var(--sage)}
+.slider-dots{display:flex;justify-content:center;gap:8px;padding:12px 0;background:var(--white)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--border);transition:width .2s,background .2s,border-radius .2s;cursor:pointer;padding:4px;background-clip:content-box;box-sizing:content-box}
+.dot.on{width:24px;border-radius:4px;background:var(--sage)}
+
+/* 슬라이더 화살표 */
+.slider-nav{
+  position:absolute;top:50%;transform:translateY(-50%);
+  width:32px;height:32px;
+  background:rgba(0,0,0,.30);color:#fff;
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:14px;z-index:5;opacity:.85;
+  border:none;cursor:pointer;
+}
+.slider-nav:active{background:rgba(0,0,0,.60)}
+.slider-nav.prev{left:10px}
+.slider-nav.next{right:10px}
 
 /* ── Brother Message ── */
 .bro-msg{
@@ -505,7 +518,7 @@ body{
         <input class="f-in" id="gb-name" placeholder="이름">
         <input class="f-in" id="gb-pw" type="password" placeholder="비밀번호">
       </div>
-      <textarea class="f-ta" id="gb-text" placeholder="격려, 기도제목, 소식을 자유롭게 남겨주세요 😊" rows="3"></textarea>
+      <textarea class="f-ta" id="gb-text" placeholder="격려, 기도제목, 소식을 자유롭게 남겨주세요 😊" rows="3" maxlength="500"></textarea>
       <button class="btn-submit" onclick="submitGb()">남기기</button>
     </div>
   </div>
@@ -667,30 +680,39 @@ let pendDelFn = null;
 let pendPwFn = null;
 let replyParentId = null;
 let slideIdx = 0, slideTotal = 0, slideStartX = 0;
+let scrollPos = {};
 
 /* ─── Router ─── */
 function go(page, data=null){
+  scrollPos[curPage] = window.scrollY;
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(n=>n.classList.remove('active'));
   prevPage=curPage; curPage=page;
   document.getElementById('page-'+page).classList.add('active');
   const nb=document.querySelector(`[data-page="${page}"]`);
   if(nb)nb.classList.add('active');
-  window.scrollTo(0,0);
+  const restoreScroll = (page !== 'post') && (scrollPos[page] != null);
+  if(!restoreScroll) window.scrollTo(0,0);
   if(page==='home')loadHome();
   else if(page==='feed')loadFeed();
   else if(page==='post')loadPost(data);
   else if(page==='guestbook')loadGb();
   else if(page==='admin')loadAdmin();
+  if(restoreScroll){
+    requestAnimationFrame(()=>{ window.scrollTo(0, scrollPos[page]||0); });
+  }
 }
-function goBack(){go(prevPage)}
+function goBack(){
+  scrollPos[curPage] = window.scrollY;
+  go(prevPage);
+}
 
 /* ─── HOME ─── */
 async function loadHome(){
   const c=document.getElementById('home-posts');
   c.innerHTML='<div class="loading"><div class="spinner"></div></div>';
   try{
-    const q0=query(collection(db,'posts'),orderBy('createdAt','desc'),limit(3));
+    const q0=query(collection(db,'posts'),orderBy('date','desc'),limit(3));
     const s=await getDocs(q0);
     if(s.empty){c.innerHTML=emptyHtml('🌱','아직 소식이 없어요.<br>첫 번째 섞임 소식을 기다리고 있어요!');return}
     c.innerHTML='';
@@ -703,7 +725,7 @@ async function loadFeed(){
   const c=document.getElementById('feed-posts');
   c.innerHTML='<div class="loading"><div class="spinner"></div></div>';
   try{
-    const q1=query(collection(db,'posts'),orderBy('createdAt','desc'));
+    const q1=query(collection(db,'posts'),orderBy('date','desc'));
     const s=await getDocs(q1);
     if(s.empty){c.innerHTML=emptyHtml('📸','아직 소식이 없어요!');return}
     c.innerHTML='';
@@ -758,9 +780,13 @@ async function loadPost(pid){
       const slides=photos.map(u=>`<img class="slide-img" src="${u}" alt="섞임 사진" loading="lazy">`).join('');
       const dots=photos.length>1?`<div class="slider-dots">${photos.map((_,i)=>`<div class="dot${i===0?' on':''}" onclick="toSlide(${i})"></div>`).join('')}</div>`:'';
       const counter=photos.length>1?`<div class="slider-counter" id="s-ctr">1 / ${photos.length}</div>`:'';
+      const navs=photos.length>1?`
+        <button class="slider-nav prev" onclick="toSlide(window._slideIdx-1);event.stopPropagation()">&#10094;</button>
+        <button class="slider-nav next" onclick="toSlide(window._slideIdx+1);event.stopPropagation()">&#10095;</button>`:'';
       sliderHtml=`
         <div class="slider-wrap" id="s-wrap">
           <div class="slider-track" id="s-track">${slides}</div>
+          ${navs}
           ${counter}
         </div>${dots}`;
     }
@@ -800,6 +826,7 @@ async function loadPost(pid){
 /* ─── Slider ─── */
 function initSlider(total){
   slideIdx=0;slideTotal=total;
+  window._slideIdx=0;
   const wrap=document.getElementById('s-wrap');
   if(!wrap)return;
   wrap.addEventListener('touchstart',e=>{slideStartX=e.touches[0].clientX},{passive:true});
@@ -812,7 +839,9 @@ function initSlider(total){
   },{passive:true});
 }
 function toSlide(i){
+  if(i<0||i>=slideTotal)return;
   slideIdx=i;
+  window._slideIdx=i;
   const t=document.getElementById('s-track');
   const dots=document.querySelectorAll('.dot');
   const ctr=document.getElementById('s-ctr');
@@ -964,6 +993,10 @@ async function submitGb(){
   const p=document.getElementById('gb-pw').value.trim();
   const t=document.getElementById('gb-text').value.trim();
   if(!n||!p||!t){toast('이름, 비밀번호, 내용을 모두 입력해주세요','err');return}
+  if(n.length<2){toast('이름은 2글자 이상 입력해주세요','err');return}
+  if(p.length<2){toast('비밀번호는 2글자 이상 입력해주세요','err');return}
+  if(t.length<5){toast('내용을 5자 이상 입력해주세요','err');return}
+  if(t.length>500){toast(`내용은 500자 이내로 입력해주세요 (현재 ${t.length}자)`,'err');return}
   try{
     const h=await sha(p);
     await addDoc(collection(db,'guestbook'),{name:n,content:t,passwordHash:h,createdAt:serverTimestamp()});
@@ -1308,7 +1341,7 @@ document.getElementById('fi-photos').addEventListener('change', function(){
 
 /* ── Window export (module 함수 → 전역 접근 허용) ── */
 window.go = go;
-window.goBack = () => go(prevPage);
+window.goBack = goBack;
 window.sharePost = sharePost;
 window.copyLink = copyLink;
 window.submitGb = submitGb;
