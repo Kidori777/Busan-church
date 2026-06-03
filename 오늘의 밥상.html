@@ -79,15 +79,23 @@ body{background:#FAF7F2;font-family:'Noto Sans KR',sans-serif}
 .copy-btn:hover{background:#16A34A}
 
 /* ══ HERO ══ */
+/* 사진 없을 때: 전체 화면 그라디언트 */
 #hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
 #hero-bg{position:absolute;inset:0;background:linear-gradient(160deg,#5C3D2E 0%,#2C1810 100%);overflow:hidden}
-#hero-bg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block;}
-#hero-ov{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(44,24,16,.2) 0%,rgba(44,24,16,.62) 55%,rgba(44,24,16,.92) 100%)}
+#hero-bg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;display:block;}
+#hero-ov{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(44,24,16,.2) 0%,rgba(44,24,16,.62) 55%,rgba(44,24,16,.92) 100%);z-index:1}
 #hero-ct{position:relative;z-index:2;text-align:center;color:#FAF7F2;padding:2rem;max-width:820px;animation:fadeUp 1s ease}
-.h-sub{font-size:clamp(.75rem,1.6vw,.9rem);letter-spacing:.32em;color:rgba(250,247,242,.55);margin-bottom:1.1rem}
-.h-name{font-family:'Noto Serif KR',serif;font-size:clamp(2.8rem,7vw,5.5rem);font-weight:700;letter-spacing:-.02em;line-height:1.1;text-shadow:0 2px 24px rgba(0,0,0,.4)}
-#hero-msg{font-family:'Dancing Script',cursive;font-size:clamp(1.5rem,3.5vw,2.4rem);font-weight:600;line-height:1.8;color:#F5E8D6;white-space:pre-line;margin:1.8rem 0 1.2rem;text-shadow:0 1px 12px rgba(0,0,0,.2)}
-#hero-scroll{position:absolute;bottom:2.5rem;left:50%;animation:float 2.2s ease-in-out infinite;z-index:2;display:flex;flex-direction:column;align-items:center;gap:.35rem;color:rgba(250,247,242,.45);font-size:.7rem;letter-spacing:.18em;cursor:pointer}
+.h-sub{font-size:clamp(.75rem,1.6vw,.9rem);letter-spacing:.32em;color:rgba(250,247,242,.65);margin-bottom:1.1rem}
+.h-name{font-family:'Noto Serif KR',serif;font-size:clamp(2.4rem,6vw,5rem);font-weight:700;letter-spacing:-.02em;line-height:1.1;text-shadow:0 2px 24px rgba(0,0,0,.5)}
+#hero-msg{font-family:'Dancing Script',cursive;font-size:clamp(1.3rem,3vw,2.2rem);font-weight:600;line-height:1.8;color:#F5E8D6;white-space:pre-line;margin:1.5rem 0 1rem;text-shadow:0 1px 12px rgba(0,0,0,.3)}
+#hero-scroll{position:absolute;bottom:2rem;left:50%;animation:float 2.2s ease-in-out infinite;z-index:3;display:flex;flex-direction:column;align-items:center;gap:.35rem;color:rgba(250,247,242,.5);font-size:.7rem;letter-spacing:.18em;cursor:pointer}
+/* 사진 있을 때: 원본 비율 전체 표시 */
+#hero.has-img{min-height:unset;display:block;}
+#hero.has-img #hero-bg{position:relative;inset:auto;width:100%;height:auto;}
+#hero.has-img #hero-bg img{position:relative;inset:auto;width:100%;height:auto;max-height:none;object-fit:fill;display:block;}
+#hero.has-img #hero-ov{position:absolute;bottom:0;left:0;right:0;height:55%;top:auto;background:linear-gradient(to top,rgba(44,24,16,.95) 0%,rgba(44,24,16,.5) 60%,transparent 100%);}
+#hero.has-img #hero-ct{position:absolute;bottom:3rem;left:50%;transform:translateX(-50%);width:100%;padding:2rem;z-index:2;}
+#hero.has-img #hero-scroll{position:absolute;bottom:1rem;}
 
 /* ══ SECTIONS ══ */
 .sec{padding:clamp(4rem,8vw,8rem) clamp(1.5rem,5vw,3rem);max-width:1100px;margin:0 auto}
@@ -249,8 +257,8 @@ body{background:#FAF7F2;font-family:'Noto Sans KR',sans-serif}
         <div class="wiz-desc">내 데이터만 담을 개인 공간을 만들고 ID를 붙여넣어 주세요.</div>
         <div class="how-box">
           <div class="how-row"><div class="how-num">1</div><div class="how-txt">왼쪽 메뉴 <strong>Bins</strong> → 우측 상단 <strong>Create Bin</strong></div></div>
-          <div class="how-row"><div class="how-num">2</div><div class="how-txt">내용에 <code>{ "status": "ok" }</code> 입력 후 <strong>Create</strong> 클릭</div></div>
-          <div class="how-row"><div class="how-num">3</div><div class="how-txt">BIN ID 복사<br><span style="opacity:.6;font-size:.78rem">예: https://api.jsonbin.io/v3/b/<strong>6630f1a9acd...</strong></span></div></div>
+          <div class="how-row"><div class="how-num">2</div><div class="how-txt">내용에 <code>{}</code> 입력 후 <strong>Create</strong> 클릭</div></div>
+          <div class="how-row"><div class="how-num">3</div><div class="how-txt">주소창 URL 맨 끝 긴 문자열 복사<br><span style="opacity:.6;font-size:.78rem">예: https://api.jsonbin.io/v3/b/<strong>6630f1a9acd...</strong></span></div></div>
         </div>
         <input class="wiz-in" id="w-bid" placeholder="6630f1a9... 여기에 붙여넣기" autocomplete="off">
         <div class="wiz-err" id="w-bid-err">연결에 실패했습니다. Secret Key와 Bin ID를 확인해주세요</div>
@@ -659,12 +667,15 @@ function render(){
   document.getElementById('hero-tagline').textContent=d.store.tagline;
   document.getElementById('hero-msg').innerHTML=d.hero.msg.replace(/\n/g,'<br>');
   const heroBg=document.getElementById('hero-bg');
+  const heroSec=document.getElementById('hero');
   if(d.hero.image){
     heroBg.innerHTML=`<img src="${d.hero.image}" alt="매장 대표 사진">`;
     heroBg.style.background='none';
+    heroSec.classList.add('has-img');
   }else{
     heroBg.innerHTML='';
     heroBg.style.background='linear-gradient(160deg,#5C3D2E 0%,#2C1810 100%)';
+    heroSec.classList.remove('has-img');
   }
   document.getElementById('ct-name').textContent=d.store.name;
   document.getElementById('ct-footer').textContent=`© ${d.store.name} · 매일 정성껏 준비합니다.`;
