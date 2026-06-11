@@ -38,7 +38,6 @@
   .gate-bg {
     position: fixed;
     inset: 0;
-    /* 하늘 → 따뜻한 크림 → 연한 민트 풀밭 */
     background:
       radial-gradient(ellipse 80% 55% at 68% 8%,  rgba(255,230,100,.55) 0%, transparent 65%),
       radial-gradient(ellipse 50% 40% at 20% 5%,  rgba(255,210,120,.35) 0%, transparent 60%),
@@ -89,7 +88,7 @@
     pointer-events: none;
   }
 
-  /* 처마 라인 — 제거 (수채화에 어울리지 않음) */
+  /* 처마 라인 — 제거 */
   .eave-top, .eave-bottom { display: none; }
 
   /* ── SCENE WRAPPER ── */
@@ -131,23 +130,23 @@
   }
   #env-flap.open { transform: rotateX(-180deg); }
 
-  /* 클릭 힌트 */
+  /* 클릭 힌트 - 가독성 개선 (배경 대비 선명한 진한 먹색으로 변경) */
   #click-hint {
     position: absolute;
     bottom: -38px;
     left: 50%;
     transform: translateX(-50%);
-    color: var(--gold-light);
+    color: var(--ink-dark);
     font-family: 'Noto Serif KR', serif;
-    font-size: clamp(13px,2.2vw,17px);
-    font-weight: 400;
+    font-size: clamp(14px, 2.4vw, 18px);
+    font-weight: 700;
     letter-spacing: .2em;
     white-space: nowrap;
-    text-shadow: 0 0 12px rgba(200,168,80,.6);
+    text-shadow: 0 1px 3px rgba(255, 255, 255, 0.8), 0 0 8px rgba(255, 255, 255, 0.5);
     animation: hint-pulse 2.2s ease-in-out infinite;
   }
   @keyframes hint-pulse {
-    0%,100% { opacity:.6; transform: translateX(-50%) translateY(0); }
+    0%,100% { opacity:.7; transform: translateX(-50%) translateY(0); }
     50%      { opacity:1;  transform: translateX(-50%) translateY(-4px); }
   }
   @keyframes hint-bounce {
@@ -185,7 +184,7 @@
     pointer-events: none;
     transition: background .8s, opacity .6s;
     overflow-y: auto;
-    padding: clamp(12px, 3vw, 40px);
+    padding: clamp(20px, 5vw, 40px);
   }
   #modal.visible {
     background: rgba(6,12,10,.88);
@@ -211,7 +210,7 @@
     width: min(540px, 95vw);
     background: linear-gradient(160deg, #f7edd8 0%, #f0e2c2 40%, #e8d4aa 100%);
     border-radius: 4px;
-    padding: clamp(28px,6vw,56px) clamp(24px,5vw,48px);
+    padding: clamp(35px, 6vw, 56px) clamp(24px, 5vw, 48px) clamp(25px, 5vw, 40px);
     box-shadow:
       0 0 0 1px #c8a850,
       0 0 0 5px rgba(200,168,80,.15),
@@ -269,8 +268,8 @@
 
   .card-header .eyebrow {
     font-family: 'Noto Sans KR', sans-serif;
-    font-size: clamp(10px,1.6vw,13px);
-    font-weight: 300;
+    font-size: clamp(11px,1.6vw,13px);
+    font-weight: 500;
     letter-spacing: .35em;
     color: var(--dancheong-red);
     margin-bottom: 8px;
@@ -296,7 +295,7 @@
     font-size: clamp(13px,2vw,15px);
     font-weight: 400;
     color: var(--ink-medium);
-    line-height: 2;
+    line-height: 1.9;
     letter-spacing: .03em;
     margin-bottom: clamp(18px,3vw,24px);
     opacity: 0;
@@ -304,7 +303,7 @@
     transition: opacity .7s .85s, transform .7s .85s;
   }
   .card-body.in { opacity:1; transform:translateY(0); }
-  .card-body p { margin-bottom: 10px; }
+  .card-body p { margin-bottom: 8px; }
   .card-body strong { color: var(--dancheong-red); font-weight: 600; }
 
   /* 일정표 */
@@ -406,22 +405,34 @@
   #modal::-webkit-scrollbar { width: 4px; }
   #modal::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
 
-  @media (max-width:480px) {
-    .sch-time { min-width: 90px; }
+  /* ── 모바일 모니터 대응 미디어 쿼리 수정 ── */
+  @media (max-width: 480px) {
+    #modal {
+      align-items: flex-start; /* 상단이 잘리지 않도록 위쪽 정렬 고정 */
+      padding: 12px;
+    }
+    #invite-card {
+      padding: 32px 18px 24px 18px; /* 내부 패딩을 줄여 상단 타이틀 확보 */
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+    .sch-time { 
+      min-width: 85px; 
+    }
+    .card-body {
+      line-height: 1.7;
+    }
   }
 </style>
 </head>
 <body>
 
-<!-- 배경 -->
 <div class="gate-bg"></div>
 <div class="eave-top"></div>
 <div class="eave-bottom"></div>
 
-<!-- SVG 배경: 수채화 식물·꽃·햇살 -->
 <svg class="bg-svg" viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
   <defs>
-    <!-- 수채화 번짐 필터 -->
     <filter id="wc" x="-20%" y="-20%" width="140%" height="140%">
       <feTurbulence type="fractalNoise" baseFrequency=".02 .025" numOctaves="3" seed="8" result="noise"/>
       <feDisplacementMap in="SourceGraphic" in2="noise" scale="18" xChannelSelector="R" yChannelSelector="G" result="displaced"/>
@@ -439,12 +450,10 @@
     </filter>
   </defs>
 
-  <!-- ── 햇살 광채 (우상단) ── -->
   <g filter="url(#softblur)" opacity=".55">
     <circle cx="980" cy="80" r="220" fill="rgba(255,240,130,.45)"/>
     <circle cx="980" cy="80" r="140" fill="rgba(255,250,180,.5)"/>
   </g>
-  <!-- 햇살 방사선 -->
   <g opacity=".12" stroke="#f0c040" stroke-width="1.2" transform="translate(980,80)">
     <line x1="0" y1="0" x2="380" y2="120"/>
     <line x1="0" y1="0" x2="320" y2="280"/>
@@ -453,32 +462,25 @@
     <line x1="0" y1="0" x2="420" y2="-40"/>
   </g>
 
-  <!-- ── 좌하단 큰 잎사귀 군락 ── -->
   <g filter="url(#wc)" opacity=".7">
-    <!-- 큰 잎 1 -->
     <ellipse cx="60" cy="700" rx="90" ry="38" fill="#7fc47a" opacity=".5" transform="rotate(-30,60,700)"/>
     <ellipse cx="60" cy="700" rx="75" ry="22" fill="#a8d8a0" opacity=".4" transform="rotate(-30,60,700)"/>
-    <!-- 큰 잎 2 -->
     <ellipse cx="0" cy="750" rx="110" ry="40" fill="#6bb870" opacity=".45" transform="rotate(-15,0,750)"/>
-    <!-- 작은 잎들 -->
     <ellipse cx="120" cy="780" rx="65" ry="22" fill="#9ed49a" opacity=".4" transform="rotate(-45,120,780)"/>
     <ellipse cx="160" cy="760" rx="50" ry="18" fill="#b4ddb0" opacity=".35" transform="rotate(-55,160,760)"/>
     <ellipse cx="30" cy="800" rx="80" ry="28" fill="#80c47a" opacity=".4" transform="rotate(-20,30,800)"/>
   </g>
 
-  <!-- ── 우하단 풀꽃 ── -->
   <g filter="url(#wc)" opacity=".65">
     <ellipse cx="1150" cy="720" rx="80" ry="30" fill="#7cc478" opacity=".45" transform="rotate(25,1150,720)"/>
     <ellipse cx="1200" cy="760" rx="95" ry="35" fill="#6ab868" opacity=".4" transform="rotate(15,1200,760)"/>
     <ellipse cx="1100" cy="780" rx="60" ry="20" fill="#9ed49a" opacity=".38" transform="rotate(40,1100,780)"/>
-    <!-- 수국 꽃송이 -->
     <circle cx="1130" cy="680" r="28" fill="rgba(180,160,230,.35)"/>
     <circle cx="1155" cy="668" r="20" fill="rgba(190,170,235,.3)"/>
     <circle cx="1108" cy="668" r="18" fill="rgba(170,150,225,.28)"/>
     <circle cx="1130" cy="655" r="16" fill="rgba(200,180,240,.25)"/>
   </g>
 
-  <!-- ── 좌상단 덩굴 잎 ── -->
   <g filter="url(#wc)" opacity=".6">
     <ellipse cx="40" cy="120" rx="55" ry="20" fill="#8cca86" opacity=".45" transform="rotate(20,40,120)"/>
     <ellipse cx="90" cy="80" rx="45" ry="16" fill="#a4d49e" opacity=".38" transform="rotate(-10,90,80)"/>
@@ -486,45 +488,34 @@
     <ellipse cx="130" cy="40" rx="40" ry="14" fill="#b0d8aa" opacity=".32" transform="rotate(5,130,40)"/>
   </g>
 
-  <!-- ── 중앙 흩뿌려진 꽃잎들 (수채화) ── -->
   <g filter="url(#wc2)" opacity=".5">
-    <!-- 분홍 꽃잎 그룹 1 -->
     <ellipse cx="280" cy="180" rx="18" ry="8" fill="#f4a8c0" opacity=".5" transform="rotate(30,280,180)"/>
     <ellipse cx="310" cy="160" rx="14" ry="6" fill="#f8bcd0" opacity=".45" transform="rotate(-20,310,160)"/>
     <ellipse cx="255" cy="200" rx="12" ry="5" fill="#f0a0b8" opacity=".4" transform="rotate(55,255,200)"/>
-    <!-- 꽃잎 그룹 2 (우측 중간) -->
     <ellipse cx="950" cy="380" rx="20" ry="8" fill="#f9c4d4" opacity=".45" transform="rotate(-35,950,380)"/>
     <ellipse cx="975" cy="360" rx="15" ry="6" fill="#fbd0de" opacity=".4" transform="rotate(15,975,360)"/>
-    <!-- 작은 들꽃 노랑 -->
     <circle cx="820" cy="680" r="10" fill="rgba(255,220,80,.45)"/>
     <circle cx="835" cy="665" r="7"  fill="rgba(255,230,100,.38)"/>
     <circle cx="808" cy="672" r="6"  fill="rgba(255,210,70,.35)"/>
-    <!-- 들꽃 노랑 2 -->
     <circle cx="350" cy="710" r="9"  fill="rgba(255,215,80,.4)"/>
     <circle cx="368" cy="698" r="6"  fill="rgba(255,225,90,.35)"/>
   </g>
 
-  <!-- ── 중앙 상단 구름 같은 빛 번짐 ── -->
   <g filter="url(#softblur)" opacity=".3">
     <ellipse cx="600" cy="50" rx="350" ry="80" fill="rgba(255,248,200,.6)"/>
     <ellipse cx="600" cy="60" rx="220" ry="50" fill="rgba(255,245,180,.5)"/>
   </g>
 
-  <!-- ── 수면 반사 같은 하단 빛 ── -->
   <g filter="url(#softblur)" opacity=".2">
     <ellipse cx="600" cy="800" rx="500" ry="100" fill="rgba(160,220,200,.5)"/>
   </g>
 </svg>
 
-<!-- 꽃잎 캔버스 -->
 <canvas id="petal-canvas"></canvas>
 
-<!-- 씬 -->
 <div id="scene">
-  <!-- 봉투 -->
   <div id="envelope-wrap" onclick="openEnvelope()">
 
-    <!-- 봉투 본체 SVG -->
     <svg class="env-body" viewBox="0 0 380 260" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="envGrad" x1="0" y1="0" x2="0" y2="1">
@@ -544,37 +535,28 @@
         </filter>
       </defs>
 
-      <!-- 봉투 뒷면 그림자 -->
       <rect x="4" y="6" width="372" height="250" rx="4" fill="rgba(0,0,0,.3)" filter="url(#paper)"/>
 
-      <!-- 봉투 본체 -->
       <rect x="0" y="10" width="380" height="250" rx="4" fill="url(#envGrad)"/>
       <rect x="0" y="10" width="380" height="250" rx="4" fill="url(#envSide)"/>
 
-      <!-- 봉투 테두리 금박 -->
       <rect x="0" y="10" width="380" height="250" rx="4" fill="none" stroke="#c8a850" stroke-width="1.5"/>
       <rect x="5" y="15" width="370" height="240" rx="2" fill="none" stroke="rgba(200,168,80,.35)" stroke-width=".8"/>
 
-      <!-- 봉투 하단 삼각 접힘 -->
       <path d="M0 260 L190 160 L380 260 Z" fill="#e8d4a8" stroke="#c8a850" stroke-width="1"/>
-      <!-- 좌측 접힘 -->
       <path d="M0 10 L0 260 L190 160 Z" fill="#dcc890" stroke="#c8a850" stroke-width=".8"/>
-      <!-- 우측 접힘 -->
       <path d="M380 10 L380 260 L190 160 Z" fill="#dcc890" stroke="#c8a850" stroke-width=".8"/>
 
-      <!-- 봉인 인장 -->
       <circle cx="190" cy="185" r="22" fill="#9b2335" stroke="#c8a850" stroke-width="1.5"/>
       <circle cx="190" cy="185" r="17" fill="none" stroke="rgba(200,168,80,.6)" stroke-width=".8"/>
       <text x="190" y="182" text-anchor="middle" font-family="serif" font-size="13" fill="#f5ead6" font-weight="bold">主</text>
       <text x="190" y="195" text-anchor="middle" font-family="serif" font-size="8" fill="rgba(245,234,214,.7)" letter-spacing="2">교회</text>
 
-      <!-- 한지 질감선 -->
-      <line x1="20" y1="50" x2="360" y2="50" stroke="rgba(200,168,80,.15)" stroke-width=".5"/>
+      <line x1="20" y1="50" x2="360" y2="50" stroke="rgba(200,168,80 Ram, .15)" stroke-width=".5"/>
       <line x1="20" y1="90" x2="360" y2="90" stroke="rgba(200,168,80,.1)" stroke-width=".5"/>
       <line x1="20" y1="130" x2="360" y2="130" stroke="rgba(200,168,80,.1)" stroke-width=".5"/>
     </svg>
 
-    <!-- 봉투 덮개 flap -->
     <div id="env-flap">
       <svg viewBox="0 0 380 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;position:absolute;top:10px;left:0;">
         <defs>
@@ -583,16 +565,12 @@
             <stop offset="100%" stop-color="#e8d4a8"/>
           </linearGradient>
         </defs>
-        <!-- 삼각 덮개 -->
         <path d="M0 0 L380 0 L190 130 Z" fill="url(#flapGrad)" stroke="#c8a850" stroke-width="1.5" stroke-linejoin="round"/>
-        <!-- 덮개 안쪽 그림자 -->
         <path d="M0 0 L380 0 L190 130 Z" fill="none" stroke="rgba(200,168,80,.3)" stroke-width=".5" transform="translate(2,2)"/>
-        <!-- 단청 라인 -->
         <line x1="0" y1="0" x2="380" y2="0" stroke="#c8a850" stroke-width="1.5"/>
       </svg>
     </div>
 
-    <!-- 봉투에서 솟아오르는 카드 미리보기 -->
     <div id="card-wrap">
       <svg viewBox="0 0 350 60" xmlns="http://www.w3.org/2000/svg" style="width:100%;">
         <rect width="350" height="60" rx="2" fill="#f5ead6" stroke="#c8a850" stroke-width="1"/>
@@ -604,11 +582,9 @@
   </div>
 </div>
 
-<!-- 모달 -->
 <div id="modal">
   <div id="invite-card">
 
-    <!-- 태극 워터마크 -->
     <svg class="taeguk-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
       <circle cx="50" cy="50" r="48" fill="none" stroke="#9b2335" stroke-width="1.5"/>
       <clipPath id="cc"><circle cx="50" cy="50" r="48"/></clipPath>
@@ -620,20 +596,17 @@
       </g>
     </svg>
 
-    <!-- 모서리 장식 -->
     <div class="corner c-tl"><svg viewBox="0 0 28 28"><path d="M0 28 L0 0 L28 0" fill="none" stroke="#c8a850" stroke-width="1.5"/><circle cx="0" cy="0" r="4" fill="#c8a850"/></svg></div>
     <div class="corner c-tr"><svg viewBox="0 0 28 28"><path d="M0 28 L0 0 L28 0" fill="none" stroke="#c8a850" stroke-width="1.5"/><circle cx="0" cy="0" r="4" fill="#c8a850"/></svg></div>
     <div class="corner c-bl"><svg viewBox="0 0 28 28"><path d="M0 28 L0 0 L28 0" fill="none" stroke="#c8a850" stroke-width="1.5"/><circle cx="0" cy="0" r="4" fill="#c8a850"/></svg></div>
     <div class="corner c-br"><svg viewBox="0 0 28 28"><path d="M0 28 L0 0 L28 0" fill="none" stroke="#c8a850" stroke-width="1.5"/><circle cx="0" cy="0" r="4" fill="#c8a850"/></svg></div>
 
-    <!-- 헤더 -->
     <div class="card-header" id="ch">
       <div class="eyebrow">부산교회 2구역 · 섞임 집회 초대</div>
       <h1>대만 <span>의란(宜蘭)교회</span><br>방문 집회에 초대합니다</h1>
       <div class="card-divider"></div>
     </div>
 
-    <!-- 본문 -->
     <div class="card-body" id="cb">
       <p>청년 형제자매님들!</p>
       <p>
@@ -649,7 +622,6 @@
       <p>부담을 받아 참여하여 주님의 은혜를 다 함께 나누길 바랍니다.</p>
     </div>
 
-    <!-- 일정표 -->
     <div class="schedule" id="cs">
       <div class="sch-day">6월 13일 (토) — 하단집회소</div>
       <div class="sch-item">
@@ -691,7 +663,6 @@
       <div class="sch-note">📍 모임장소 : 하단집회소</div>
     </div>
 
-    <!-- 푸터 -->
     <div class="card-footer" id="cf">
       <div class="venue">하단집회소</div>
       부산교회 2구역 드림
@@ -832,7 +803,6 @@ function drawPetal(p) {
   ctx.beginPath();
   ctx.ellipse(0, 0, p.size * .5, p.size, 0, 0, Math.PI * 2);
   ctx.fill();
-  // 꽃잎 광택
   ctx.fillStyle = 'rgba(255,255,255,.2)';
   ctx.beginPath();
   ctx.ellipse(-p.size*.1, -p.size*.3, p.size*.15, p.size*.35, -.3, 0, Math.PI*2);
@@ -844,7 +814,6 @@ function animatePetals() {
   if (!running) return;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // 새 꽃잎 생성
   if (petals.length < 80) {
     for (let i = 0; i < 2; i++) petals.push(createPetal());
   }
