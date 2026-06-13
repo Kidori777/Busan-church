@@ -18,8 +18,6 @@
     --dancheong-blue:#1a4a6e;
     --gold:          #c8a850;
     --gold-light:    #e8c97a;
-    --taegeuk-red:   #c0392b;
-    --taegeuk-blue:  #154a8a;
   }
 
   * { margin:0; padding:0; box-sizing:border-box; }
@@ -44,17 +42,11 @@
       radial-gradient(ellipse 60% 50% at 85% 85%, rgba(180,230,200,.4)  0%, transparent 65%),
       radial-gradient(ellipse 70% 45% at 10% 90%, rgba(160,210,240,.3)  0%, transparent 60%),
       linear-gradient(175deg,
-        #d4eef8 0%,
-        #e8f4fb 18%,
-        #fdf0d0 40%,
-        #fdf6e2 58%,
-        #edf5e8 78%,
-        #d8edd8 100%
+        #d4eef8 0%, #e8f4fb 18%, #fdf0d0 40%,
+        #fdf6e2 58%, #edf5e8 78%, #d8edd8 100%
       );
     z-index: 0;
   }
-
-  /* 수채화 번짐 레이어 1 — 햇살 블러 */
   .gate-bg::before {
     content: '';
     position: fixed;
@@ -65,8 +57,6 @@
       radial-gradient(ellipse 55% 30% at 50% 0%,  rgba(200,235,255,.45) 0%, transparent 70%);
     filter: blur(28px);
   }
-
-  /* 수채화 번짐 레이어 2 — 꽃·풀 흔적 */
   .gate-bg::after {
     content: '';
     position: fixed;
@@ -78,7 +68,6 @@
     filter: blur(18px);
   }
 
-  /* SVG 배경: 수채화 식물 + 잔 패턴 */
   .bg-svg {
     position: fixed;
     inset: 0;
@@ -88,7 +77,6 @@
     pointer-events: none;
   }
 
-  /* 처마 라인 — 제거 */
   .eave-top, .eave-bottom { display: none; }
 
   /* ── SCENE WRAPPER ── */
@@ -113,13 +101,11 @@
   #envelope-wrap:hover { transform: translateY(-6px) scale(1.03); }
   #envelope-wrap:hover #click-hint { animation: hint-bounce .5s ease infinite; }
 
-  /* 봉투 SVG */
   .env-body {
     width: 100%;
-    filter: drop-shadow(0 12px 32px rgba(0,0,0,.7)) drop-shadow(0 2px 6px rgba(200,168,80,.3));
+    filter: drop-shadow(0 12px 32px rgba(0,0,0,.18)) drop-shadow(0 2px 6px rgba(180,140,60,.2));
   }
 
-  /* 봉투 덮개(flap) - 3D 접기 */
   #env-flap {
     position: absolute;
     top: 0; left: 0; width: 100%;
@@ -130,28 +116,30 @@
   }
   #env-flap.open { transform: rotateX(-180deg); }
 
-  /* 클릭 힌트 - 가독성 개선 (배경 대비 선명한 진한 먹색으로 변경) */
+  /* ── 열어보기 힌트: 밝은 배경에 맞는 진한 색 ── */
   #click-hint {
     position: absolute;
-    bottom: -38px;
+    bottom: -40px;
     left: 50%;
     transform: translateX(-50%);
-    color: var(--ink-dark);
+    color: #5a3e1b;                        /* 진한 갈색 — 밝은 배경에서 선명 */
     font-family: 'Noto Serif KR', serif;
-    font-size: clamp(14px, 2.4vw, 18px);
-    font-weight: 700;
-    letter-spacing: .2em;
+    font-size: clamp(13px, 2.2vw, 17px);
+    font-weight: 600;
+    letter-spacing: .22em;
     white-space: nowrap;
-    text-shadow: 0 1px 3px rgba(255, 255, 255, 0.8), 0 0 8px rgba(255, 255, 255, 0.5);
+    text-shadow:
+      0 1px 3px rgba(255,255,255,.8),      /* 아래 흰 빛 — 한지 위에 올라온 느낌 */
+      0 0 16px rgba(200,150,60,.35);
     animation: hint-pulse 2.2s ease-in-out infinite;
   }
   @keyframes hint-pulse {
     0%,100% { opacity:.7; transform: translateX(-50%) translateY(0); }
-    50%      { opacity:1;  transform: translateX(-50%) translateY(-4px); }
+    50%      { opacity:1;  transform: translateX(-50%) translateY(-5px); }
   }
   @keyframes hint-bounce {
-    0%,100% { transform: translateX(-50%) translateY(-4px); }
-    50%      { transform: translateX(-50%) translateY(-10px); }
+    0%,100% { transform: translateX(-50%) translateY(-5px); }
+    50%      { transform: translateX(-50%) translateY(-11px); }
   }
 
   /* ── CARD RISE ── */
@@ -162,32 +150,27 @@
     transform-origin: bottom center;
     width: clamp(200px, 50vw, 350px);
     z-index: 3;
-    transition: transform 1s cubic-bezier(.2,1,.3,1) .4s, opacity .8s .4s;
     opacity: 0;
     pointer-events: none;
   }
-  #card-wrap.rising {
-    transform: translateX(-50%) translateY(-40%) scaleY(1);
-    opacity: 1;
-  }
-
   /* ── MODAL OVERLAY ── */
   #modal {
     position: fixed;
     inset: 0;
     z-index: 100;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     background: rgba(6,12,10,.0);
     opacity: 0;
     pointer-events: none;
     transition: background .8s, opacity .6s;
     overflow-y: auto;
-    padding: clamp(20px, 5vw, 40px);
+    -webkit-overflow-scrolling: touch;
+    padding: clamp(36px, 7vh, 64px) clamp(10px, 3vw, 24px) clamp(36px, 7vh, 64px);
   }
   #modal.visible {
-    background: rgba(6,12,10,.88);
+    background: rgba(6,12,10,.82);
     opacity: 1;
     pointer-events: all;
   }
@@ -207,10 +190,10 @@
   #invite-card {
     position: relative;
     z-index: 101;
-    width: min(540px, 95vw);
+    width: min(540px, 96vw);
     background: linear-gradient(160deg, #f7edd8 0%, #f0e2c2 40%, #e8d4aa 100%);
     border-radius: 4px;
-    padding: clamp(35px, 6vw, 56px) clamp(24px, 5vw, 48px) clamp(25px, 5vw, 40px);
+    padding: clamp(24px,5vw,52px) clamp(20px,4vw,44px);
     box-shadow:
       0 0 0 1px #c8a850,
       0 0 0 5px rgba(200,168,80,.15),
@@ -226,8 +209,6 @@
     opacity: 1;
     transform: translateY(0) scale(1);
   }
-
-  /* 카드 배경 수묵화 패턴 */
   #invite-card::before {
     content: '';
     position: absolute;
@@ -243,84 +224,107 @@
     position: absolute;
     right: clamp(12px,4vw,24px);
     top: clamp(12px,4vw,24px);
-    width: clamp(40px,8vw,60px);
-    height: clamp(40px,8vw,60px);
+    width: clamp(36px,7vw,56px);
+    height: clamp(36px,7vw,56px);
     opacity: .12;
   }
 
-  /* 모서리 단청 장식 */
-  .corner { position: absolute; width: 28px; height: 28px; }
+  /* 모서리 장식 */
+  .corner { position: absolute; width: 26px; height: 26px; }
   .corner svg { width: 100%; height: 100%; }
   .c-tl { top:8px; left:8px; }
   .c-tr { top:8px; right:8px; transform: scaleX(-1); }
   .c-bl { bottom:8px; left:8px; transform: scaleY(-1); }
   .c-br { bottom:8px; right:8px; transform: scale(-1,-1); }
 
-  /* 카드 내용 */
+  /* ── 카드 헤더: 데스크탑만 표시 ── */
   .card-header {
     text-align: center;
-    margin-bottom: clamp(18px,4vw,30px);
+    margin-bottom: clamp(14px,3vw,26px);
     opacity: 0;
     transform: translateY(16px);
     transition: opacity .7s .6s, transform .7s .6s;
   }
   .card-header.in { opacity:1; transform:translateY(0); }
 
+  /* 모바일(≤600px)에서 헤더 숨김 */
+  @media (max-width: 600px) {
+    .card-header { display: none; }
+  }
+
   .card-header .eyebrow {
     font-family: 'Noto Sans KR', sans-serif;
-    font-size: clamp(11px,1.6vw,13px);
-    font-weight: 500;
+    font-size: clamp(10px,1.6vw,13px);
+    font-weight: 300;
     letter-spacing: .35em;
     color: var(--dancheong-red);
     margin-bottom: 8px;
     text-transform: uppercase;
   }
   .card-header h1 {
-    font-size: clamp(18px,3.5vw,26px);
+    font-size: clamp(17px,3.2vw,25px);
     font-weight: 700;
     color: var(--ink-dark);
-    line-height: 1.4;
+    line-height: 1.45;
     letter-spacing: .05em;
   }
-  .card-header h1 span {
-    color: var(--dancheong-blue);
-  }
+  .card-header h1 span { color: var(--dancheong-blue); }
   .card-divider {
-    width: 60px; height: 2px;
+    width: 56px; height: 2px;
     background: linear-gradient(90deg, transparent, var(--gold), transparent);
     margin: 12px auto 0;
   }
 
+  /* 카드 본문 */
   .card-body {
-    font-size: clamp(13px,2vw,15px);
+    font-size: clamp(13px,1.9vw,15px);
     font-weight: 400;
     color: var(--ink-medium);
-    line-height: 1.9;
+    line-height: 2;
     letter-spacing: .03em;
-    margin-bottom: clamp(18px,3vw,24px);
+    margin-bottom: clamp(14px,3vw,22px);
     opacity: 0;
     transform: translateY(16px);
-    transition: opacity .7s .85s, transform .7s .85s;
+    transition: opacity .7s .55s, transform .7s .55s;
   }
   .card-body.in { opacity:1; transform:translateY(0); }
-  .card-body p { margin-bottom: 8px; }
+  .card-body p { margin-bottom: 10px; }
   .card-body strong { color: var(--dancheong-red); font-weight: 600; }
+
+  /* 모바일: 본문 첫 줄 강조 (헤더 대신 역할) */
+  @media (max-width: 600px) {
+    .card-body { transition: opacity .7s .15s, transform .7s .15s; }
+    .card-body p.greeting {
+      font-size: clamp(15px, 4vw, 18px);
+      font-weight: 700;
+      color: var(--dancheong-blue);
+      letter-spacing: .06em;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(200,168,80,.4);
+    }
+  }
 
   /* 일정표 */
   .schedule {
     background: rgba(200,168,80,.1);
     border-left: 3px solid var(--gold);
     border-radius: 0 3px 3px 0;
-    padding: clamp(14px,3vw,20px) clamp(14px,3vw,22px);
-    margin: 14px 0;
+    padding: clamp(12px,2.5vw,20px) clamp(12px,2.5vw,22px);
+    margin: 12px 0;
     opacity: 0;
     transform: translateY(16px);
-    transition: opacity .7s 1.1s, transform .7s 1.1s;
+    transition: opacity .7s .85s, transform .7s .85s;
   }
   .schedule.in { opacity:1; transform:translateY(0); }
 
+  /* 모바일: 일정 전환 딜레이 앞당김 */
+  @media (max-width: 600px) {
+    .schedule { transition: opacity .7s .4s, transform .7s .4s; }
+  }
+
   .sch-day {
-    font-size: clamp(13px,1.8vw,15px);
+    font-size: clamp(12px,1.8vw,15px);
     font-weight: 700;
     color: var(--dancheong-blue);
     letter-spacing: .08em;
@@ -339,20 +343,20 @@
   }
   .sch-item {
     display: flex;
-    gap: 12px;
+    gap: 10px;
     padding: 4px 0;
-    font-size: clamp(12px,1.7vw,14px);
+    font-size: clamp(11px,1.6vw,14px);
     color: var(--ink-medium);
     border-bottom: 1px dashed rgba(200,168,80,.3);
   }
   .sch-item:last-child { border-bottom: none; }
   .sch-time {
-    color: var(--gold);
+    color: #8a6020;
     font-family: 'Noto Sans KR', sans-serif;
-    font-weight: 500;
+    font-weight: 600;
     white-space: nowrap;
-    min-width: 110px;
-    font-size: clamp(11px,1.6vw,13px);
+    min-width: 100px;
+    font-size: clamp(11px,1.5vw,13px);
   }
   .sch-note {
     font-family: 'Noto Sans KR', sans-serif;
@@ -371,7 +375,7 @@
     letter-spacing: .05em;
     opacity: 0;
     transform: translateY(12px);
-    transition: opacity .7s 1.4s, transform .7s 1.4s;
+    transition: opacity .7s 1.2s, transform .7s 1.2s;
   }
   .card-footer.in { opacity:1; transform:translateY(0); }
   .card-footer .venue {
@@ -380,48 +384,37 @@
     color: var(--dancheong-red);
     margin-bottom: 4px;
   }
+  @media (max-width: 600px) {
+    .card-footer { transition: opacity .7s .7s, transform .7s .7s; }
+  }
 
   /* 닫기 버튼 */
   #close-btn {
     display: block;
-    margin: clamp(20px,4vw,32px) auto 0;
-    padding: 10px 28px;
+    margin: clamp(18px,4vw,30px) auto 0;
+    padding: 9px 26px;
     background: transparent;
     border: 1px solid var(--gold);
-    color: var(--gold);
+    color: #7a5010;
     font-family: 'Noto Serif KR', serif;
     font-size: 13px;
     letter-spacing: .15em;
     cursor: pointer;
     border-radius: 2px;
-    transition: background .2s, color .2s;
     opacity: 0;
-    transition: opacity .7s 1.6s, background .2s, color .2s;
+    transition: opacity .7s 1.4s, background .2s, color .2s;
   }
   #close-btn.in { opacity:1; }
   #close-btn:hover { background: var(--gold); color: var(--ink-dark); }
+  @media (max-width: 600px) {
+    #close-btn { transition: opacity .7s .9s, background .2s, color .2s; }
+  }
 
-  /* 스크롤바 */
   #modal::-webkit-scrollbar { width: 4px; }
   #modal::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
 
-  /* ── 모바일 모니터 대응 미디어 쿼리 수정 ── */
   @media (max-width: 480px) {
-    #modal {
-      align-items: flex-start; /* 상단이 잘리지 않도록 위쪽 정렬 고정 */
-      padding: 12px;
-    }
-    #invite-card {
-      padding: 32px 18px 24px 18px; /* 내부 패딩을 줄여 상단 타이틀 확보 */
-      margin-top: 10px;
-      margin-bottom: 10px;
-    }
-    .sch-time { 
-      min-width: 85px; 
-    }
-    .card-body {
-      line-height: 1.7;
-    }
+    .sch-time { min-width: 86px; }
   }
 </style>
 </head>
@@ -431,6 +424,7 @@
 <div class="eave-top"></div>
 <div class="eave-bottom"></div>
 
+<!-- SVG 배경: 수채화 식물·꽃·햇살 -->
 <svg class="bg-svg" viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
   <defs>
     <filter id="wc" x="-20%" y="-20%" width="140%" height="140%">
@@ -445,9 +439,7 @@
       <feGaussianBlur in="d" stdDeviation="5" result="b"/>
       <feComposite in="b" in2="SourceGraphic" operator="over"/>
     </filter>
-    <filter id="softblur">
-      <feGaussianBlur stdDeviation="6"/>
-    </filter>
+    <filter id="softblur"><feGaussianBlur stdDeviation="6"/></filter>
   </defs>
 
   <g filter="url(#softblur)" opacity=".55">
@@ -461,7 +453,6 @@
     <line x1="0" y1="0" x2="-80" y2="300"/>
     <line x1="0" y1="0" x2="420" y2="-40"/>
   </g>
-
   <g filter="url(#wc)" opacity=".7">
     <ellipse cx="60" cy="700" rx="90" ry="38" fill="#7fc47a" opacity=".5" transform="rotate(-30,60,700)"/>
     <ellipse cx="60" cy="700" rx="75" ry="22" fill="#a8d8a0" opacity=".4" transform="rotate(-30,60,700)"/>
@@ -470,7 +461,6 @@
     <ellipse cx="160" cy="760" rx="50" ry="18" fill="#b4ddb0" opacity=".35" transform="rotate(-55,160,760)"/>
     <ellipse cx="30" cy="800" rx="80" ry="28" fill="#80c47a" opacity=".4" transform="rotate(-20,30,800)"/>
   </g>
-
   <g filter="url(#wc)" opacity=".65">
     <ellipse cx="1150" cy="720" rx="80" ry="30" fill="#7cc478" opacity=".45" transform="rotate(25,1150,720)"/>
     <ellipse cx="1200" cy="760" rx="95" ry="35" fill="#6ab868" opacity=".4" transform="rotate(15,1200,760)"/>
@@ -480,14 +470,12 @@
     <circle cx="1108" cy="668" r="18" fill="rgba(170,150,225,.28)"/>
     <circle cx="1130" cy="655" r="16" fill="rgba(200,180,240,.25)"/>
   </g>
-
   <g filter="url(#wc)" opacity=".6">
     <ellipse cx="40" cy="120" rx="55" ry="20" fill="#8cca86" opacity=".45" transform="rotate(20,40,120)"/>
     <ellipse cx="90" cy="80" rx="45" ry="16" fill="#a4d49e" opacity=".38" transform="rotate(-10,90,80)"/>
     <ellipse cx="20" cy="60" rx="50" ry="18" fill="#78be72" opacity=".4" transform="rotate(35,20,60)"/>
     <ellipse cx="130" cy="40" rx="40" ry="14" fill="#b0d8aa" opacity=".32" transform="rotate(5,130,40)"/>
   </g>
-
   <g filter="url(#wc2)" opacity=".5">
     <ellipse cx="280" cy="180" rx="18" ry="8" fill="#f4a8c0" opacity=".5" transform="rotate(30,280,180)"/>
     <ellipse cx="310" cy="160" rx="14" ry="6" fill="#f8bcd0" opacity=".45" transform="rotate(-20,310,160)"/>
@@ -500,22 +488,23 @@
     <circle cx="350" cy="710" r="9"  fill="rgba(255,215,80,.4)"/>
     <circle cx="368" cy="698" r="6"  fill="rgba(255,225,90,.35)"/>
   </g>
-
   <g filter="url(#softblur)" opacity=".3">
     <ellipse cx="600" cy="50" rx="350" ry="80" fill="rgba(255,248,200,.6)"/>
     <ellipse cx="600" cy="60" rx="220" ry="50" fill="rgba(255,245,180,.5)"/>
   </g>
-
   <g filter="url(#softblur)" opacity=".2">
     <ellipse cx="600" cy="800" rx="500" ry="100" fill="rgba(160,220,200,.5)"/>
   </g>
 </svg>
 
+<!-- 꽃잎 캔버스 -->
 <canvas id="petal-canvas"></canvas>
 
+<!-- 씬 -->
 <div id="scene">
   <div id="envelope-wrap" onclick="openEnvelope()">
 
+    <!-- 봉투 본체 -->
     <svg class="env-body" viewBox="0 0 380 260" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="envGrad" x1="0" y1="0" x2="0" y2="1">
@@ -534,29 +523,24 @@
           <feComposite in="displaced" in2="SourceGraphic" operator="in"/>
         </filter>
       </defs>
-
-      <rect x="4" y="6" width="372" height="250" rx="4" fill="rgba(0,0,0,.3)" filter="url(#paper)"/>
-
+      <rect x="4" y="6" width="372" height="250" rx="4" fill="rgba(0,0,0,.12)" filter="url(#paper)"/>
       <rect x="0" y="10" width="380" height="250" rx="4" fill="url(#envGrad)"/>
       <rect x="0" y="10" width="380" height="250" rx="4" fill="url(#envSide)"/>
-
       <rect x="0" y="10" width="380" height="250" rx="4" fill="none" stroke="#c8a850" stroke-width="1.5"/>
       <rect x="5" y="15" width="370" height="240" rx="2" fill="none" stroke="rgba(200,168,80,.35)" stroke-width=".8"/>
-
       <path d="M0 260 L190 160 L380 260 Z" fill="#e8d4a8" stroke="#c8a850" stroke-width="1"/>
       <path d="M0 10 L0 260 L190 160 Z" fill="#dcc890" stroke="#c8a850" stroke-width=".8"/>
       <path d="M380 10 L380 260 L190 160 Z" fill="#dcc890" stroke="#c8a850" stroke-width=".8"/>
-
       <circle cx="190" cy="185" r="22" fill="#9b2335" stroke="#c8a850" stroke-width="1.5"/>
       <circle cx="190" cy="185" r="17" fill="none" stroke="rgba(200,168,80,.6)" stroke-width=".8"/>
       <text x="190" y="182" text-anchor="middle" font-family="serif" font-size="13" fill="#f5ead6" font-weight="bold">主</text>
       <text x="190" y="195" text-anchor="middle" font-family="serif" font-size="8" fill="rgba(245,234,214,.7)" letter-spacing="2">교회</text>
-
-      <line x1="20" y1="50" x2="360" y2="50" stroke="rgba(200,168,80 Ram, .15)" stroke-width=".5"/>
+      <line x1="20" y1="50" x2="360" y2="50" stroke="rgba(200,168,80,.15)" stroke-width=".5"/>
       <line x1="20" y1="90" x2="360" y2="90" stroke="rgba(200,168,80,.1)" stroke-width=".5"/>
       <line x1="20" y1="130" x2="360" y2="130" stroke="rgba(200,168,80,.1)" stroke-width=".5"/>
     </svg>
 
+    <!-- 봉투 덮개 flap -->
     <div id="env-flap">
       <svg viewBox="0 0 380 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;position:absolute;top:10px;left:0;">
         <defs>
@@ -571,6 +555,7 @@
       </svg>
     </div>
 
+    <!-- 솟아오르는 카드 미리보기 -->
     <div id="card-wrap">
       <svg viewBox="0 0 350 60" xmlns="http://www.w3.org/2000/svg" style="width:100%;">
         <rect width="350" height="60" rx="2" fill="#f5ead6" stroke="#c8a850" stroke-width="1"/>
@@ -582,9 +567,11 @@
   </div>
 </div>
 
+<!-- 모달 -->
 <div id="modal">
   <div id="invite-card">
 
+    <!-- 태극 워터마크 -->
     <svg class="taeguk-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
       <circle cx="50" cy="50" r="48" fill="none" stroke="#9b2335" stroke-width="1.5"/>
       <clipPath id="cc"><circle cx="50" cy="50" r="48"/></clipPath>
@@ -596,19 +583,23 @@
       </g>
     </svg>
 
+    <!-- 모서리 장식 -->
     <div class="corner c-tl"><svg viewBox="0 0 28 28"><path d="M0 28 L0 0 L28 0" fill="none" stroke="#c8a850" stroke-width="1.5"/><circle cx="0" cy="0" r="4" fill="#c8a850"/></svg></div>
     <div class="corner c-tr"><svg viewBox="0 0 28 28"><path d="M0 28 L0 0 L28 0" fill="none" stroke="#c8a850" stroke-width="1.5"/><circle cx="0" cy="0" r="4" fill="#c8a850"/></svg></div>
     <div class="corner c-bl"><svg viewBox="0 0 28 28"><path d="M0 28 L0 0 L28 0" fill="none" stroke="#c8a850" stroke-width="1.5"/><circle cx="0" cy="0" r="4" fill="#c8a850"/></svg></div>
     <div class="corner c-br"><svg viewBox="0 0 28 28"><path d="M0 28 L0 0 L28 0" fill="none" stroke="#c8a850" stroke-width="1.5"/><circle cx="0" cy="0" r="4" fill="#c8a850"/></svg></div>
 
+    <!-- 헤더 (데스크탑만) -->
     <div class="card-header" id="ch">
       <div class="eyebrow">부산교회 2구역 · 섞임 집회 초대</div>
       <h1>대만 <span>의란(宜蘭)교회</span><br>방문 집회에 초대합니다</h1>
       <div class="card-divider"></div>
     </div>
 
+    <!-- 본문 -->
     <div class="card-body" id="cb">
-      <p>청년 형제자매님들!</p>
+      <!-- 모바일에서는 이 줄이 제목 역할 -->
+      <p class="greeting">청년 형제자매님들!</p>
       <p>
         <strong>6/13(토)–14(주일)</strong>, 대만 의란(宜蘭)교회의 <strong>38명의 형제자매님들</strong>이 대가를 지불하고 2구역을 방문하여
         몸 안에서 <strong>섞임 집회</strong>를 갖습니다.
@@ -622,6 +613,7 @@
       <p>부담을 받아 참여하여 주님의 은혜를 다 함께 나누길 바랍니다.</p>
     </div>
 
+    <!-- 일정표 -->
     <div class="schedule" id="cs">
       <div class="sch-day">6월 13일 (토) — 하단집회소</div>
       <div class="sch-item">
@@ -636,7 +628,6 @@
         <span class="sch-time">20:30 ~</span>
         <span>가정 안배</span>
       </div>
-
       <div class="sch-day" style="margin-top:14px;">6월 14일 (주일)</div>
       <div class="sch-item">
         <span class="sch-time">08:00 – 09:00</span>
@@ -644,7 +635,7 @@
       </div>
       <div class="sch-item">
         <span class="sch-time">10:30 – 12:30</span>
-        <span>주일집회 — 하단집회소 / 영도집회소<br>
+        <span>주일집회 — 하단 / 영도집회소<br>
         <span style="font-size:.9em;color:#7a5c3a;">주님의 상 집회 · 신언집회</span></span>
       </div>
       <div class="sch-item">
@@ -659,10 +650,10 @@
         <span class="sch-time">17:00</span>
         <span>양산교회로 출발</span>
       </div>
-
       <div class="sch-note">📍 모임장소 : 하단집회소</div>
     </div>
 
+    <!-- 푸터 -->
     <div class="card-footer" id="cf">
       <div class="venue">하단집회소</div>
       부산교회 2구역 드림
@@ -674,41 +665,37 @@
 
 <script>
 let opened = false;
+const isMobile = () => window.innerWidth <= 600;
 
 function openEnvelope() {
   if (opened) return;
   opened = true;
 
-  const wrap = document.getElementById('envelope-wrap');
-  const flap = document.getElementById('env-flap');
-  const cardWrap = document.getElementById('card-wrap');
-  const hint = document.getElementById('click-hint');
+  const wrap    = document.getElementById('envelope-wrap');
+  const flap    = document.getElementById('env-flap');
+  const cardWrap= document.getElementById('card-wrap');
+  const hint    = document.getElementById('click-hint');
 
   wrap.style.pointerEvents = 'none';
   hint.style.display = 'none';
 
-  // 1. 덮개 열기
   flap.classList.add('open');
 
-  // 2. 카드 솟아오름
   setTimeout(() => {
     cardWrap.style.transition = 'transform 1s cubic-bezier(.2,1,.3,1), opacity .8s';
-    cardWrap.style.opacity = '1';
-    cardWrap.style.transform = 'translateX(-50%) translateY(-80%) scaleY(1)';
-    cardWrap.style.pointerEvents = 'none';
+    cardWrap.style.opacity    = '1';
+    cardWrap.style.transform  = 'translateX(-50%) translateY(-80%) scaleY(1)';
   }, 900);
 
-  // 3. 모달 전환
-  setTimeout(() => {
-    showModal();
-  }, 1800);
+  setTimeout(() => { showModal(); }, 1800);
 }
 
 function showModal() {
-  const modal   = document.getElementById('modal');
-  const card    = document.getElementById('invite-card');
-  const canvas  = document.getElementById('petal-canvas');
+  const modal  = document.getElementById('modal');
+  const card   = document.getElementById('invite-card');
+  const canvas = document.getElementById('petal-canvas');
 
+  modal.scrollTop = 0;
   modal.classList.add('visible');
 
   setTimeout(() => {
@@ -716,16 +703,27 @@ function showModal() {
     canvas.classList.add('show');
     startPetals();
 
-    // 순차 fade-in
-    setTimeout(() => document.getElementById('ch').classList.add('in'), 300);
-    setTimeout(() => document.getElementById('cb').classList.add('in'), 550);
-    setTimeout(() => document.getElementById('cs').classList.add('in'), 800);
-    setTimeout(() => document.getElementById('cf').classList.add('in'), 1100);
-    setTimeout(() => {
-      const btn = document.getElementById('close-btn');
-      btn.classList.add('in');
-      btn.style.transition = 'opacity .7s, background .2s, color .2s';
-    }, 1300);
+    const mobile = isMobile();
+    if (!mobile) {
+      setTimeout(() => document.getElementById('ch').classList.add('in'), 300);
+      setTimeout(() => document.getElementById('cb').classList.add('in'), 550);
+      setTimeout(() => document.getElementById('cs').classList.add('in'), 820);
+      setTimeout(() => document.getElementById('cf').classList.add('in'), 1100);
+      setTimeout(() => {
+        const btn = document.getElementById('close-btn');
+        btn.classList.add('in');
+        btn.style.transition = 'opacity .7s, background .2s, color .2s';
+      }, 1320);
+    } else {
+      setTimeout(() => document.getElementById('cb').classList.add('in'), 150);
+      setTimeout(() => document.getElementById('cs').classList.add('in'), 380);
+      setTimeout(() => document.getElementById('cf').classList.add('in'), 650);
+      setTimeout(() => {
+        const btn = document.getElementById('close-btn');
+        btn.classList.add('in');
+        btn.style.transition = 'opacity .7s, background .2s, color .2s';
+      }, 880);
+    }
   }, 100);
 }
 
@@ -737,16 +735,12 @@ function closeModal() {
   setTimeout(() => {
     modal.classList.remove('visible');
     modal.style.opacity = '';
-
-    // 봉투 리셋
     opened = false;
     document.getElementById('env-flap').classList.remove('open');
     document.getElementById('envelope-wrap').style.pointerEvents = '';
     document.getElementById('click-hint').style.display = '';
     document.getElementById('card-wrap').style.opacity = '0';
     document.getElementById('card-wrap').style.transform = 'translateX(-50%) translateY(60px) scaleY(0)';
-
-    // 카드 상태 리셋
     ['ch','cb','cs','cf'].forEach(id => document.getElementById(id).classList.remove('in'));
     document.getElementById('invite-card').classList.remove('appear');
     canvas.classList.remove('show');
@@ -757,9 +751,7 @@ function closeModal() {
 /* ── 꽃잎 애니메이션 ── */
 const canvas = document.getElementById('petal-canvas');
 const ctx = canvas.getContext('2d');
-let petals = [];
-let animId = null;
-let running = false;
+let petals = [], animId = null, running = false;
 
 function resize() {
   canvas.width  = window.innerWidth;
@@ -813,13 +805,10 @@ function drawPetal(p) {
 function animatePetals() {
   if (!running) return;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-
   if (petals.length < 80) {
     for (let i = 0; i < 2; i++) petals.push(createPetal());
   }
-
   petals = petals.filter(p => p.y < canvas.height + 30);
-
   for (const p of petals) {
     p.frame++;
     p.y += p.speedY;
@@ -827,16 +816,12 @@ function animatePetals() {
     p.rot += p.rotSpeed;
     drawPetal(p);
   }
-
   animId = requestAnimationFrame(animatePetals);
 }
 
 function startPetals() {
-  running = true;
-  petals = [];
-  animatePetals();
+  running = true; petals = []; animatePetals();
 }
-
 function stopPetals() {
   running = false;
   if (animId) { cancelAnimationFrame(animId); animId = null; }
